@@ -7,7 +7,7 @@ process rnaspades {
 	label "spades"
 
 	input:
-	tuple val(sample)  path(fastqs)
+	tuple val(sample), path(fastqs)
 	val(stage)
 
 	output:
@@ -35,10 +35,10 @@ process rnaspades {
 		input_files += " --pe1-s ${orphans.join(' ')}"
 	}
 
-	// spades.py --meta --rna -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 	"""
-	rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
+	spades.py --meta --rna -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 	"""
+	// rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 }
 
 // METASPADES_ASSEMBLY_SHELL = """
