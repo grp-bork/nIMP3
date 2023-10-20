@@ -33,7 +33,7 @@ workflow metaT_input {
 			.map {
 				sample, files ->
 					sample.library_type = "metaT"
-				return tuple(sample, files)
+				return tuple(sample.id, sample, files)
 			}
 }
 
@@ -47,7 +47,7 @@ workflow metaG_input {
 			.map {
 				sample, files ->
 					sample.library_type = "metaG"
-				return tuple(sample, files)
+				return tuple(sample.id, sample, files)
 			}
 			
 }
@@ -64,10 +64,10 @@ workflow {
 	)
 
 	metaT_ch = metaT_input.out.reads
-		.map { sample, files -> return tuple(sample.id, sample, files) }
+		// .map { sample, files -> return tuple(sample.id, sample, files) }
 
 	metaG_ch = metaG_input.out.reads
-		.map { sample, files -> return tuple(sample.id, sample, files) }
+		// .map { sample, files -> return tuple(sample.id, sample, files) }
 
 	joined = metaT_ch.concat(metaG_ch).groupTuple(by:1, size: 2, remainder: true)
 	joined.view()
