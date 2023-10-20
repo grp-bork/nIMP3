@@ -62,6 +62,26 @@ workflow nevermore_prep_align {
 					.groupTuple()
 					.view()
 
+		single_reads_ch.paired_end
+					.map { sample, fastq  ->
+						return tuple(sample.id, [sample, fastq])
+					}
+					// .groupTuple(sort: true)
+					.groupTuple()
+					.view()
+
+
+		// [
+		// 	[
+		// 		[id:sample1.singles, is_paired:false, library:paired, library_type:metaG, merged:false],
+		// 		/scratch/schudoma/imp3_test/work/81/de3d1a9001bb042be34dba8e8971dd/no_host/sample1.orphans/sample1.orphans_R1.fastq.gz
+		// 	], 
+		// 	[
+		// 		[id:sample1.singles, is_paired:false, library:paired, library_type:metaG, merged:false],
+		// 		/scratch/schudoma/imp3_test/work/1f/0047be22bd27bfd45708afaebd7db4/no_host/sample1/sample1.chimeras_R1.fastq.gz
+		// 	]
+		// ]
+
 		merged_single_ch = single_reads_ch.single_end
 			.map { sample, fastq  ->
 				return tuple(sample.id, [sample, fastq])
