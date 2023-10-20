@@ -28,7 +28,7 @@ workflow metaT_input {
 	take:
 		fastq_ch
 	main:
-		fastq_input(fastq_ch)
+		fastq_input(fastq_ch, null)
 	emit:
 		reads = fastq_input.out.fastqs
 			.map {
@@ -44,7 +44,7 @@ workflow metaG_input {
 	take:
 		fastq_ch
 	main:
-		fastq_input(fastq_ch)
+		fastq_input(fastq_ch, null)
 	emit:
 		reads = fastq_input.out.fastqs
 			.map {
