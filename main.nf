@@ -83,7 +83,7 @@ workflow {
 		.filter { it[0].library_type == "metaT" }
 		.map { sample, fastqs -> 
 			meta = [:]
-			meta.sample_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
+			meta.id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
 			meta.library = sample.library
 			meta.library_type = sample.library_type
 			
