@@ -28,7 +28,7 @@ workflow metaT_input {
 	take:
 		fastq_ch
 	main:
-		fastq_input(fastq_ch, null)
+		fastq_input(fastq_ch, Channel.of("MT"))
 	emit:
 		reads = fastq_input.out.fastqs
 			.map {
@@ -44,7 +44,7 @@ workflow metaG_input {
 	take:
 		fastq_ch
 	main:
-		fastq_input(fastq_ch, null)
+		fastq_input(fastq_ch, Channel.empty())
 	emit:
 		reads = fastq_input.out.fastqs
 			.map {

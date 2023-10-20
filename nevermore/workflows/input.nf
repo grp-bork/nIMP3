@@ -95,7 +95,7 @@ workflow remote_bam_input {
 workflow fastq_input {
 	take:
 		fastq_ch
-		val(libsfx)
+		libsfx
 	
 	main:
 		prepare_fastqs(fastq_ch.collect(), (params.remote_input_dir != null || params.remote_input_dir), libsfx)
