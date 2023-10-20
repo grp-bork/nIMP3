@@ -21,7 +21,7 @@ include { fastq_input } from "./nevermore/workflows/input"
 def input_dir = (params.input_dir) ? params.input_dir : params.remote_input_dir
 
 // params.ignore_dirs = ""
-params.remote_input = false
+params.remote_input_dir = false
 
 workflow metaT_input {
 	take:
