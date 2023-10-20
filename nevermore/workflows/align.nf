@@ -55,7 +55,7 @@ workflow nevermore_prep_align {
 		.set { single_reads_ch }
 
 		single_reads_ch.paired_end
-			.groupTuple()
+			.groupTuple(sort: true)
 			.view()
 
 
