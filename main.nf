@@ -69,7 +69,7 @@ workflow {
 	metaG_ch = metaG_input.out.reads
 		// .map { sample, files -> return tuple(sample.id, sample, files) }
 
-	joined = metaT_ch.concat(metaG_ch).groupTuple(by:1, size: 2, remainder: true)
+	joined = metaT_ch.concat(metaG_ch).groupTuple(by:0, size: 2, remainder: true)
 	joined.view()
 	
 
