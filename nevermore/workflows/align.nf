@@ -54,27 +54,44 @@ workflow nevermore_prep_align {
 			}
 		.set { single_reads_ch }
 
-		single_reads_ch.paired_end
+
+
+		se_singles_ch = single_reads_ch.single_end
 			.groupTuple(sort: true)
-			.view()
+			.map { sample, files -> 
+				sample.merged = true
+				return tuple(sample, files)
+			}
+		pe_singles_ch = single_reads_ch.paired_end
+			.groupTuple(sort: true)
+			.map { sample, files -> 
+				sample.merged = true
+				return tuple(sample, files)
+			}
+
+		merged_single_ch = se_singles_ch.concat(pe_singles_ch)
+
+		// single_reads_ch.paired_end
+		// 	.groupTuple(sort: true)
+		// 	.view()
 
 
-		single_reads_ch.paired_end
-					.map { sample, fastq  ->
-						return tuple(sample.id, [sample, fastq])
-					}
-					// .groupTuple(sort: true)
-					.groupTuple()
-					.map { sample_id, data -> return data }
-					.view()
+		// single_reads_ch.paired_end
+		// 			.map { sample, fastq  ->
+		// 				return tuple(sample.id, [sample, fastq])
+		// 			}
+		// 			// .groupTuple(sort: true)
+		// 			.groupTuple()
+		// 			.map { sample_id, data -> return data }
+		// 			.view()
 
-		single_reads_ch.single_end
-					.map { sample, fastq  ->
-						return tuple(sample.id, [sample, fastq])
-					}
-					// .groupTuple(sort: true)
-					.groupTuple()
-					.view()
+		// single_reads_ch.single_end
+		// 			.map { sample, fastq  ->
+		// 				return tuple(sample.id, [sample, fastq])
+		// 			}
+		// 			// .groupTuple(sort: true)
+		// 			.groupTuple()
+		// 			.view()
 
 
 		// [
@@ -88,30 +105,30 @@ workflow nevermore_prep_align {
 		// 	]
 		// ]
 
-		merged_single_ch = single_reads_ch.single_end
-			.map { sample, fastq  ->
-				return tuple(sample.id, [sample, fastq])
-			}
-			// .groupTuple(sort: true)
-			.groupTuple()
-			.map { sample_id, data ->
-				def meta = data[0].clone()
-				meta.merged = true
-				return tuple(meta, data[1])
-			}
-			.concat(
-				single_reads_ch.paired_end
-					.map { sample, fastq  ->
-						return tuple(sample.id, [sample, fastq])
-					}
-					// .groupTuple(sort: true)
-					.groupTuple()
-					.map { sample_id, data ->
-						def meta = data[0].clone()
-						meta.merged = true
-						return tuple(meta, data[1])
-					}
-			)
+		// merged_single_ch = single_reads_ch.single_end
+		// 	.map { sample, fastq  ->
+		// 		return tuple(sample.id, [sample, fastq])
+		// 	}
+		// 	// .groupTuple(sort: true)
+		// 	.groupTuple()
+		// 	.map { sample_id, data ->
+		// 		def meta = data[0].clone()
+		// 		meta.merged = true
+		// 		return tuple(meta, data[1])
+		// 	}
+		// 	.concat(
+		// 		single_reads_ch.paired_end
+		// 			.map { sample, fastq  ->
+		// 				return tuple(sample.id, [sample, fastq])
+		// 			}
+		// 			// .groupTuple(sort: true)
+		// 			.groupTuple()
+		// 			.map { sample_id, data ->
+		// 				def meta = data[0].clone()
+		// 				meta.merged = true
+		// 				return tuple(meta, data[1])
+		// 			}
+		// 	)
 
 		// merged_single_ch.view()
 		// merged_single_ch = single_ch
