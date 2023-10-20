@@ -16,6 +16,7 @@ process rnaspades {
 
 	def stranded = (params.stranded) ? params.stranded : ""
 	def kmers = "-k ${params.kmer_steps}"
+	def mem_gb = task.memory.toGiga()
 
 	def input_files = ""
 	// we cannot auto-detect SE vs. PE-orphan!
@@ -35,7 +36,7 @@ process rnaspades {
 
 
 	"""
-	rnaspades.py --meta -t {task.cpus} -m {task.memory.toGiga()} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
+	rnaspades.py --meta -t {task.cpus} -m {mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 	"""
 }
 
