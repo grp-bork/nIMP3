@@ -62,7 +62,7 @@ workflow nevermore_prep_align {
 					.groupTuple()
 					.view()
 
-		single_reads_ch.paired_end
+		single_reads_ch.single_end
 					.map { sample, fastq  ->
 						return tuple(sample.id, [sample, fastq])
 					}
