@@ -22,22 +22,20 @@ workflow nevermore_prep_align {
 		single_ch = fastq_ch
 			.filter { it[0].is_paired == false }
 			.map { sample, fastq ->
-				def meta = sample.clone()
-				meta.id = fastq.name.replaceAll(/_R1.fastq.gz$/, "")
-				meta.is_paired = false
-				meta.merged = false
-				return tuple(meta, fastq)
+				sample.id = fastq.name.replaceAll(/_R1.fastq.gz$/, "")
+				sample.is_paired = false
+				sample.merged = false
+				return tuple(sample, fastq)
 			}
 
 		/*	route all paired-end read files into a common channel */
 
 		paired_ch = fastq_ch
 			.filter { it[0].is_paired == true }
-			.map { sample, fastq ->
-				def meta = sample.clone()
-				meta.is_paired = true
-				meta.merged = true
-				return tuple(meta, fastq)
+			.map { sample, fastq ->				
+				sample.is_paired = true
+				sample.merged = true
+				return tuple(sample, fastq)
 			}
 
 		/*	group all single-read files by sample and route into merge-channel */
@@ -54,8 +52,6 @@ workflow nevermore_prep_align {
 			}
 		.set { single_reads_ch }
 
-
-
 		se_singles_ch = single_reads_ch.single_end
 			.groupTuple(sort: true)
 			.map { sample, files -> 
@@ -70,84 +66,6 @@ workflow nevermore_prep_align {
 			}
 
 		merged_single_ch = se_singles_ch.concat(pe_singles_ch)
-
-		// single_reads_ch.paired_end
-		// 	.groupTuple(sort: true)
-		// 	.view()
-
-
-		// single_reads_ch.paired_end
-		// 			.map { sample, fastq  ->
-		// 				return tuple(sample.id, [sample, fastq])
-		// 			}
-		// 			// .groupTuple(sort: true)
-		// 			.groupTuple()
-		// 			.map { sample_id, data -> return data }
-		// 			.view()
-
-		// single_reads_ch.single_end
-		// 			.map { sample, fastq  ->
-		// 				return tuple(sample.id, [sample, fastq])
-		// 			}
-		// 			// .groupTuple(sort: true)
-		// 			.groupTuple()
-		// 			.view()
-
-
-		// [
-		// 	[
-		// 		[id:sample1.singles, is_paired:false, library:paired, library_type:metaG, merged:false],
-		// 		/scratch/schudoma/imp3_test/work/81/de3d1a9001bb042be34dba8e8971dd/no_host/sample1.orphans/sample1.orphans_R1.fastq.gz
-		// 	], 
-		// 	[
-		// 		[id:sample1.singles, is_paired:false, library:paired, library_type:metaG, merged:false],
-		// 		/scratch/schudoma/imp3_test/work/1f/0047be22bd27bfd45708afaebd7db4/no_host/sample1/sample1.chimeras_R1.fastq.gz
-		// 	]
-		// ]
-
-		// merged_single_ch = single_reads_ch.single_end
-		// 	.map { sample, fastq  ->
-		// 		return tuple(sample.id, [sample, fastq])
-		// 	}
-		// 	// .groupTuple(sort: true)
-		// 	.groupTuple()
-		// 	.map { sample_id, data ->
-		// 		def meta = data[0].clone()
-		// 		meta.merged = true
-		// 		return tuple(meta, data[1])
-		// 	}
-		// 	.concat(
-		// 		single_reads_ch.paired_end
-		// 			.map { sample, fastq  ->
-		// 				return tuple(sample.id, [sample, fastq])
-		// 			}
-		// 			// .groupTuple(sort: true)
-		// 			.groupTuple()
-		// 			.map { sample_id, data ->
-		// 				def meta = data[0].clone()
-		// 				meta.merged = true
-		// 				return tuple(meta, data[1])
-		// 			}
-		// 	)
-
-		// merged_single_ch.view()
-		// merged_single_ch = single_ch
-		// 	.map { sample, fastq ->
-		// 		return tuple(
-		// 			sample.id.replaceAll(/.(orphans|singles|chimeras)$/, ".singles"),
-		// 			sample.library,
-		// 			fastq
-		// 		)
-		// 	}
-		// 	.groupTuple(sort: true)
-		// 	.map { sample_id, library, files ->
-		// 		def meta = [:]
-		// 		meta.id = sample_id
-		// 		meta.is_paired = false
-		// 		meta.library = library
-		// 		meta.merged = true
-		// 		return tuple(meta, files)
-		// 	}
 
 		/*	then merge single-read file groups into single files */
 

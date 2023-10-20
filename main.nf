@@ -6,6 +6,8 @@ include { nevermore_main } from "./nevermore/workflows/nevermore"
 include { gffquant_flow } from "./nevermore/workflows/gffquant"
 include { fastq_input } from "./nevermore/workflows/input"
 
+include { rnaspades } from "./imp/modules/assemblers/rnaspades"
+
 // if (params.input_dir && params.remote_input_dir) {
 // 	log.info """
 // 		Cannot process both --input_dir and --remote_input_dir. Please check input parameters.
@@ -32,11 +34,9 @@ workflow metaT_input {
 	emit:
 		reads = fastq_input.out.fastqs
 			.map {
-				sample, files ->
-					new_sample = sample.clone()
-					new_sample.library_type = "metaT"
-					// new_sample.id = new_sample.id + ".MT"
-				return tuple(new_sample, files)
+				sample, files ->					
+					sample.library_type = "metaT"					
+				return tuple(sample, files)
 			}
 }
 
@@ -44,15 +44,13 @@ workflow metaG_input {
 	take:
 		fastq_ch
 	main:
-		fastq_input(fastq_ch, Channel.of(null))
+		fastq_input(fastq_ch, Channel.of("MG"))
 	emit:
 		reads = fastq_input.out.fastqs
 			.map {
 				sample, files ->
-					new_sample = sample.clone()
-					new_sample.library_type = "metaG"
-					// new_sample.id = new_sample.id + ".MG"
-				return tuple(new_sample, files)
+					sample.library_type = "metaG"
+				return tuple(sample, files)
 			}
 			
 }
@@ -73,7 +71,7 @@ workflow {
 
 	nevermore_main(metaT_ch.concat(metaG_ch))
 
-	// nevermore_main.out.fastqs.view()
+	nevermore_main.out.fastqs.view()
 	
 
 	// // this is for later
