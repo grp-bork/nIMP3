@@ -73,7 +73,7 @@ workflow {
 
 	nevermore_main(metaT_ch.concat(metaG_ch))
 
-	nevermore_main.out.fastqs.view()
+	// nevermore_main.out.fastqs.view()
 	
 
 	// // this is for later
