@@ -54,6 +54,8 @@ workflow nevermore_prep_align {
 			}
 		.set { single_reads_ch }
 
+		single_reads_ch.paired_end.view()
+
 		merged_single_ch = single_reads_ch.single_end
 			.map { sample, fastq  ->
 				return tuple(sample.id, [sample, fastq])
