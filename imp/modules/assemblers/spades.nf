@@ -1,12 +1,13 @@
 params.stranded = null
-params.kmer_steps = "25,29,33,37,41,45,49,53,57,61,65,69,73,77,81,85,89,93,97"
+// params.kmer_steps = "25,29,33,37,41,45,49,53,57,61,65,69,73,77,81,85,89,93,97"
+params.kmer_steps = "25 29 33 37 41 45 49 53 57 61 65 69 73 77 81 85 89 93 97"
 
 
 process rnaspades {
 	label "spades"
 
 	input:
-	tuple val(sample), path(fastqs)
+	tuple val(sample)  path(fastqs)
 	val(stage)
 
 	output:
@@ -34,9 +35,9 @@ process rnaspades {
 		input_files += " --pe1-s ${orphans.join(' ')}"
 	}
 
-
+	//rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 	"""
-	rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
+	spades.py --meta --rna -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 	"""
 }
 
