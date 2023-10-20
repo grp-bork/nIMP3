@@ -22,7 +22,7 @@ def input_dir = (params.input_dir) ? params.input_dir : params.remote_input_dir
 
 // params.ignore_dirs = ""
 params.remote_input_dir = false
-params.has_assay_suffix = true
+// params.has_assay_suffix = true
 
 workflow metaT_input {
 	take:
