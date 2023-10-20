@@ -58,7 +58,8 @@ workflow nevermore_prep_align {
 			.map { sample, fastq  ->
 				return tuple(sample.id, [sample, fastq])
 			}
-			.groupTuple(sort: true)
+			// .groupTuple(sort: true)
+			.groupTuple()
 			.map { sample_id, data ->
 				def meta = data[0].clone()
 				meta.merged = true
@@ -69,7 +70,8 @@ workflow nevermore_prep_align {
 					.map { sample, fastq  ->
 						return tuple(sample.id, [sample, fastq])
 					}
-					.groupTuple(sort: true)
+					// .groupTuple(sort: true)
+					.groupTuple()
 					.map { sample_id, data ->
 						def meta = data[0].clone()
 						meta.merged = true
