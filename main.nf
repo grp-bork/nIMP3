@@ -33,7 +33,7 @@ workflow metaT_input {
 			.map {
 				sample, files ->
 					sample.library_type = "metaT"
-				return tuple(sample.id, sample, files)
+				return tuple(sample.id[0], sample, files)
 			}
 }
 
@@ -47,7 +47,7 @@ workflow metaG_input {
 			.map {
 				sample, files ->
 					sample.library_type = "metaG"
-				return tuple(sample.id, sample, files)
+				return tuple(sample.id[0], sample, files)
 			}
 			
 }
