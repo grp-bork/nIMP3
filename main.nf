@@ -95,6 +95,13 @@ workflow {
 	metaT_preprocessed_ch.view()
 
 	// [
+	// 	[sample_id:sample1.MT, library:paired, library_type:metaT],
+	// 	[/scratch/schudoma/imp3_test/work/fe/9d2f24508e4c6dc8bfba488ae5585e/no_host/sample1.MT/sample1.MT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/fe/9d2f24508e4c6dc8bfba488ae5585e/no_host/sample1.MT/sample1.MT_R2.fastq.gz, /scratch/schudoma/imp3_test/work/bc/8c33cc37b6b62f57dea67ba440ae08/merged/sample1.MT.singles_R1.fastq.gz]
+	// ]
+
+	rnaspades(metaT_preprocessed_ch, "initial")
+
+	// [
 	// 	[sample_id:sample1.MT, library:paired, library_type:metaT], 
 	// 	[
 	// 		[/scratch/schudoma/imp3_test/work/fe/9d2f24508e4c6dc8bfba488ae5585e/no_host/sample1.MT/sample1.MT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/fe/9d2f24508e4c6dc8bfba488ae5585e/no_host/sample1.MT/sample1.MT_R2.fastq.gz], [/scratch/schudoma/imp3_test/work/bc/8c33cc37b6b62f57dea67ba440ae08/merged/sample1.MT.singles_R1.fastq.gz]]]
