@@ -60,6 +60,7 @@ workflow nevermore_prep_align {
 					}
 					// .groupTuple(sort: true)
 					.groupTuple()
+					.map { sample_id, data -> return data }
 					.view()
 
 		single_reads_ch.single_end
