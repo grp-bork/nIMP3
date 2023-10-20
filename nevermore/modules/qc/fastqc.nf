@@ -10,7 +10,7 @@ process fastqc {
 
     script:
     def compression = (reads[0].name.endsWith(".gz")) ? "gz" : "bz2"
-    def sample_id = params.has_assay_suffix ? sample.id.replaceAll(/\.M[GT]/, "") : sample.id
+    def sample_id = (params.has_assay_suffix == true) ? sample.id.replaceAll(/\.M[GT]/, "") : sample.id
         
     def fastqc_cmd = "fastqc -t ${task.cpus} --extract --outdir=fastqc"
     def process_r2 = (sample.is_paired) ? "${fastqc_cmd} ${sample_id}_R2.fastq.${compression} && mv fastqc/${sample_id}_R2_fastqc/fastqc_data.txt fastqc/${sample_id}_R2_fastqc/${sample_id}_R2_fastqc_data.txt" : ""
