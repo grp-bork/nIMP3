@@ -38,7 +38,7 @@ process rnaspades {
 	"""
 	spades.py --rna -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 
-	ln -sf assemblies/rnaspades/${stage}/${sample.id}/transcripts.fasta assemblies/rnaspades/${stage}/${sample.id}/${sample.id}.transcripts.fasta 
+	ln -sf transcripts.fasta assemblies/rnaspades/${stage}/${sample.id}/${sample.id}.transcripts.fasta 
 	"""
 	// rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 }
