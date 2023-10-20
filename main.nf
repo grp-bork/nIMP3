@@ -34,8 +34,8 @@ workflow metaT_input {
 				sample, files ->
 					new_sample = sample.clone()
 					new_sample.library_type = "metaT"
-					new_sample.id = new_sample.id + "x"
-				return tuple(sample.id, [new_sample, files])
+					new_sample.id = new_sample.id + ".MT"
+				return tuple(new_sample.id, [new_sample, files])
 			}
 }
 
@@ -48,8 +48,10 @@ workflow metaG_input {
 		reads = fastq_input.out.fastqs
 			.map {
 				sample, files ->
-					sample.library_type = "metaG"
-				return tuple(sample.id, [sample, files])
+					new_sample = sample.clone()
+					new_sample.library_type = "metaG"
+					new_sample.id = new_sample.id + ".MG"
+				return tuple(new_sample.id, [new_sample, files])
 			}
 			
 }
@@ -65,15 +67,16 @@ workflow {
 		Channel.fromPath(params.metaG_input_dir + "/*", type: "dir")
 	)
 
-	metaT_ch = metaT_input.out.reads
-		// .map { sample, files -> return tuple(sample.id, sample, files) }
+	metaT_ch = metaT_input.out.reads		
+	metaG_ch = metaG_input.out.reads		
 
-	metaG_ch = metaG_input.out.reads
-		// .map { sample, files -> return tuple(sample.id, sample, files) }
+	nevermore_main(metaT_ch.concat(metaG_ch))
 
-	joined = metaT_ch.concat(metaG_ch).groupTuple(by:0, size: 2, remainder: true)
-	joined.view()
+	nevermore_main.out.fastqs.view()
 	
 
+	// // this is for later
+	// joined = metaT_ch.concat(metaG_ch).groupTuple(by:0, size: 2, remainder: true)
+	// joined.view()
 
 }
