@@ -6,7 +6,7 @@ include { nevermore_main } from "./nevermore/workflows/nevermore"
 include { gffquant_flow } from "./nevermore/workflows/gffquant"
 include { fastq_input } from "./nevermore/workflows/input"
 
-include { rnaspades } from "./imp/modules/assemblers/rnaspades"
+include { rnaspades } from "./imp/modules/assemblers/spades"
 
 // if (params.input_dir && params.remote_input_dir) {
 // 	log.info """
