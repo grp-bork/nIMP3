@@ -30,6 +30,11 @@ workflow metaT_input {
 		fastq_input(fastq_ch)
 	emit:
 		reads = fastq_input.out.fastqs
+			.map {
+				sample, files ->
+					sample.library_type = "metaT"
+				return tuple(sample, files)
+			}
 }
 
 workflow metaG_input {
@@ -39,6 +44,12 @@ workflow metaG_input {
 		fastq_input(fastq_ch)
 	emit:
 		reads = fastq_input.out.fastqs
+			.map {
+				sample, files ->
+					sample.library_type = "metaG"
+				return tuple(sample, files)
+			}
+			
 }
 
 
@@ -51,7 +62,6 @@ workflow {
 	metaG_input(
 		Channel.fromPath(params.metaG_input_dir + "/*", type: "dir")
 	)
-
 
 	metaT_input.out.reads.view()
 
