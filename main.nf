@@ -27,7 +27,7 @@ workflow metaT_input {
 	take:
 		fastq_ch
 	main:
-		fastq_input(fastq_ch, params.remote_input)
+		fastq_input(fastq_ch)
 	emit:
 		reads = fastq_input.out.fastqs
 }
@@ -36,7 +36,7 @@ workflow metaG_input {
 	take:
 		fastq_ch
 	main:
-		fastq_input(fastq_ch, params.remote_input)
+		fastq_input(fastq_ch)
 	emit:
 		reads = fastq_input.out.fastqs
 }
