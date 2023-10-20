@@ -71,7 +71,7 @@ workflow {
 
 	nevermore_main(metaT_ch.concat(metaG_ch))
 
-	nevermore_main.out.fastqs.view()
+	// nevermore_main.out.fastqs.view()
 	
 	// [[id:sample1.MG, is_paired:true, library:paired, library_type:metaG, merged:true], [/scratch/schudoma/imp3_test/work/b3/ce455386c39117375509edef448095/no_host/sample1.MG/sample1.MG_R1.fastq.gz, /scratch/schudoma/imp3_test/work/b3/ce455386c39117375509edef448095/no_host/sample1.MG/sample1.MG_R2.fastq.gz]]
 	// [[id:sample1.MT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/fe/9d2f24508e4c6dc8bfba488ae5585e/no_host/sample1.MT/sample1.MT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/fe/9d2f24508e4c6dc8bfba488ae5585e/no_host/sample1.MT/sample1.MT_R2.fastq.gz]]
