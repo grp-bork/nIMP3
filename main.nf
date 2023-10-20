@@ -35,7 +35,7 @@ workflow metaT_input {
 					new_sample = sample.clone()
 					new_sample.library_type = "metaT"
 					new_sample.id = new_sample.id + ".MT"
-				return tuple(new_sample.id, [new_sample, files])
+				return tuple(new_sample, files)
 			}
 }
 
@@ -51,7 +51,7 @@ workflow metaG_input {
 					new_sample = sample.clone()
 					new_sample.library_type = "metaG"
 					new_sample.id = new_sample.id + ".MG"
-				return tuple(new_sample.id, [new_sample, files])
+				return tuple(new_sample, files)
 			}
 			
 }
