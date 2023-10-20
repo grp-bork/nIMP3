@@ -23,10 +23,6 @@ workflow nevermore_main {
 	main:
 		if (do_preprocessing) {
 	
-			//prepare_fastqs(fastq_ch)
-	
-			//raw_fastq_ch = prepare_fastqs.out.reads
-	
 			nevermore_simple_preprocessing(fastq_ch)
 	
 			preprocessed_ch = nevermore_simple_preprocessing.out.main_reads_out
@@ -42,10 +38,9 @@ workflow nevermore_main {
 				if (!params.drop_chimeras) {
 					chimera_ch = remove_host_kraken2_individual.out.chimera_orphans
 						.map { sample, file ->
-							def meta = [:]
+							def meta = sample.clone()
 							meta.id = sample.id + ".chimeras"
 							meta.is_paired = false
-							meta.library = sample.library
 							return tuple(meta, file)
 						}
 					preprocessed_ch = preprocessed_ch.concat(chimera_ch)

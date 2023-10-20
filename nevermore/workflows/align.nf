@@ -22,10 +22,9 @@ workflow nevermore_prep_align {
 		single_ch = fastq_ch
 			.filter { it[0].is_paired == false }
 			.map { sample, fastq ->
-				def meta = [:]
+				def meta = sample.clone()
 				meta.id = fastq.name.replaceAll(/_R1.fastq.gz$/, "")
 				meta.is_paired = false
-				meta.library = sample.library
 				meta.merged = false
 				return tuple(meta, fastq)
 			}
@@ -35,10 +34,8 @@ workflow nevermore_prep_align {
 		paired_ch = fastq_ch
 			.filter { it[0].is_paired == true }
 			.map { sample, fastq ->
-				def meta = [:]
-				meta.id = sample.id
+				def meta = sample.clone()
 				meta.is_paired = true
-				meta.library = sample.library
 				meta.merged = true
 				return tuple(meta, fastq)
 			}
@@ -59,30 +56,24 @@ workflow nevermore_prep_align {
 
 		merged_single_ch = single_reads_ch.single_end
 			.map { sample, fastq  ->
-				return tuple(sample.id, fastq)
+				return tuple(sample.id, [sample, fastq])
 			}
 			.groupTuple(sort: true)
-			.map { sample_id, files ->
-				def meta = [:]
-				meta.id = sample_id
-				meta.is_paired = false
-				meta.library = "single"
+			.map { sample_id, data ->
+				def meta = data[0].clone()
 				meta.merged = true
-				return tuple(meta, files)
+				return tuple(meta, data[1])
 			}
 			.concat(
 				single_reads_ch.paired_end
 					.map { sample, fastq  ->
-						return tuple(sample.id, fastq)
+						return tuple(sample.id, [sample, fastq])
 					}
 					.groupTuple(sort: true)
-					.map { sample_id, files ->
-						def meta = [:]
-						meta.id = sample_id
-						meta.is_paired = false
-						meta.library = "paired"
+					.map { sample_id, data ->
+						def meta = data[0].clone()
 						meta.merged = true
-						return tuple(meta, files)
+						return tuple(meta, data[1])
 					}
 			)
 
@@ -119,10 +110,8 @@ workflow nevermore_prep_align {
 		fastqc_in_ch = single_ch
 			.filter { ! it[0].id.endsWith(".singles") }
 			.map { sample, fastq ->
-				def meta = [:]
-				meta.id = fastq.name.replaceAll(/_R1.fastq.gz$/, "")
-				meta.is_paired = false
-				meta.library = sample.library
+				def meta = sample.clone()
+				meta.id = fastq.name.replaceAll(/_R1.fastq.gz$/, "")				
 				meta.merged = false
 				return tuple(meta, fastq)
 			}

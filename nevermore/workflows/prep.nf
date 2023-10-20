@@ -62,10 +62,9 @@ workflow nevermore_simple_preprocessing {
 			processed_reads_ch = processed_reads_ch.concat(qc_bbduk.out.reads)
 			orphans_ch = qc_bbduk.out.orphans
 				.map { sample, file -> 
-					def meta = [:]
+					def meta = sample.clone()
 					meta.id = sample.id + ".orphans"
 					meta.is_paired = false
-					meta.library = sample.library
 					return tuple(meta, file)
 				}
 
