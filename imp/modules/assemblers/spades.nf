@@ -36,7 +36,7 @@ process rnaspades {
 
 
 	"""
-	rnaspades.py --meta -t {task.cpus} -m {mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
+	rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 	"""
 }
 
