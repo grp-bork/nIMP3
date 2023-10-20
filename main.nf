@@ -32,7 +32,7 @@ workflow metaT_input {
 		reads = fastq_input.out.fastqs
 			.map {
 				sample, files ->
-					new_sample = sample
+					new_sample = sample.clone()
 					new_sample.library_type = "metaT"
 					new_sample.id = new_sample.id + "x"
 				return tuple(sample.id, [new_sample, files])
