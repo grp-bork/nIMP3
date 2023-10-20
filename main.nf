@@ -63,9 +63,12 @@ workflow {
 		Channel.fromPath(params.metaG_input_dir + "/*", type: "dir")
 	)
 
-	metaT_input.out.reads.view()
+	metaT_ch = metaT_input.out.reads
 
-	metaG_input.out.reads.view()
+	metaG_ch = metaG_input.out.reads
+
+	joined = metaT_ch.concat(metaG_ch).groupTuple(size: 2, remainder: true)
+	joined.view()
 	
 
 
