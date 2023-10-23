@@ -11,7 +11,7 @@ workflow metaT_initial_assembly {
 		fastq_ch
 	main:
 		assembly_prep(fastq_ch)
-		initial_assembly_ch = asssembly_prep.out.reads
+		initial_assembly_ch = assembly_prep.out.reads
 		// initial_assembly_ch = fastq_ch
 		// 	.map { sample, fastqs -> 
 		// 		meta = [:]
