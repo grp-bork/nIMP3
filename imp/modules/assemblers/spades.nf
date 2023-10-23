@@ -43,8 +43,8 @@ process spades {
 	"""
 	spades.py ${spades_mode} -t ${task.cpus} -m ${mem_gb} -o assemblies/spades/${stage}/${sample.library_type}/${sample.id} ${stranded} ${kmers} ${input_files}
 
+	ln -sf assemblies/spades/${stage}/${sample.library_type}/${sample.id}/transcripts.fasta assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.transcripts.fasta 
 	"""
-	// ln -sf transcripts.fasta assemblies/spades/${stage}/${sample.id}/${sample.id}.transcripts.fasta 
 	// rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 }
 
