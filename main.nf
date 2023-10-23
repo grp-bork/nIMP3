@@ -108,9 +108,9 @@ workflow {
 		.filter { it[0].library_type == "metaT" }
 		.map { sample, fastqs -> 
 			sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
-			return tuple(sample_base_id, sample.library_type, sample, fastqs)
+			return tuple(sample_base_id, sample.library_type, sample, [fastqs].flatten())
 		}
-		.join(bwa_index.out.index, by: [0, 1])
+		.join(bwa_index.out.index, by: [0, 1], remainder: true)
 	
 	
 	metaT_post_assembly_check_ch.view()
