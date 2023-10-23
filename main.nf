@@ -106,10 +106,33 @@ workflow metaT_initial_assembly {
 				return tuple(meta, fastqs.flatten())
 			}
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
+			.map { sample, fastqs ->
+				sample.library = sample.library[0]
+				sample.library_type = sample.library_type[0]
+				return tuple(sample, fastqs.flatten())
+			}
 
 		emit:
 			unmapped_reads = unmapped_ch
 			contigs = spades.out.contigs
+}
+
+process concatenate_contigs {
+	input:
+		tuple val(sample), path(icontigs), path(ucontigs)
+		val(stage)
+		val(assembler)
+		
+	output:
+		tuple val(sample), path("assemblies/${assembler}/${stage}/${sample.library_type}/${sample.id}/${sample.id}*"), emit: contigs
+	
+	script:
+		"""
+		mkdir -p assemblies/${assembler}/${stage}/${sample.library_type}/${sample.id}/
+
+		cat <(awk -f rename_contigs.awk -v preprocessing ${icontigs}) <(awk -f rename_contigs.awk -v unmapped ${ucontigs}) > assemblies/${assembler}/${stage}/${sample.library_type}/${sample.id}/${sample.id}.final_contigs.fasta
+		"""
+
 }
 
 workflow metaT_assembly {
@@ -121,9 +144,17 @@ workflow metaT_assembly {
 		metaT_initial_assembly.out.contigs.view()
 		spades(metaT_initial_assembly.out.unmapped_reads, "unmapped")
 
+		contigs_ch = metaT_initial_assembly.out.contigs
+			.concat(spades.out.contigs)
+			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
+		concatenate_contigs(contigs_ch, "final")
+
+
+
 	emit:
 		initial_contigs = metaT_initial_assembly.out.contigs
 		unmapped_contigs = spades.out.contigs
+		final_contigs = concatenate_contigs.out.contigs
 
 }
 
