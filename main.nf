@@ -89,7 +89,7 @@ workflow metaT_initial_assembly {
 				return tuple(sample, fastqs, index) 
 			}
 
-		extract_unmapped(metaT_post_assembly_check_ch, "initial")
+		extract_unmapped(post_assembly_check_ch, "initial")
 
 		unmapped_ch = extract_unmapped.out.fastqs
 			.map { sample, fastqs ->
