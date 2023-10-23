@@ -148,7 +148,7 @@ workflow metaT_assembly {
 			.concat(spades.out.contigs)
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
 		contigs_ch.view()
-		concatenate_contigs(contigs_ch, "final")
+		concatenate_contigs(contigs_ch, "final", "spades")
 
 
 
