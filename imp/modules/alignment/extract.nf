@@ -33,7 +33,7 @@ process extract_unmapped {
 
 	"""
 	mkdir -p unmapped/${stage}/${sample.library_type}/${sample.id}/
-	bwa mem -v 1 -t ${task.cpus} ${sample.id} ${reads1} ${reads2} 2>> error.log | \
+	bwa mem -v 1 -t ${task.cpus} ${sample.index_id} ${reads1} ${reads2} 2>> error.log | \
 	samtools view --threads {task.cpus} -bS - > alignment.bam 2>> error.log
 
 	${filter_cmd}

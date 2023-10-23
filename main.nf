@@ -136,7 +136,9 @@ workflow {
 
 	// metaT_post_assembly_check_ch = metaT_post_assembly_check_ch	
 		.combine(bwa_index.out.index, by: [0, 1])
-		.map { sample_id, libtype, sample, fastqs, index -> return tuple(sample, fastqs, index) }
+		.map { sample_id, libtype, sample, fastqs, index 
+			sample.index_id = sample_id
+			-> return tuple(sample, fastqs, index) }
 	
 	// bwa_index.out.index.view()
 	metaT_post_assembly_check_ch.view()
