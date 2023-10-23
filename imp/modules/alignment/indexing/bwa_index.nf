@@ -5,12 +5,12 @@ process bwa_index {
 	val(stage)
 
 	output:
-	tuple val(sample), path("index/${stage}/${sample.id}/${sample.id}*"), emit: index
+	tuple val(sample.id), val(sample.library_type), path("index/${stage}/${sample.library_type}/${sample.id}/${sample.id}*"), emit: index
 
 	script:
 	"""
-	mkdir -p index/${stage}/${sample.id}/
-	bwa index -p index/${stage}/${sample.id}/${sample.id} ${fasta}
+	mkdir -p index/${stage}/${sample.library_type}/${sample.id}/
+	bwa index -p index/${stage}/${sample.library_type}/${sample.id}/${sample.id} ${fasta}
 	"""
 
 

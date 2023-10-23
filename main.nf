@@ -8,6 +8,7 @@ include { fastq_input } from "./nevermore/workflows/input"
 
 include { rnaspades } from "./imp/modules/assemblers/spades"
 include { bwa_index } from "./imp/modules/alignment/indexing/bwa_index"
+include { extract_unmapped } from "./imp/modules/alignment/extract"
 
 // if (params.input_dir && params.remote_input_dir) {
 // 	log.info """
@@ -31,7 +32,7 @@ workflow metaT_input {
 	take:
 		fastq_ch
 	main:
-		fastq_input(fastq_ch, Channel.of("MT"))
+		fastq_input(fastq_ch, Channel.of("metaT"))
 	emit:
 		reads = fastq_input.out.fastqs
 			.map {
@@ -45,7 +46,7 @@ workflow metaG_input {
 	take:
 		fastq_ch
 	main:
-		fastq_input(fastq_ch, Channel.of("MG"))
+		fastq_input(fastq_ch, Channel.of("metaG"))
 	emit:
 		reads = fastq_input.out.fastqs
 			.map {
@@ -102,6 +103,19 @@ workflow {
 
 	rnaspades(metaT_preprocessed_ch, "initial")
 	bwa_index(rnaspades.out.contigs, "initial")
+
+	metaT_post_assembly_check_ch = nevermore_main.out.fastqs
+		.filter { it[0].library_type == "metaT" }
+		.map { sample, fastqs -> 
+			sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
+			return tuple(sample_base_id, sample.library_type, sample, fastqs)
+		}
+		.join(bwa_index.out.index, by: [0, 1])
+	
+	
+	metaT_post_assembly_check_ch.view()
+
+
 
 	// [
 	// 	[sample_id:sample1.MT, library:paired, library_type:metaT], 
