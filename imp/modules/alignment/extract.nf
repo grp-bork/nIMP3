@@ -1,10 +1,12 @@
 process extract_unmapped {
+	label "align"
 
 	input:
 	tuple val(sample), path(fastqs), path(index)
+	val(stage)
 
 	output:
-	tuple val(sample), path("unmapped/${stage}/${sample.library_type}/${sample.id}/*.fastq.gz")
+	tuple val(sample), path("unmapped/${stage}/${sample.library_type}/${sample.id}/*.fastq.gz"), emit: fastqs
 
 	script:
 	def reads1 = "${sample.id}_R1.fastq.gz"
