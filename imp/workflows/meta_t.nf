@@ -1,3 +1,6 @@
+include { spades } from "../modules/assemblers/spades"
+include { bwa_index } from "../modules/alignment/indexing/bwa_index"
+include { extract_unmapped } from "../modules/alignment/extract"
 include { concatenate_contigs } from "../modules/assemblers/functions"
 
 
