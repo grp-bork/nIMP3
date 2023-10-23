@@ -119,7 +119,7 @@ workflow metaT_assembly {
 		metaT_initial_assembly(fastq_ch)
 		metaT_initial_assembly.out.unmapped_reads.view()
 		metaT_initial_assembly.out.contigs.view()
-		spades(metaT_initial_assembly.out.unmapped_ch, "unmapped")
+		spades(metaT_initial_assembly.out.unmapped_reads, "unmapped")
 
 	emit:
 		initial_contigs = metaT_initial_assembly.out.contigs
