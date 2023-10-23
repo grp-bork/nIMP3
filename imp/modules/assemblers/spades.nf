@@ -11,7 +11,7 @@ process spades {
 	val(stage)
 
 	output:
-	tuple val(sample), path("assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.${sample.library_type}.transcripts.fasta"), emit: contigs
+	tuple val(sample), path("assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.transcripts.fasta"), emit: contigs
 
 	script:
 
@@ -43,7 +43,7 @@ process spades {
 	"""
 	spades.py ${spades_mode} -t ${task.cpus} -m ${mem_gb} -o assemblies/spades/${stage}/${sample.library_type}/${sample.id} ${stranded} ${kmers} ${input_files}
 
-	ln -sf transcripts.fasta assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.${sample.library_type}.transcripts.fasta 
+	ln -sf transcripts.fasta assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
 	"""
 	// rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 }

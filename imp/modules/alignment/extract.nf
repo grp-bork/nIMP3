@@ -17,6 +17,8 @@ process extract_unmapped {
 	def outpath = "unmapped/${stage}/${sample.library_type}/${sample.id}"
 	def extract_cmd = "samtools fastq -0 ${outpath}/${sample.id}_R1.fastq.gz unmapped.bam"
 
+	def check_cmd = "if [[ -z \"\$(gzip -dc ${outpath}/${sample.id}_R1.fastq.gz | head -n 1)\" ]]; then rm -f ${outpath}/${sample.id}_R1.fastq.gz; fi"
+
 	if (sample.is_paired) {
 		reads = "${sample.id}_R2.fastq.gz"
 		filter_cmd = "${filter_cmd_base} -f4 -F 264 alignment.bam > self_unmapped.bam 2>> error.log\n"
@@ -27,6 +29,7 @@ process extract_unmapped {
 		filter_cmd += " | samtools collate -@ ${task.cpus} -o unmapped.bam - 2>> error.log"
 
 		extract_cmd = "samtools fastq -1 ${outpath}/${sample.id}_R1.fastq.gz -2 ${outpath}/${sample.id}_R2.fastq.gz unmapped.bam"
+		check_cmd = "if [[ -z \"\$(gzip -dc ${outpath}/${sample.id}_R1.fastq.gz | head -n 1)\" ]]; then rm -f ${outpath}/*.fastq.gz; fi"
 	}
 
 
@@ -38,6 +41,8 @@ process extract_unmapped {
 
 	${filter_cmd}
 	${extract_cmd}
+	${check_cmd}
+
 	"""
 
 
