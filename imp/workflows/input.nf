@@ -30,3 +30,23 @@ workflow metaG_input {
 			}
 			
 }
+
+
+workflow assembly_prep {
+	take:
+		fastq_ch
+	main:
+		initial_assembly_ch = fastq_ch
+			.map { sample, fastqs -> 
+				meta = [:]
+				meta.id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
+				meta.library = sample.library
+				meta.library_type = sample.library_type
+				
+				return tuple(meta, [fastqs].flatten())
+			}
+			.groupTuple(by: 0, size: 2, remainder: true)
+			.map { sample, fastqs -> return tuple(sample, fastqs.flatten())}
+	emit:
+		reads = initial_assembly_ch
+}

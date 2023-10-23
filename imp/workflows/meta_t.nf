@@ -3,29 +3,31 @@ include { bwa_index } from "../modules/alignment/indexing/bwa_index"
 include { extract_unmapped } from "../modules/alignment/extract"
 include { concatenate_contigs } from "../modules/assemblers/functions"
 
+include { asssembly_prep } from "../input"
+
 
 workflow metaT_initial_assembly {
 	take:
 		fastq_ch
 	main:
-		initial_assembly_ch = fastq_ch
-			.filter { it[0].library_type == "metaT" }
-			.map { sample, fastqs -> 
-				meta = [:]
-				meta.id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
-				meta.library = sample.library
-				meta.library_type = sample.library_type
+		assembly_prep(fastq_ch)
+		initial_assembly_ch = asssembly_prep.out.reads
+		// initial_assembly_ch = fastq_ch
+		// 	.map { sample, fastqs -> 
+		// 		meta = [:]
+		// 		meta.id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
+		// 		meta.library = sample.library
+		// 		meta.library_type = sample.library_type
 				
-				return tuple(meta, [fastqs].flatten())
-			}
-			.groupTuple(by: 0, size: 2, remainder: true)
-			.map { sample, fastqs -> return tuple(sample, fastqs.flatten())}
+		// 		return tuple(meta, [fastqs].flatten())
+		// 	}
+		// 	.groupTuple(by: 0, size: 2, remainder: true)
+		// 	.map { sample, fastqs -> return tuple(sample, fastqs.flatten())}
 
 		spades(initial_assembly_ch, "initial")
 		bwa_index(spades.out.contigs, "initial")
 
 		post_assembly_check_ch = fastq_ch
-			.filter { it[0].library_type == "metaT" }
 			.map { sample, fastqs -> 
 				sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
 				return tuple(sample_base_id, sample.library_type, sample, [fastqs].flatten())
@@ -61,6 +63,7 @@ workflow metaT_initial_assembly {
 		emit:
 			unmapped_reads = unmapped_ch
 			contigs = spades.out.contigs
+			reads = initial_assembly_ch
 }
 
 
@@ -81,5 +84,6 @@ workflow metaT_assembly {
 		initial_contigs = metaT_initial_assembly.out.contigs
 		unmapped_contigs = spades.out.contigs
 		final_contigs = concatenate_contigs.out.contigs
+		reads = metaT_initial_assembly.out.reads
 
 }
