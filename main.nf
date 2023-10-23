@@ -94,10 +94,18 @@ workflow metaT_initial_assembly {
 		unmapped_ch = extract_unmapped.out.fastqs
 			.map { sample, fastqs ->
 				sample.id = sample.index_id
-				return tuple(sample, fastqs)
+				return tuple(sample.id, sample, fastqs)
 			}
 			.groupTuple(by: 0, size: 2, remainder: true)
-			.map { sample, fastqs -> return tuple(sample, fastqs.flatten()) }
+			.map { sample_id, sample, fastqs -> 
+				meta = [:]
+				meta.id = sample_id
+				meta.library = sample.library
+				meta.library_type = sample.library_type
+				//  is_paired = (files instanceof Collection && files.size() == 2)
+				return tuple(meta, fastqs.flatten())
+			}
+			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
 
 		emit:
 			unmapped_reads = unmapped_ch
