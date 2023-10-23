@@ -7,6 +7,7 @@ include { gffquant_flow } from "./nevermore/workflows/gffquant"
 include { fastq_input } from "./nevermore/workflows/input"
 
 include { rnaspades } from "./imp/modules/assemblers/spades"
+include { bwa_index } from "./imp/modules/alignment/indexing/bwa_index"
 
 // if (params.input_dir && params.remote_input_dir) {
 // 	log.info """
