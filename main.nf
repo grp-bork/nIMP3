@@ -147,14 +147,15 @@ workflow metaT_assembly {
 		contigs_ch = metaT_initial_assembly.out.contigs
 			.concat(spades.out.contigs)
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
-		concatenate_contigs(contigs_ch, "final")
+		contigs_ch.view()
+		// concatenate_contigs(contigs_ch, "final")
 
 
 
 	emit:
 		initial_contigs = metaT_initial_assembly.out.contigs
 		unmapped_contigs = spades.out.contigs
-		final_contigs = concatenate_contigs.out.contigs
+		// final_contigs = concatenate_contigs.out.contigs
 
 }
 
