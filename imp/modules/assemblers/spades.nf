@@ -3,7 +3,7 @@ params.stranded = null
 params.kmer_steps = "25 29 33 37 41 45 49 53 57 61 65 69 73 77 81 85 89 93 97"
 
 
-process rnaspades {
+process spades {
 	label "spades"
 
 	input:
@@ -11,7 +11,7 @@ process rnaspades {
 	val(stage)
 
 	output:
-	tuple val(sample), path("assemblies/rnaspades/${stage}/${sample.id}/${sample.id}.transcripts.fasta"), emit: contigs
+	tuple val(sample), path("assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.transcripts.fasta"), emit: contigs
 
 	script:
 
@@ -35,11 +35,16 @@ process rnaspades {
 		input_files += " --pe1-s ${orphans.join(' ')}"
 	}
 
-	"""
-	spades.py --rna -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
+	def spades_mode = ""
+	if (sample.library_type == "metaT") {
+		spades_mode = "--rna"
+	}
 
-	ln -sf transcripts.fasta assemblies/rnaspades/${stage}/${sample.id}/${sample.id}.transcripts.fasta 
 	"""
+	spades.py ${spades_mode} -t ${task.cpus} -m ${mem_gb} -o assemblies/spades/${stage}/${sample.library_type}/${sample.id} ${stranded} ${kmers} ${input_files}
+
+	"""
+	// ln -sf transcripts.fasta assemblies/spades/${stage}/${sample.id}/${sample.id}.transcripts.fasta 
 	// rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 }
 

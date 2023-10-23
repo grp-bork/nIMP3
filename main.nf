@@ -6,7 +6,7 @@ include { nevermore_main } from "./nevermore/workflows/nevermore"
 include { gffquant_flow } from "./nevermore/workflows/gffquant"
 include { fastq_input } from "./nevermore/workflows/input"
 
-include { rnaspades } from "./imp/modules/assemblers/spades"
+include { spades } from "./imp/modules/assemblers/spades"
 include { bwa_index } from "./imp/modules/alignment/indexing/bwa_index"
 include { extract_unmapped } from "./imp/modules/alignment/extract"
 
@@ -74,8 +74,8 @@ workflow metaT_initial_assembly {
 			.groupTuple(by: 0, size: 2, remainder: true)
 			.map { sample, fastqs -> return tuple(sample, fastqs.flatten())}
 
-		rnaspades(initial_assembly_ch, "initial")
-		bwa_index(rnaspades.out.contigs, "initial")
+		spades(initial_assembly_ch, "initial")
+		bwa_index(spades.out.contigs, "initial")
 
 		post_assembly_check_ch = fastq_ch
 			.filter { it[0].library_type == "metaT" }
@@ -109,7 +109,7 @@ workflow metaT_initial_assembly {
 
 		emit:
 			unmapped_reads = unmapped_ch
-			contigs = rnaspades.out.contigs
+			contigs = spades.out.contigs
 }
 
 workflow metaT_assembly {
@@ -119,8 +119,11 @@ workflow metaT_assembly {
 		metaT_initial_assembly(fastq_ch)
 		metaT_initial_assembly.out.unmapped_reads.view()
 		metaT_initial_assembly.out.contigs.view()
+		spades(metaT_initial_assembly.out.unmapped_ch, "unmapped")
+
 	emit:
-		contigs = metaT_initial_assembly.out.contigs
+		initial_contigs = metaT_initial_assembly.out.contigs
+		unmapped_contigs = spades.out.contigs
 
 }
 
@@ -141,7 +144,8 @@ workflow {
 	nevermore_main(metaT_ch.concat(metaG_ch))
 
 	metaT_assembly(nevermore_main.out.fastqs)
-	metaT_assembly.out.contigs.view()
+	metaT_assembly.out.initial_contigs.view()
+	metaT_assembly.out.unmapped_contigs.view()
 
 	// nevermore_main.out.fastqs.view()
 	
