@@ -9,6 +9,7 @@ process bwa_index {
 
 	script:
 	"""
+	mkdir -p index/${stage}/${sample.id}/
 	bwa index -p index/${stage}/${sample.id}/${sample.id} ${fasta}
 	"""
 
