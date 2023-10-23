@@ -11,7 +11,7 @@ process rnaspades {
 	val(stage)
 
 	output:
-	tuple val(sample), path("assemblies/rnaspades/${stage}/${sample.id}/${sample.id}.transcripts.fasta")
+	tuple val(sample), path("assemblies/rnaspades/${stage}/${sample.id}/${sample.id}.transcripts.fasta"), emit: contigs
 
 	script:
 

@@ -100,6 +100,7 @@ workflow {
 	// ]
 
 	rnaspades(metaT_preprocessed_ch, "initial")
+	bwa_index(rnaspades.contigs, "initial")
 
 	// [
 	// 	[sample_id:sample1.MT, library:paired, library_type:metaT], 
