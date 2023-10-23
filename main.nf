@@ -132,9 +132,9 @@ workflow {
 			return tuple(sample_base_id, sample.library_type, sample, [fastqs].flatten())
 		}
 
-	metaT_post_assembly_check_ch.view()
+	// metaT_post_assembly_check_ch.view()
 
-	metaT_post_assembly_check_ch = metaT_post_assembly_check_ch	
+	// metaT_post_assembly_check_ch = metaT_post_assembly_check_ch	
 		.combine(bwa_index.out.index, by: [0, 1])
 		.map { sample_id, sample, fastqs, index -> return tuple(sample, fastqs, index) }
 	
