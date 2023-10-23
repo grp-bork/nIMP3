@@ -141,13 +141,14 @@ workflow metaT_assembly {
 	main:
 		metaT_initial_assembly(fastq_ch)
 		metaT_initial_assembly.out.unmapped_reads.view()
-		metaT_initial_assembly.out.contigs.view()
+		// metaT_initial_assembly.out.contigs.view()
+		// [[id:sample1.metaT, library:paired, library_type:metaT], [/scratch/schudoma/imp3_test/work/1b/b40c66dfeb6cd2d9756c42b268a016/assemblies/spades/initial/metaT/sample1.metaT/sample1.metaT.initial.transcripts.fasta]]
 		spades(metaT_initial_assembly.out.unmapped_reads, "unmapped")
 
 		contigs_ch = metaT_initial_assembly.out.contigs
 			.concat(spades.out.contigs)
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
-		contigs_ch.view()
+		// contigs_ch.view()
 		concatenate_contigs(contigs_ch, "final", "spades")
 
 
@@ -176,9 +177,9 @@ workflow {
 	nevermore_main(metaT_ch.concat(metaG_ch))
 
 	metaT_assembly(nevermore_main.out.fastqs)
-	metaT_assembly.out.initial_contigs.view()
+	// metaT_assembly.out.initial_contigs.view()
 	// [[id:sample1.metaT, library:paired, library_type:metaT], [/scratch/schudoma/imp3_test/work/36/d05bf4c452ef43f1a38804c99ec1be/unmapped/initial/metaT/sample1.metaT.singles/sample1.metaT.singles_R1.fastq.gz]]
-	metaT_assembly.out.unmapped_contigs.view()
+	// metaT_assembly.out.unmapped_contigs.view()
 
 	// nevermore_main.out.fastqs.view()
 	
