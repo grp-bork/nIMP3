@@ -119,7 +119,7 @@ workflow metaT_initial_assembly {
 
 process concatenate_contigs {
 	input:
-		tuple val(sample), path(icontigs), path(ucontigs)
+		tuple val(sample), path(contigs) //path(icontigs), path(ucontigs)
 		val(stage)
 		val(assembler)
 		
@@ -130,7 +130,7 @@ process concatenate_contigs {
 		"""
 		mkdir -p assemblies/${assembler}/${stage}/${sample.library_type}/${sample.id}/
 
-		cat <(awk -f rename_contigs.awk -v preprocessing ${icontigs}) <(awk -f rename_contigs.awk -v unmapped ${ucontigs}) > assemblies/${assembler}/${stage}/${sample.library_type}/${sample.id}/${sample.id}.final_contigs.fasta
+		cat <(awk -f rename_contigs.awk -v preprocessing ${contigs[0]}) <(awk -f rename_contigs.awk -v unmapped ${contigs[1]}) > assemblies/${assembler}/${stage}/${sample.library_type}/${sample.id}/${sample.id}.final_contigs.fasta
 		"""
 
 }
@@ -148,14 +148,14 @@ workflow metaT_assembly {
 			.concat(spades.out.contigs)
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
 		contigs_ch.view()
-		// concatenate_contigs(contigs_ch, "final")
+		concatenate_contigs(contigs_ch, "final")
 
 
 
 	emit:
 		initial_contigs = metaT_initial_assembly.out.contigs
 		unmapped_contigs = spades.out.contigs
-		// final_contigs = concatenate_contigs.out.contigs
+		final_contigs = concatenate_contigs.out.contigs
 
 }
 
@@ -177,6 +177,7 @@ workflow {
 
 	metaT_assembly(nevermore_main.out.fastqs)
 	metaT_assembly.out.initial_contigs.view()
+	// [[id:sample1.metaT, library:paired, library_type:metaT], [/scratch/schudoma/imp3_test/work/36/d05bf4c452ef43f1a38804c99ec1be/unmapped/initial/metaT/sample1.metaT.singles/sample1.metaT.singles_R1.fastq.gz]]
 	metaT_assembly.out.unmapped_contigs.view()
 
 	// nevermore_main.out.fastqs.view()
