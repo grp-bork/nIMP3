@@ -105,6 +105,23 @@ workflow {
 // [sample1.metaT, metaT, [id:sample1.metaT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/5a/d315af98dd81607d915fd6ced7e74a/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/5a/d315af98dd81607d915fd6ced7e74a/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz], [/scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.amb, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.ann, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.bwt, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.pac, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.sa]]
 // [sample1.metaT, metaT, [id:sample1.metaT.singles, is_paired:false, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/b5/f5162a9919436a454a91a11ee65dd7/merged/sample1.metaT.singles_R1.fastq.gz], null]
 
+
+// [sample1.metaT, metaT, [id:sample1.metaT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/5a/d315af98dd81607d915fd6ced7e74a/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/5a/d315af98dd81607d915fd6ced7e74a/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz]]
+// [sample1.metaT, metaT, [id:sample1.metaT.singles, is_paired:false, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/b5/f5162a9919436a454a91a11ee65dd7/merged/sample1.metaT.singles_R1.fastq.gz]]
+
+
+// [sample1.metaT, metaT, [/scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.amb, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.ann, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.bwt, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.pac, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.sa]]
+// [sample1.metaT, metaT, [id:sample1.metaT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/5a/d315af98dd81607d915fd6ced7e74a/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/5a/d315af98dd81607d915fd6ced7e74a/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz], [/scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.amb, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.ann, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.bwt, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.pac, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.sa]]
+
+// [sample1.metaT, metaT, [id:sample1.metaT.singles, is_paired:false, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/b5/f5162a9919436a454a91a11ee65dd7/merged/sample1.metaT.singles_R1.fastq.gz]]
+// [sample1.metaT, metaT, [/scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.amb, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.ann, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.bwt, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.pac, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.sa]]
+// [sample1.metaT, metaT, [id:sample1.metaT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/5a/d315af98dd81607d915fd6ced7e74a/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/5a/d315af98dd81607d915fd6ced7e74a/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz], [/scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.amb, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.ann, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.bwt, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.pac, /scratch/schudoma/imp3_test/work/9e/7aeb0b74556a625e5831d7f7ab44ee/index/initial/metaT/sample1.metaT/sample1.metaT.sa]]
+// [sample1.metaT, metaT, [id:sample1.metaT.singles, is_paired:false, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/b5/f5162a9919436a454a91a11ee65dd7/merged/sample1.metaT.singles_R1.fastq.gz], null]
+
+
+
+
+
 	rnaspades(metaT_preprocessed_ch, "initial")
 	bwa_index(rnaspades.out.contigs, "initial")
 
@@ -118,7 +135,7 @@ workflow {
 	metaT_post_assembly_check_ch.view()
 
 	metaT_post_assembly_check_ch = metaT_post_assembly_check_ch	
-		.join(bwa_index.out.index, by: [0, 1], remainder: true)
+		.combine(bwa_index.out.index, by: [0, 1])
 	
 	bwa_index.out.index.view()
 	metaT_post_assembly_check_ch.view()
