@@ -73,7 +73,7 @@ workflow {
 			return tuple(meta, fastqs)
 			
 		}
-		.groupTuple(
+		.concat(
 			metaG_assembly_ch
 				.map { sample, fastqs ->
 					meta = [:]
@@ -82,18 +82,17 @@ workflow {
 					// sample.id = sample.id.replaceAll(/\.metaT/, "")
 					return tuple(meta, fastqs)
 
-				},
-			by: 0, remainder: true, size: 2
+				}			
 		)
-		.join(
+		.concat(
 			metaT_assembly.out.final_contigs
 				.map { sample, contigs ->
 					meta = [:]
 					meta.id = sample.id.replaceAll(/\.metaT/, "")
 					return tuple(meta, contigs)
-				},
-			by: 0, remainder: true, size: 3
+				},			
 		)
+		.groupTuple()
 
 	hybrid_assembly_input_ch.view()
 
