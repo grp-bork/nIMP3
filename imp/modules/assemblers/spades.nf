@@ -85,11 +85,12 @@ process metaspades {
 
 	r1_mt_files = r1_files.findAll( { it.name.matches("(.*).metaT_R1.fastq.gz" ) })
 	r2_mt_files = r2_files.findAll( { it.name.matches("(.*).metaT_R2.fastq.gz" ) })
-	orphan_mt_files = orphan_files.findAll( { it.name.matches("(.*)singles(.*).metaT(.*)")})
+	orphan_mt_files = orphan_files.findAll( { it.name.matches("(.*).metaT.singles(.*)")})
 
 	r1_mg_files = r1_files.findAll( { it.name.matches("(.*).metaG_R1.fastq.gz" ) })
 	r2_mg_files = r2_files.findAll( { it.name.matches("(.*).metaG_R2.fastq.gz" ) })
-	orphan_mg_files = orphan_files.findAll( { it.name.matches("(.*)singles(.*).metaG(.*)")})
+	orphan_mg_files = orphan_files.findAll( { it.name.matches("(.*).metaG.singles(.*)(.*)")})
+
 
 	if (r1_mg_files.size() != 0) {
 		input_files += "--pe1-1 ${r1_mg_files.join(' ')}"
