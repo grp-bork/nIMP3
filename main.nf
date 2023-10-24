@@ -95,6 +95,7 @@ workflow {
 				},			
 		)
 		.groupTuple()
+		.map { sample, data -> return tuple(sample, data[0], data[1]) }
 
 	hybrid_assembly_input_ch.view()
 
