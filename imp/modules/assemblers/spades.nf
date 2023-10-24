@@ -45,48 +45,84 @@ process rnaspades {
 	// rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 }
 
+// spades.py --meta \
+//  --pe1-1 {input[0]} \
+//  --pe1-2 {input[1]} \
+//  --pe1-s {input[2]} \
+//  --pe2-1 {input[3]} \
+//  --pe2-2 {input[4]} \
+//  --pe2-s {input[5]} \
+//   {params.contigs} \
+//   -t {threads} \
+//   -m {BIGMEMTOTAL} \
+//   -k {KMER_STEPS} \
+//   {LONG_READ_ARG} \
+//   -o {output[0]} > {log} 2>&1
+// ln -fs  {output[1]} {output[2]}
+
+
 process metaspades {
 	label "spades"
 
 	input:
-	tuple val(sample), path(fastqs)
+	tuple val(sample), path(fastqs), path(contigs)
 	val(stage)
 
 	output:
-	tuple val(sample), path("assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.*.fasta"), emit: contigs
+	tuple val(sample), path("assemblies/metaspades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.*.fasta"), emit: contigs
 
 	script:
 
-	def stranded = (params.stranded) ? params.stranded : ""
 	def kmers = "-k ${params.kmer_steps}"
 	def mem_gb = task.memory.toGiga()
 
 	def input_files = ""
+	
 	// we cannot auto-detect SE vs. PE-orphan!
 	r1_files = fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") } )
 	r2_files = fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") } )
-	orphans = fastqs.findAll( { it.name.matches("(.*)singles(.*)") } )
+	orphan_files = fastqs.findAll( { it.name.matches("(.*)singles(.*)") } )
 
-	if (r1_files.size() != 0) {
-		input_files += "--pe1-1 ${r1_files.join(' ')}"
+	r1_mt_files = r1_files.findAll( { it.name.matches("(.*).metaT_R1.fastq.gz" ) })
+	r2_mt_files = r2_files.findAll( { it.name.matches("(.*).metaT_R2.fastq.gz" ) })
+	orphan_mt_files = orphan_files.findAll( { it.name.matches("(.*)singles(.*).metaT(.*)")})
+
+	r1_mg_files = r1_files.findAll( { it.name.matches("(.*).metaG_R1.fastq.gz" ) })
+	r2_mg_files = r2_files.findAll( { it.name.matches("(.*).metaG_R2.fastq.gz" ) })
+	orphan_mg_files = orphan_files.findAll( { it.name.matches("(.*)singles(.*).metaG(.*)")})
+
+	if (r1_mg_files.size() != 0) {
+		input_files += "--pe1-1 ${r1_mg_files.join(' ')}"
 	}
-	if (r2_files.size() != 0) {
-		input_files += " --pe1-2 ${r2_files.join(' ')}"
+	if (r2_mg_files.size() != 0) {
+		input_files += " --pe1-2 ${r2_mg_files.join(' ')}"
 	}
-	if (orphans.size() != 0) {
-		input_files += " --pe1-s ${orphans.join(' ')}"
+	if (orphan_mg_files.size() != 0) {
+		input_files += " --pe1-s ${orphan_mg_files.join(' ')}"
 	}
 
-	// --meta and --rna seem mutually exclusive?
+	if (r1_mt_files.size() != 0) {
+		input_files += " --pe2-1 ${r1_mt_files.join(' ')}"
+	}
+	if (r2_mt_files.size() != 0) {
+		input_files += " --pe2-2 ${r2_mt_files.join(' ')}"
+	}
+	if (orphan_mt_files.size() != 0) {
+		input_files += " --pe2-s ${orphan_mt_files.join(' ')}"
+	}
+
+	def contig_str = "--trusted-contigs ${contigs}"
 
 	"""
-	rnaspades.py -t ${task.cpus} -m ${mem_gb} -o assemblies/spades/${stage}/${sample.library_type}/${sample.id} ${stranded} ${kmers} ${input_files}
-	mv -v transcripts.fasta ${sample.id}.${stage}.transcripts.fasta 
+	spades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/metaspades/${stage}/${sample.library_type}/${sample.id} ${stranded} ${kmers} ${input_files} ${contig_str}
+	mv -v assemblies/metaspades/${stage}/${sample.library_type}/${sample.id}/contigs.fasta assemblies/metaspades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.contigs.fasta 
 	"""
 	// mv -v transcripts.fasta assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
 	// rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 }
 
+
+"""
 
 
 //  rule metaspades_hybrid_assembly_1:
