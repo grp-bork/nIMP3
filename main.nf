@@ -52,7 +52,9 @@ workflow {
 	)
 
 	metaT_assembly.out.reads.view()
+	// [[id:sample1.metaT, library:paired, library_type:metaT], [/scratch/schudoma/imp3_test/work/0a/c32c5be6621089f9c71d87fc2fd308/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/0a/c32c5be6621089f9c71d87fc2fd308/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz, /scratch/schudoma/imp3_test/work/f3/2d793cfd78eda426ffc94ce4f5712a/merged/sample1.metaT.singles_R1.fastq.gz]]
 	metaT_assembly.out.final_contigs.view()
+	// [[id:sample1.metaT, library:paired, library_type:metaT], /scratch/schudoma/imp3_test/work/29/885cb85b918cada4ee1e07111a2434/assemblies/rnaspades/final/metaT/sample1.metaT/sample1.metaT.final_contigs.fasta]
 
 	assembly_prep(
 		nevermore_main.out.fastqs
@@ -61,5 +63,33 @@ workflow {
 
 	metaG_assembly_ch = assembly_prep.out.reads
 	metaG_assembly_ch.view()
+
+	hybrid_assembly_input_ch = metaT_assembly.out.reads
+		.map { sample, fastqs ->
+			meta = [:]
+			meta.id = sample.id.replaceAll(/\.metaT/, "") 
+			return tuple(meta.id, meta, fastqs)
+		}
+		.join(
+			metaG_assembly_ch
+				.map { sample, fastqs ->
+					meta = [:]
+					metaid = sample.id.replaceAll(/\.metaG/, "")
+					return tuple(meta.id, meta, fastqs)
+				},
+			by: 0, remainder: true
+		)
+		.join(
+			metaT_assembly.out.final_contigs
+				.map { sample, contigs ->
+					meta = [:]
+					meta.id = sample.id.replaceAll(/\.metaT/, "")
+					return tuple(meta.id, meta, fastqs)
+				},
+			by: 0, remainder: true
+		)
+
+	hybrid_assembly_input_ch.view()
+
 }
 

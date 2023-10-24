@@ -69,7 +69,7 @@ process metaspades {
 	val(stage)
 
 	output:
-	tuple val(sample), path("assemblies/metaspades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.*.fasta"), emit: contigs
+	tuple val(sample), path("assemblies/metaspades/${stage}/${sample.id}/${sample.id}.${stage}.*.fasta"), emit: contigs
 
 	script:
 
@@ -114,8 +114,8 @@ process metaspades {
 	def contig_str = "--trusted-contigs ${contigs}"
 
 	"""
-	spades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/metaspades/${stage}/${sample.library_type}/${sample.id} ${stranded} ${kmers} ${input_files} ${contig_str}
-	mv -v assemblies/metaspades/${stage}/${sample.library_type}/${sample.id}/contigs.fasta assemblies/metaspades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.contigs.fasta 
+	spades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/metaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files} ${contig_str}
+	mv -v assemblies/metaspades/${stage}/${sample.id}/contigs.fasta assemblies/metaspades/${stage}/${sample.id}/${sample.id}.${stage}.contigs.fasta 
 	"""
 	// mv -v transcripts.fasta assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
 	// rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
