@@ -1,6 +1,6 @@
-#!/usr/bin/env awk -f
+#!/usr/bin/awk -f 
 
-BEGIN {
+BEGIN {	
 	ct = 1;
 } 
 /^>/ { 
