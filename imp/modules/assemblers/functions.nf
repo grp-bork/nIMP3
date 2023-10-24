@@ -11,7 +11,7 @@ process concatenate_contigs {
 		"""
 		mkdir -p assemblies/${assembler}/${stage}/${sample.library_type}/${sample.id}/
 
-		cat <(awk -f rename_contigs.awk -v preprocessing ${contigs[0]}) <(awk -f rename_contigs.awk -v unmapped ${contigs[1]}) > assemblies/${assembler}/${stage}/${sample.library_type}/${sample.id}/${sample.id}.final_contigs.fasta
+		cat <(awk -f rename_contigs.awk -v ctg_prefix=preprocessing ${contigs[0]}) <(awk -f rename_contigs.awk -v ctg_prefix=unmapped ${contigs[1]}) > assemblies/${assembler}/${stage}/${sample.library_type}/${sample.id}/${sample.id}.final_contigs.fasta
 		"""
 
 }
