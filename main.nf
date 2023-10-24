@@ -84,7 +84,7 @@ workflow {
 				.map { sample, contigs ->
 					meta = [:]
 					meta.id = sample.id.replaceAll(/\.metaT/, "")
-					return tuple(meta.id, meta, fastqs)
+					return tuple(meta.id, meta, contigs)
 				},
 			by: 0, remainder: true
 		)
