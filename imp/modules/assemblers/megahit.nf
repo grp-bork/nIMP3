@@ -35,6 +35,7 @@ process metaT_megahit {
 	def outdir = "assemblies/metaT_megahit/${stage}/${sample.library_type}/${sample.id}"
 	
 	"""
+	mkdir -p ${outdir}/
 	megahit -t ${task.cpus} --cpu-only -m ${task.memory} ${input_files} ${kmer_params} --bubble-level 0 --mem-flag 1
 	mv -v megahit_out/final.contigs.fa ${outdir}/${sample.id}.${stage}.transcripts.fasta
 	"""
