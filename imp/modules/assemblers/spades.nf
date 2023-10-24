@@ -3,7 +3,49 @@ params.stranded = null
 params.kmer_steps = "25 29 33 37 41 45 49 53 57 61 65 69 73 77 81 85 89 93 97"
 
 
-process spades {
+process rnaspades {
+	label "spades"
+
+	input:
+	tuple val(sample), path(fastqs)
+	val(stage)
+
+	output:
+	tuple val(sample), path("assemblies/rnaspades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.*.fasta"), emit: contigs
+
+	script:
+
+	def stranded = (params.stranded) ? params.stranded : ""
+	def kmers = "-k ${params.kmer_steps}"
+	def mem_gb = task.memory.toGiga()
+
+	def input_files = ""
+	// we cannot auto-detect SE vs. PE-orphan!
+	r1_files = fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") } )
+	r2_files = fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") } )
+	orphans = fastqs.findAll( { it.name.matches("(.*)singles(.*)") } )
+
+	if (r1_files.size() != 0) {
+		input_files += "--pe1-1 ${r1_files.join(' ')}"
+	}
+	if (r2_files.size() != 0) {
+		input_files += " --pe1-2 ${r2_files.join(' ')}"
+	}
+	if (orphans.size() != 0) {
+		input_files += " --pe1-s ${orphans.join(' ')}"
+	}
+
+	// --meta and --rna seem mutually exclusive?
+
+	"""
+	rnaspades.py -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.library_type}/${sample.id} ${stranded} ${kmers} ${input_files}
+	mv -v assemblies/rnaspades/${stage}/${sample.library_type}/${sample.id}/transcripts.fasta assemblies/rnaspades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
+	"""
+	// mv -v transcripts.fasta assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
+	// rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
+}
+
+process metaspades {
 	label "spades"
 
 	input:
@@ -35,18 +77,48 @@ process spades {
 		input_files += " --pe1-s ${orphans.join(' ')}"
 	}
 
-	def spades_mode = ""
-	if (sample.library_type == "metaT") {
-		spades_mode = "--rna"
-	}
+	// --meta and --rna seem mutually exclusive?
 
 	"""
-	spades.py ${spades_mode} -t ${task.cpus} -m ${mem_gb} -o assemblies/spades/${stage}/${sample.library_type}/${sample.id} ${stranded} ${kmers} ${input_files}
+	rnaspades.py -t ${task.cpus} -m ${mem_gb} -o assemblies/spades/${stage}/${sample.library_type}/${sample.id} ${stranded} ${kmers} ${input_files}
 	mv -v transcripts.fasta ${sample.id}.${stage}.transcripts.fasta 
 	"""
 	// mv -v transcripts.fasta assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
 	// rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 }
+
+
+
+//  rule metaspades_hybrid_assembly_1:
+//         input:
+//             'Preprocessing/mg.r1.preprocessed.fq',
+//             'Preprocessing/mg.r2.preprocessed.fq',
+//             'Preprocessing/mg.se.preprocessed.fq',
+//             'Preprocessing/mt.r1.preprocessed.fq',
+//             'Preprocessing/mt.r2.preprocessed.fq',
+//             'Preprocessing/mt.se.preprocessed.fq',
+//             'Assembly/intermediary/mt.metaspades_preprocessed.1.final.contigs.fa'
+//         output:
+//             'Assembly/intermediary/mgmt.metaspades_hybrid.1/contigs.fa',
+//             'Assembly/intermediary/mgmt.metaspades_hybrid.1.fa',
+//             directory('Assembly/intermediary/mgmt.metaspades_hybrid.1')
+//         params:
+//             contigs = "--trusted-contigs Assembly/intermediary/mt.metaspades_preprocessed.1.final.contigs.fa"
+//         resources:
+//             runtime = "120:00:00",
+//             mem = BIGMEMCORE
+//         threads: getThreads(BIGCORENO)
+//         conda: ENVDIR + "/IMP_assembly.yaml"
+//         log: "logs/assembly_metaspades_hybrid_assembly_1.log"
+//         message: "metaspades_hybrid_assembly_1: Performing hybrid assembly 1 from preprocessed reads using METASPADES"
+//         shell:
+//             """
+//             if [ -d "{output[2]}" ]; then
+//                 rm -rf {output[2]}
+//             fi
+//             METASPADES_ASSEMBLY_SHELL
+//         """
+
 
 // METASPADES_ASSEMBLY_SHELL = """
 // if [ -d "{output[0]}" ]; then

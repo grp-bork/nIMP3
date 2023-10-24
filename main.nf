@@ -7,7 +7,7 @@ include { gffquant_flow } from "./nevermore/workflows/gffquant"
 // include { fastq_input } from "./nevermore/workflows/input"
 include { metaT_input; metaG_input } from "./imp/workflows/input"
 
-include { spades } from "./imp/modules/assemblers/spades"
+include { rnaspades } from "./imp/modules/assemblers/spades"
 include { bwa_index } from "./imp/modules/alignment/indexing/bwa_index"
 include { extract_unmapped } from "./imp/modules/alignment/extract"
 
@@ -52,33 +52,3 @@ workflow {
 
 }
 
-
-//  rule metaspades_hybrid_assembly_1:
-//         input:
-//             'Preprocessing/mg.r1.preprocessed.fq',
-//             'Preprocessing/mg.r2.preprocessed.fq',
-//             'Preprocessing/mg.se.preprocessed.fq',
-//             'Preprocessing/mt.r1.preprocessed.fq',
-//             'Preprocessing/mt.r2.preprocessed.fq',
-//             'Preprocessing/mt.se.preprocessed.fq',
-//             'Assembly/intermediary/mt.metaspades_preprocessed.1.final.contigs.fa'
-//         output:
-//             'Assembly/intermediary/mgmt.metaspades_hybrid.1/contigs.fa',
-//             'Assembly/intermediary/mgmt.metaspades_hybrid.1.fa',
-//             directory('Assembly/intermediary/mgmt.metaspades_hybrid.1')
-//         params:
-//             contigs = "--trusted-contigs Assembly/intermediary/mt.metaspades_preprocessed.1.final.contigs.fa"
-//         resources:
-//             runtime = "120:00:00",
-//             mem = BIGMEMCORE
-//         threads: getThreads(BIGCORENO)
-//         conda: ENVDIR + "/IMP_assembly.yaml"
-//         log: "logs/assembly_metaspades_hybrid_assembly_1.log"
-//         message: "metaspades_hybrid_assembly_1: Performing hybrid assembly 1 from preprocessed reads using METASPADES"
-//         shell:
-//             """
-//             if [ -d "{output[2]}" ]; then
-//                 rm -rf {output[2]}
-//             fi
-//             METASPADES_ASSEMBLY_SHELL
-//         """

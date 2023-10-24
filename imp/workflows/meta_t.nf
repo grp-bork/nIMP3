@@ -1,4 +1,4 @@
-include { spades } from "../modules/assemblers/spades"
+include { rnaspades } from "../modules/assemblers/spades"
 include { bwa_index } from "../modules/alignment/indexing/bwa_index"
 include { extract_unmapped } from "../modules/alignment/extract"
 include { concatenate_contigs } from "../modules/assemblers/functions"
@@ -24,8 +24,8 @@ workflow metaT_initial_assembly {
 		// 	.groupTuple(by: 0, size: 2, remainder: true)
 		// 	.map { sample, fastqs -> return tuple(sample, fastqs.flatten())}
 
-		spades(initial_assembly_ch, "initial")
-		bwa_index(spades.out.contigs, "initial")
+		rnaspades(initial_assembly_ch, "initial")
+		bwa_index(rnaspades.out.contigs, "initial")
 
 		post_assembly_check_ch = fastq_ch
 			.map { sample, fastqs -> 
@@ -62,7 +62,7 @@ workflow metaT_initial_assembly {
 
 		emit:
 			unmapped_reads = unmapped_ch
-			contigs = spades.out.contigs
+			contigs = rnaspades.out.contigs
 			reads = initial_assembly_ch
 }
 
@@ -73,16 +73,16 @@ workflow metaT_assembly {
 	main:
 		metaT_initial_assembly(fastq_ch)
 		metaT_initial_assembly.out.unmapped_reads.view()
-		spades(metaT_initial_assembly.out.unmapped_reads, "unmapped")
+		rnaspades(metaT_initial_assembly.out.unmapped_reads, "unmapped")
 
 		contigs_ch = metaT_initial_assembly.out.contigs
-			.concat(spades.out.contigs)
+			.concat(rnaspades.out.contigs)
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
-		concatenate_contigs(contigs_ch, "final", "spades")
+		concatenate_contigs(contigs_ch, "final", "rnaspades")
 
 	emit:
 		initial_contigs = metaT_initial_assembly.out.contigs
-		unmapped_contigs = spades.out.contigs
+		unmapped_contigs = rnaspades.out.contigs
 		final_contigs = concatenate_contigs.out.contigs
 		reads = metaT_initial_assembly.out.reads
 
