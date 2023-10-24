@@ -1,4 +1,5 @@
 include { rnaspades } from "../modules/assemblers/spades"
+include { metaT_megahit } from "../modules/assemblers/megahit"
 include { bwa_index } from "../modules/alignment/indexing/bwa_index"
 include { extract_unmapped } from "../modules/alignment/extract"
 include { concatenate_contigs } from "../modules/assemblers/functions"
@@ -24,8 +25,14 @@ workflow metaT_initial_assembly {
 		// 	.groupTuple(by: 0, size: 2, remainder: true)
 		// 	.map { sample, fastqs -> return tuple(sample, fastqs.flatten())}
 
-		rnaspades(initial_assembly_ch, "initial")
-		bwa_index(rnaspades.out.contigs, "initial")
+		if (params.assembler == "spades") {
+			rnaspades(initial_assembly_ch, "initial")
+			contigs_ch = rnaspades.out.contigs
+		} else {
+			metaT_megahit(initial_assembly_ch, "initial")
+			contigs_ch = metaT_megahit.out.contigs
+		}
+		bwa_index(contigs_ch, "initial")
 
 		post_assembly_check_ch = fastq_ch
 			.map { sample, fastqs -> 
@@ -62,7 +69,7 @@ workflow metaT_initial_assembly {
 
 		emit:
 			unmapped_reads = unmapped_ch
-			contigs = rnaspades.out.contigs
+			contigs = contigs_ch
 			reads = initial_assembly_ch
 }
 
@@ -73,16 +80,26 @@ workflow metaT_assembly {
 	main:
 		metaT_initial_assembly(fastq_ch)
 		metaT_initial_assembly.out.unmapped_reads.view()
-		rnaspades(metaT_initial_assembly.out.unmapped_reads, "unmapped")
 
-		contigs_ch = metaT_initial_assembly.out.contigs
-			.concat(rnaspades.out.contigs)
+		def assembler = ""
+		if (params.assembler == "spades") {
+			rnaspades(metaT_initial_assembly.out.unmapped_reads, "unmapped")
+			contigs_ch = rnaspades.out.contigs
+			assembler = "rnaspades"
+		} else {
+			metaT_megahit(metaT_initial_assembly.out.unmapped_reads, "unmapped")
+			contigs_ch = metaT_megahit.out.contigs
+			assembler = "metaT_megahit"
+		}
+
+		all_contigs_ch = metaT_initial_assembly.out.contigs
+			.concat(contigs_ch)
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
-		concatenate_contigs(contigs_ch, "final", "rnaspades")
+		concatenate_contigs(all_contigs_ch, "final", assembler)
 
 	emit:
 		initial_contigs = metaT_initial_assembly.out.contigs
-		unmapped_contigs = rnaspades.out.contigs
+		unmapped_contigs = contigs_ch
 		final_contigs = concatenate_contigs.out.contigs
 		reads = metaT_initial_assembly.out.reads
 

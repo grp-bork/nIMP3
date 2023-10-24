@@ -30,6 +30,8 @@ def input_dir = (params.input_dir) ? params.input_dir : params.remote_input_dir
 
 params.remote_input_dir = false
 
+params.assembler = "megahit"
+
 
 workflow {
 	// last working revision: 06e468bf12
@@ -99,9 +101,14 @@ workflow {
 
 	hybrid_assembly_input_ch.view()
 
-	metaspades(hybrid_assembly_input_ch, "initial")
+	if (params.assembler = "spades") {
+		metaspades(hybrid_assembly_input_ch, "initial")
+		metaspades.out.contigs.view()
+	} 
+	// else {
 
-	metaspades.out.contigs.view()
+	// }
+
 
 
 
