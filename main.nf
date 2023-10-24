@@ -84,6 +84,8 @@ workflow {
 
 				}			
 		)
+		.groupTuple()
+		.map { sample, fastqs -> return tuple(sample, fastqs.flatten()) }
 		.concat(
 			metaT_assembly.out.final_contigs
 				.map { sample, contigs ->
