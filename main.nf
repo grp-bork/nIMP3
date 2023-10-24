@@ -7,7 +7,7 @@ include { gffquant_flow } from "./nevermore/workflows/gffquant"
 // include { fastq_input } from "./nevermore/workflows/input"
 include { metaT_input; metaG_input } from "./imp/workflows/input"
 
-include { rnaspades } from "./imp/modules/assemblers/spades"
+include { rnaspades; metaspades } from "./imp/modules/assemblers/spades"
 include { bwa_index } from "./imp/modules/alignment/indexing/bwa_index"
 include { extract_unmapped } from "./imp/modules/alignment/extract"
 
@@ -98,6 +98,12 @@ workflow {
 		.map { sample, data -> return tuple(sample, data[0], data[1]) }
 
 	hybrid_assembly_input_ch.view()
+
+	metaspades(hybrid_assembly_input_ch)
+
+	metaspades.out.contigs.view()
+
+
 
 }
 
