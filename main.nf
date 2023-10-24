@@ -68,25 +68,31 @@ workflow {
 		.map { sample, fastqs ->
 			meta = [:]
 			meta.id = sample.id.replaceAll(/\.metaT/, "") 
-			return tuple(meta.id, meta, fastqs)
+			// return tuple(meta.id, meta, fastqs)
+			
+			return tuple(meta, fastqs)
+			
 		}
-		.join(
+		.groupTuple(
 			metaG_assembly_ch
 				.map { sample, fastqs ->
 					meta = [:]
-					metaid = sample.id.replaceAll(/\.metaG/, "")
-					return tuple(meta.id, meta, fastqs)
+					meta.id = sample.id.replaceAll(/\.metaG/, "")
+					// return tuple(meta.id, meta, fastqs)
+					// sample.id = sample.id.replaceAll(/\.metaT/, "")
+					return tuple(meta, fastqs)
+
 				},
-			by: 0, remainder: true
+			by: 0, remainder: true, size: 2
 		)
 		.join(
 			metaT_assembly.out.final_contigs
 				.map { sample, contigs ->
 					meta = [:]
 					meta.id = sample.id.replaceAll(/\.metaT/, "")
-					return tuple(meta.id, meta, contigs)
+					return tuple(meta, contigs)
 				},
-			by: 0, remainder: true
+			by: 0, remainder: true, size: 3
 		)
 
 	hybrid_assembly_input_ch.view()
