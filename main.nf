@@ -99,7 +99,7 @@ workflow {
 
 	hybrid_assembly_input_ch.view()
 
-	metaspades(hybrid_assembly_input_ch)
+	metaspades(hybrid_assembly_input_ch, "initial")
 
 	metaspades.out.contigs.view()
 
