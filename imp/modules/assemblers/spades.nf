@@ -114,7 +114,7 @@ process metaspades {
 	def contig_str = "--trusted-contigs ${contigs}"
 
 	"""
-	spades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/metaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files} ${contig_str}
+	spades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/metaspades/${stage}/${sample.id} ${kmers} ${input_files} ${contig_str}
 	mv -v assemblies/metaspades/${stage}/${sample.id}/contigs.fasta assemblies/metaspades/${stage}/${sample.id}/${sample.id}.${stage}.contigs.fasta 
 	"""
 	// mv -v transcripts.fasta assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
