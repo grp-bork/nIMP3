@@ -37,7 +37,7 @@ process metaT_megahit {
 	"""
 	mkdir -p ${outdir}/
 	megahit -t ${task.cpus} --cpu-only -m ${task.memory} ${input_files} ${kmer_params} --bubble-level 0 --mem-flag 1
-	mv -v megahit_out/final.contigs.fa ${outdir}/${sample.id}.${stage}.transcripts.fasta
+	cp -v megahit_out/final.contigs.fa ${outdir}/${sample.id}.${stage}.transcripts.fasta
 	"""
 	// rnaspades.py -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.library_type}/${sample.id} ${stranded} ${kmers} ${input_files}
 	// mv -v transcripts.fasta assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
