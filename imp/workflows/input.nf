@@ -50,3 +50,4 @@ workflow assembly_prep {
 	emit:
 		reads = initial_assembly_ch
 }
+

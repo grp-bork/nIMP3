@@ -13,6 +13,7 @@ include { extract_unmapped } from "./imp/modules/alignment/extract"
 
 include { metaT_assembly } from "./imp/workflows/meta_t"
 include { assembly_prep } from "./imp/workflows/input"
+include { hybrid_megahit } from "./imp/modules/assemblers/megahit"
 
 // if (params.input_dir && params.remote_input_dir) {
 // 	log.info """
@@ -101,13 +102,14 @@ workflow {
 
 	hybrid_assembly_input_ch.view()
 
-	if (params.assembler = "spades") {
+
+	if (params.assembler == "spades") {
 		metaspades(hybrid_assembly_input_ch, "initial")
 		metaspades.out.contigs.view()
-	} 
-	// else {
-
-	// }
+	} else {
+		hybrid_megahit(hybrid_assembly_input_ch, "initial")
+		hybrid_megahit.out.contigs.view()
+	}
 
 
 
