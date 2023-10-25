@@ -14,6 +14,9 @@ include { extract_unmapped } from "./imp/modules/alignment/extract"
 include { metaT_assembly } from "./imp/workflows/meta_t"
 include { assembly_prep } from "./imp/workflows/input"
 include { hybrid_megahit } from "./imp/modules/assemblers/megahit"
+include { bwa_index } from "./imp/modules/alignment/indexing/bwa_index"
+include { get_unmapped_reads } from "./imp/workflows/extract"
+
 
 // if (params.input_dir && params.remote_input_dir) {
 // 	log.info """
@@ -105,11 +108,22 @@ workflow {
 
 	if (params.assembler == "spades") {
 		metaspades(hybrid_assembly_input_ch, "initial")
-		metaspades.out.contigs.view()
+		contigs_ch = metaspades.out.contigs		
 	} else {
 		hybrid_megahit(hybrid_assembly_input_ch, "initial")
-		hybrid_megahit.out.contigs.view()
+		contigs_ch = hybrid_megahit.out.contigs
 	}
+	contigs_ch.view()
+
+	bwa_index(contigs_ch, "initial")
+	get_unmapped_reads(nevermore_main.out.fastqs, bwa_index.out.index)
+
+	empty_file = file("${launchDir}/NO_INPUT")
+
+	final_assembly_ch = get_unmapped_reads.out.reads
+		.map { sample, fastqs -> return tuple(sample, fastqs, [empty_file])}
+	final_assembly_ch.view()
+
 
 
 

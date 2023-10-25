@@ -92,7 +92,7 @@ process hybrid_megahit {
 	"""
 	mkdir -p ${outdir}/
 	megahit -t ${task.cpus} --cpu-only -m ${mem} ${input_files} ${kmer_params} --bubble-level 0 --mem-flag 1
-	cp -v megahit_out/final.contigs.fa ${outdir}/${sample.id}.${stage}.transcripts.fasta
+	cp -v megahit_out/final.contigs.fa ${outdir}/${sample.id}.${stage}.contigs.fasta
 	"""
 	
 }
