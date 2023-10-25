@@ -1,6 +1,8 @@
 params.mink = 25
 params.maxk = 100
 params.stepk = 4
+params.kmer_steps = "25,29,33,37,41,45,49,53,57,61,65,69,73,77,81,85,89,93,97"
+
 
 process metaT_megahit {
 	label "megahit"
@@ -32,7 +34,7 @@ process metaT_megahit {
 		input_files += " -r ${orphans.join(' ')}"
 	}
 
-	def kmer_params = "--k-min ${params.mink} --k-max ${params.maxk} --k-step ${params.stepk}"
+	def kmer_params = "--k-list ${params.kmer_steps}" //--k-min ${params.mink} --k-max ${params.maxk} --k-step ${params.stepk}"
 	def outdir = "assemblies/metaT_megahit/${stage}/${sample.library_type}/${sample.id}"
 	
 	"""
