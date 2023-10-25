@@ -84,7 +84,7 @@ workflow metaT_assembly {
 		fastq_ch
 	main:
 		metaT_initial_assembly(fastq_ch)
-		metaT_initial_assembly.out.unmapped_reads.view()
+		// metaT_initial_assembly.out.unmapped_reads.view()
 
 		def assembler = ""
 		if (params.assembler == "spades") {
