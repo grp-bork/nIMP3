@@ -20,7 +20,7 @@ process extract_unmapped {
 	// def check_cmd = "if [[ -z \"\$(gzip -dc ${outpath}/${sample.id}_R1.fastq.gz | head -n 1)\" ]]; then rm -f ${outpath}/${sample.id}_R1.fastq.gz; fi"
 
 	if (sample.is_paired) {
-		reads = "${sample.id}_R2.fastq.gz"
+		reads2 = "${sample.id}_R2.fastq.gz"
 		filter_cmd = "${filter_cmd_base} -f4 -F 264 alignment.bam > self_unmapped.bam 2>> error.log\n"
 		filter_cmd += "${filter_cmd_base} -f8 -F 260 alignment.bam > mate_unmapped.bam 2>> error.log\n"
 		filter_cmd += "${filter_cmd_base} -f12 -F 256 alignment.bam > both_unmapped.bam 2>> error.log\n"
