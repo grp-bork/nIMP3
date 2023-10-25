@@ -14,7 +14,6 @@ include { extract_unmapped } from "./imp/modules/alignment/extract"
 include { metaT_assembly } from "./imp/workflows/meta_t"
 include { assembly_prep } from "./imp/workflows/input"
 include { hybrid_megahit } from "./imp/modules/assemblers/megahit"
-include { bwa_index } from "./imp/modules/alignment/indexing/bwa_index"
 include { get_unmapped_reads } from "./imp/workflows/extract"
 
 
