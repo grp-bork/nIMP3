@@ -115,6 +115,10 @@ workflow {
 	contigs_ch.view()
 
 	bwa_index(contigs_ch, "initial")
+
+	bwa_index.out.index.view()
+	nevermore_main.out.fastqs.view()
+
 	get_unmapped_reads(nevermore_main.out.fastqs, bwa_index.out.index)
 
 	empty_file = file("${launchDir}/NO_INPUT")
