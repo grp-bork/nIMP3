@@ -35,7 +35,7 @@ workflow metaT_initial_assembly {
 		}
 		bwa_index(contigs_ch, "initial")
 
-		get_unmapped_reads(fastq_ch)
+		get_unmapped_reads(fastq_ch, bwa_index.out.index)
 
 		// post_assembly_check_ch = fastq_ch
 		// 	.map { sample, fastqs -> 
