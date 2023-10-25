@@ -119,27 +119,34 @@ workflow {
 	bwa_index.out.index.view()
 	nevermore_main.out.fastqs.view()
 
+	// [sample1.metaT, [id:sample1.metaT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz]]
+	// [[id:sample1.metaT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz]]
+	// [sample1.metaG, [id:sample1.metaG, is_paired:true, library:paired, library_type:metaG, merged:true], [/scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R1.fastq.gz, /scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R2.fastq.gz]]
+	// [[id:sample1.metaG, is_paired:true, library:paired, library_type:metaG, merged:true], [/scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R1.fastq.gz, /scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R2.fastq.gz]]
+
+
+[sample1, null, [/scratch/schudoma/imp3_test/work/52/0bf03b27daa9dbeb9a72a2936ef999/index/initial/null/sample1/sample1.amb, /scratch/schudoma/imp3_test/work/52/0bf03b27daa9dbeb9a72a2936ef999/index/initial/null/sample1/sample1.ann, /scratch/schudoma/imp3_test/work/52/0bf03b27daa9dbeb9a72a2936ef999/index/initial/null/sample1/sample1.bwt, /scratch/schudoma/imp3_test/work/52/0bf03b27daa9dbeb9a72a2936ef999/index/initial/null/sample1/sample1.pac, /scratch/schudoma/imp3_test/work/52/0bf03b27daa9dbeb9a72a2936ef999/index/initial/null/sample1/sample1.sa]]
 	// get_unmapped_reads(nevermore_main.out.fastqs, bwa_index.out.index)
 
-	nevermore_main.out.fastqs
-		.map { sample, fastqs -> 
-			sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "").replace(/.meta[GT]$/, "")
-			return tuple(sample_base_id, sample, [fastqs].flatten())
-		}
-		.view()
+	// nevermore_main.out.fastqs
+	// 	.map { sample, fastqs -> 
+	// 		sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "").replaceAll(/.meta[GT]$/, "")
+	// 		return tuple(sample_base_id, sample, [fastqs].flatten())
+	// 	}
+	// 	.view()
 
 	post_assembly_check_ch = nevermore_main.out.fastqs
 		.map { sample, fastqs -> 
-			sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "").replace(/.meta[GT]$/, "")
+			sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "").replaceAll(/.meta[GT]$/, "")
 			return tuple(sample_base_id, sample, [fastqs].flatten())
 		}
 		.combine(bwa_index.out.index, by: 0)
-		.map { sample_id, sample, fastqs, index ->
+		.map { sample_id, sample, fastqs, slib, index ->
 			sample.index_id = sample_id
 			return tuple(sample, fastqs, index) 
 		}
 
-
+	post_assembly_check_ch.view()
 		
 
 	extract_unmapped(post_assembly_check_ch, "initial")
