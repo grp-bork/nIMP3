@@ -133,15 +133,17 @@ workflow {
 			return tuple(sample_base_id, sample, [fastqs].flatten())
 		}
 	
-	// base_id_ch.view()
+	base_id_ch.dump(pretty: true, tag: "base_id_ch")
 
-	base_id_ch.combine(bwa_index.out.index, by: 0).dump(pretty: true, tag: "base_id_ch")
+	// base_id_ch.combine(bwa_index.out.index, by: 0).dump(pretty: true, tag: "base_id_ch")
 
-	post_assembly_check_ch = nevermore_main.out.fastqs
-		.map { sample, fastqs -> 
-			sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "").replaceAll(/.meta[GT]$/, "")
-			return tuple(sample_base_id, sample, [fastqs].flatten())
-		}
+	// post_assembly_check_ch = nevermore_main.out.fastqs
+	// 	.map { sample, fastqs -> 
+	// 		sample_base_id = sample.id //
+	// 		sample_base_id = sample_base_id.replaceAll(/.(orphans|singles|chimeras)$/, "").replaceAll(/.meta[GT]$/, "")
+	// 		return tuple(sample_base_id, sample, [fastqs].flatten())
+	// 	}
+	post_assembly_check_ch = base_id_ch
 		.combine(bwa_index.out.index, by: 0)
 		.map { sample_id, sample, fastqs, slib, index ->
 			sample.index_id = sample_id
