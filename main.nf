@@ -102,7 +102,7 @@ workflow {
 		.groupTuple()
 		.map { sample, data -> return tuple(sample, data[0], data[1]) }
 
-	// hybrid_assembly_input_ch.view()
+	hybrid_assembly_input_ch.dump(pretty: true, tag: "hybrid_assembly_input_ch")
 
 
 	if (params.assembler == "spades") {
