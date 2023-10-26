@@ -143,16 +143,18 @@ workflow {
 	combined_assembly_input_index_ch = hybrid_assembly_input_ch
 		.map { sample, fastqs, contigs -> return tuple(sample.id, sample, fastqs) }
 		.join(bwa_index.out.index, by: 0)
-		.map { sample_id, sample, fastqs, libtype, index -> return tuple(sample, fastqs, index) }
+		.map { sample_id, sample, fastqs, libtype, index -> return tuple(sample_id, sample, fastqs, index) }
 	combined_assembly_input_index_ch.dump(pretty: true, tag: "combined_assembly_input_index_ch")
 
 	// metaT_paired_unmapped_ch = hybrid_assembly_input_ch
 	metaT_paired_unmapped_ch = combined_assembly_input_index_ch
 		// .map { sample, fastqs, contigs ->
-		.map { sample, fastqs, index ->
+		.map { sample_id, sample, fastqs, index ->
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaT"
 			new_sample.library_type = "metaT"
+			new_sample.is_paired = true
+			new_sample.index_id = sample_id
 			def wanted_fastqs = []
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaT(.*)") } ))
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaT(.*)") } ))
@@ -163,6 +165,8 @@ workflow {
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaT.singles"
 			new_sample.library_type = "metaT"
+			new_sample.is_paired = false
+			new_sample.index_id = sample_id
 			def wanted_fastqs = []
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaT(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
@@ -172,6 +176,8 @@ workflow {
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaG"
 			new_sample.library_type = "metaG"
+			new_sample.is_paired = true
+			new_sample.index_id = sample_id
 			def wanted_fastqs = []
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaG(.*)") } ))
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaG(.*)") } ))
@@ -182,6 +188,8 @@ workflow {
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaG.singles"
 			new_sample.library_type = "metaG"
+			new_sample.is_paired = false
+			new_sample.index_id = sample_id
 			def wanted_fastqs = []
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaG(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
