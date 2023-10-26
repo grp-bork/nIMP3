@@ -114,6 +114,12 @@ workflow {
 	}
 	// contigs_ch.view()
 
+	contigs_ch = contigs_ch.map {
+		sample, fastqs -> 
+		sample.library_type = "hybrid"
+		return tuple(sample, fastqs)
+	}
+
 	bwa_index(contigs_ch, "initial")
 
 	bwa_index.out.index.dump(pretty: true, tag: "bwa_index.out.index")
