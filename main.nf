@@ -202,7 +202,7 @@ workflow {
 
 	base_id_ch = nevermore_main.out.fastqs
 		.map { sample, fastqs -> 
-			sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "").replaceAll(/.meta[GT]$/, "")
+			def sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "").replaceAll(/.meta[GT]$/, "")
 			return tuple(sample_base_id, sample, [fastqs].flatten())
 		}
 	
