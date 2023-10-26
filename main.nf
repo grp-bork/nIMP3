@@ -116,8 +116,8 @@ workflow {
 
 	bwa_index(contigs_ch, "initial")
 
-	bwa_index.out.index.dump(pretty: true)
-	nevermore_main.out.fastqs.dump(pretty: true)
+	bwa_index.out.index.dump(pretty: true, tag: "bwa_index.out.index")
+	nevermore_main.out.fastqs.dump(pretty: true, tag: "nevermore_main.out.fastqs")
 
 	// [sample1.metaT, [id:sample1.metaT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz]]
 	// [[id:sample1.metaT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz]]
@@ -135,7 +135,7 @@ workflow {
 	
 	// base_id_ch.view()
 
-	base_id_ch.combine(bwa_index.out.index, by: 0).dump(pretty: true)
+	base_id_ch.combine(bwa_index.out.index, by: 0).dump(pretty: true, tag: "base_id_ch")
 
 	post_assembly_check_ch = nevermore_main.out.fastqs
 		.map { sample, fastqs -> 
@@ -148,7 +148,7 @@ workflow {
 			return tuple(sample, fastqs, index) 
 		}
 
-	post_assembly_check_ch.dump(pretty: true)
+	post_assembly_check_ch.dump(pretty: true, tag: "post_assembly_check_ch")
 		
 
 	extract_unmapped(post_assembly_check_ch, "initial")
