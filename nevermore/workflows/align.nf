@@ -91,16 +91,18 @@ workflow nevermore_prep_align {
 
 		/*	perform post-qc fastqc analysis and generate multiqc report on merged single-read and paired-end sets */
 
-		fastqc(fastqc_in_ch, "qc")
+		if (params.run_qa) {
+			fastqc(fastqc_in_ch, "qc")
 
-		multiqc(
-			fastqc.out.stats
-				.filter { it[0].merged == true || it[0].is_paired == true }
-				.map { sample, report -> return report }
-				.collect(),
-			"${asset_dir}/multiqc.config",
-			"qc"
-		)
+			multiqc(
+				fastqc.out.stats
+					.filter { it[0].merged == true || it[0].is_paired == true }
+					.map { sample, report -> return report }
+					.collect(),
+				"${asset_dir}/multiqc.config",
+				"qc"
+			)			
+		}
 
 		fastq_prep_ch = paired_ch.concat(merge_single_fastqs.out.fastq)
 
