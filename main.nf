@@ -71,7 +71,7 @@ workflow {
 
 	hybrid_assembly_input_ch = metaT_assembly.out.reads
 		.map { sample, fastqs ->
-			meta = [:]
+			def meta = [:]
 			meta.id = sample.id.replaceAll(/\.metaT/, "") 
 			// return tuple(meta.id, meta, fastqs)
 			
@@ -81,7 +81,7 @@ workflow {
 		.concat(
 			metaG_assembly_ch
 				.map { sample, fastqs ->
-					meta = [:]
+					def meta = [:]
 					meta.id = sample.id.replaceAll(/\.metaG/, "")
 					// return tuple(meta.id, meta, fastqs)
 					// sample.id = sample.id.replaceAll(/\.metaT/, "")
@@ -94,7 +94,7 @@ workflow {
 		.concat(
 			metaT_assembly.out.final_contigs
 				.map { sample, contigs ->
-					meta = [:]
+					def meta = [:]
 					meta.id = sample.id.replaceAll(/\.metaT/, "")
 					return tuple(meta, contigs)
 				},			
