@@ -90,7 +90,7 @@ workflow nevermore_prep_align {
 			.concat(paired_ch)
 
 		/*	perform post-qc fastqc analysis and generate multiqc report on merged single-read and paired-end sets */
-
+		readcounts_ch = Channel.empty()
 		if (params.run_qa) {
 			fastqc(fastqc_in_ch, "qc")
 
@@ -101,14 +101,15 @@ workflow nevermore_prep_align {
 					.collect(),
 				"${asset_dir}/multiqc.config",
 				"qc"
-			)			
+			)
+			readcounts_ch = fastqc.out.counts
 		}
 
 		fastq_prep_ch = paired_ch.concat(merge_single_fastqs.out.fastq)
 
 	emit:
 		fastqs = fastq_prep_ch
-		read_counts = fastqc.out.counts
+		read_counts = readcounts_ch
 		
 
 }
