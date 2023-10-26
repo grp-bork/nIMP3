@@ -143,45 +143,48 @@ workflow {
 	combined_assembly_input_index_ch = hybrid_assembly_input_ch
 		.map { sample, fastqs, contigs -> return tuple(sample.id, sample, fastqs) }
 		.join(bwa_index.out.index, by: 0)
+		.map { sample_id, sample, fastqs, libtype, index -> return tuple(sample, fastqs, index) }
 	combined_assembly_input_index_ch.dump(pretty: true, tag: "combined_assembly_input_index_ch")
 
-	metaT_paired_unmapped_ch = hybrid_assembly_input_ch
-		.map { sample, fastqs, contigs ->
+	// metaT_paired_unmapped_ch = hybrid_assembly_input_ch
+	metaT_paired_unmapped_ch = combined_assembly_input_index_ch
+		// .map { sample, fastqs, contigs ->
+		.map { sample, fastqs, index ->
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaT"
 			new_sample.library_type = "metaT"
 			def wanted_fastqs = []
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaT(.*)") } ))
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaT(.*)") } ))
-			return tuple(new_sample, wanted_fastqs)
+			return tuple(new_sample, wanted_fastqs, index)
 		}
-	metaT_single_unmapped_ch = hybrid_assembly_input_ch
-		.map { sample, fastqs, contigs ->
+	metaT_single_unmapped_ch = combined_assembly_input_index_ch
+		.map { sample, fastqs, index ->
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaT.singles"
 			new_sample.library_type = "metaT"
 			def wanted_fastqs = []
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaT(.*)") } ))
-			return tuple(new_sample, wanted_fastqs)
+			return tuple(new_sample, wanted_fastqs, index)
 		}
-	metaG_paired_unmapped_ch = hybrid_assembly_input_ch
-		.map { sample, fastqs, contigs ->
+	metaG_paired_unmapped_ch = combined_assembly_input_index_ch
+		.map { sample, fastqs, index ->
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaG"
 			new_sample.library_type = "metaG"
 			def wanted_fastqs = []
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaG(.*)") } ))
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaG(.*)") } ))
-			return tuple(new_sample, wanted_fastqs)
+			return tuple(new_sample, index)
 		}
-	metaG_single_unmapped_ch = hybrid_assembly_input_ch
-		.map { sample, fastqs, contigs ->
+	metaG_single_unmapped_ch = combined_assembly_input_index_ch
+		.map { sample, fastqs, index ->
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaG.singles"
 			new_sample.library_type = "metaG"
 			def wanted_fastqs = []
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaG(.*)") } ))
-			return tuple(new_sample, wanted_fastqs)
+			return tuple(new_sample, wanted_fastqs, index)
 		}
 	extract_unmapped_ch = Channel.empty()
 		.concat(metaT_paired_unmapped_ch)
@@ -232,8 +235,8 @@ workflow {
 	// 	}
 
 	// post_assembly_check_ch.dump(pretty: true, tag: "post_assembly_check_ch")
-		
-
+	extract_unmapped(extract_unmapped_ch, "initial")
+	extract_unmapped.out.fastqs.dump(pretty: true, tag: "extract_unmapped")
 	// extract_unmapped(post_assembly_check_ch, "initial")
 	// extract_unmapped(extract_unmapped_ch, "initial")
 	// extract_unmapped.out.fastqs.view()
