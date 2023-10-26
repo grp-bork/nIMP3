@@ -270,6 +270,9 @@ workflow {
 	empty_file.text = "NOTHING TO SEE HERE."
 	print empty_file
 
+
+
+	hybrid_megahit(unmapped_ch.combine(Channel.of(empty_file)))
 	// final_assembly_ch = get_unmapped_reads.out.reads
 	// 	.map { sample, fastqs -> return tuple(sample, fastqs, [empty_file])}
 	// final_assembly_ch.view()
