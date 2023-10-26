@@ -235,7 +235,7 @@ workflow {
 		
 
 	// extract_unmapped(post_assembly_check_ch, "initial")
-	extract_unmapped(extract_unmapped_ch, "initial")
+	// extract_unmapped(extract_unmapped_ch, "initial")
 	// extract_unmapped.out.fastqs.view()
 
 		// unmapped_ch = extract_unmapped.out.fastqs
