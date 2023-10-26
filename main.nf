@@ -271,15 +271,20 @@ workflow {
 	print empty_file
 
 
-
-	hybrid_megahit(unmapped_ch.combine(Channel.of(empty_file)))
+	megahit_hybrid_unmapped(unmapped_ch, Channel.of(empty_file))
+	// hybrid_megahit(unmapped_ch.combine(Channel.of(empty_file)))
 	// final_assembly_ch = get_unmapped_reads.out.reads
 	// 	.map { sample, fastqs -> return tuple(sample, fastqs, [empty_file])}
 	// final_assembly_ch.view()
-
-
-
-
-
+	
 }
 
+workflow megahit_hybrid_unmapped {
+	take:
+		fastq_ch
+		contigs_ch
+	main:
+		hybrid_megahit(fastq_ch.combine(contigs_ch))
+	emit:
+		contigs = hybrid_megahit.out.contigs
+}
