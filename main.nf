@@ -258,7 +258,7 @@ workflow {
 			// meta.library_type = sample.library_type
 			return tuple(meta, fastqs.flatten())
 		}
-		.groupTuple(by: 0, size: 2, remainder: true, sort: true)
+		.groupTuple(by: 0, size: 2, remainder: true) //, sort: true)
 		.map { sample, fastqs ->
 			// sample.library_type = sample.library_type[0]
 			return tuple(sample, fastqs.flatten())
