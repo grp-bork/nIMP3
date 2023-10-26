@@ -127,12 +127,15 @@ workflow {
 
 	// get_unmapped_reads(nevermore_main.out.fastqs, bwa_index.out.index)
 
-	nevermore_main.out.fastqs
+	base_id_ch = nevermore_main.out.fastqs
 		.map { sample, fastqs -> 
 			sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "").replaceAll(/.meta[GT]$/, "")
 			return tuple(sample_base_id, sample, [fastqs].flatten())
 		}
-		.view()
+	
+	// base_id_ch.view()
+
+	base_id_ch.combine(bwa_index.out.index, by: 0).view()
 
 	post_assembly_check_ch = nevermore_main.out.fastqs
 		.map { sample, fastqs -> 
