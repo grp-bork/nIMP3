@@ -161,7 +161,7 @@ workflow {
 			return tuple(new_sample, wanted_fastqs, index)
 		}
 	metaT_single_unmapped_ch = combined_assembly_input_index_ch
-		.map { sample, fastqs, index ->
+		.map { sample_id, sample, fastqs, index ->
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaT.singles"
 			new_sample.library_type = "metaT"
@@ -172,7 +172,7 @@ workflow {
 			return tuple(new_sample, wanted_fastqs, index)
 		}
 	metaG_paired_unmapped_ch = combined_assembly_input_index_ch
-		.map { sample, fastqs, index ->
+		.map { sample_id, sample, fastqs, index ->
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaG"
 			new_sample.library_type = "metaG"
@@ -184,7 +184,7 @@ workflow {
 			return tuple(new_sample, wanted_fastqs, index)
 		}
 	metaG_single_unmapped_ch = combined_assembly_input_index_ch
-		.map { sample, fastqs, index ->
+		.map { sample_id, sample, fastqs, index ->
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaG.singles"
 			new_sample.library_type = "metaG"
