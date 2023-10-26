@@ -147,6 +147,9 @@ workflow {
 	with_index_ch = base_id_ch.combine(bwa_index.out.index)
 	with_index_ch.dump(pretty: true, tag: "with_index_ch")
 
+	joined_ch = base_id_ch.join(bwa_index.out.index, by: 0)
+	joined_ch.dump(pretty: true, tag: "joined_ch")
+
 	// base_id_ch.combine(bwa_index.out.index, by: 0).dump(pretty: true, tag: "base_id_ch")
 
 	// post_assembly_check_ch = nevermore_main.out.fastqs
