@@ -213,13 +213,13 @@ workflow {
 	// 		sample_base_id = sample_base_id.replaceAll(/.(orphans|singles|chimeras)$/, "").replaceAll(/.meta[GT]$/, "")
 	// 		return tuple(sample_base_id, sample, [fastqs].flatten())
 	// 	}
-	post_assembly_check_ch = with_index_ch
-		.map { sample_id, sample, fastqs, slib, index ->
-			sample.index_id = sample_id
-			return tuple(sample, fastqs, index) 
-		}
+	// post_assembly_check_ch = with_index_ch
+	// 	.map { sample_id, sample, fastqs, slib, index ->
+	// 		sample.index_id = sample_id
+	// 		return tuple(sample, fastqs, index) 
+	// 	}
 
-	post_assembly_check_ch.dump(pretty: true, tag: "post_assembly_check_ch")
+	// post_assembly_check_ch.dump(pretty: true, tag: "post_assembly_check_ch")
 		
 
 	// extract_unmapped(post_assembly_check_ch, "initial")
