@@ -144,7 +144,7 @@ workflow {
 	index_and_fastqs_ch = bwa_index.out.index.combine(base_id_ch, by: 0)
 	index_and_fastqs_ch.dump(pretty: true, tag: "index_and_fastqs_ch")
 
-	with_index_ch = base_id_ch.combine(bwa_index.out.index, by: 0)
+	with_index_ch = base_id_ch.combine(bwa_index.out.index)
 	with_index_ch.dump(pretty: true, tag: "with_index_ch")
 
 	// base_id_ch.combine(bwa_index.out.index, by: 0).dump(pretty: true, tag: "base_id_ch")
