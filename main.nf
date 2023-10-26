@@ -147,7 +147,7 @@ workflow {
 
 	metaT_paired_unmapped_ch = hybrid_assembly_input_ch
 		.map { sample, fastqs, contigs ->
-			new_sample = [:]
+			def new_sample = [:]
 			new_sample.id = sample.id + ".metaT"
 			new_sample.library_type = "metaT"
 			def wanted_fastqs = []
@@ -157,7 +157,7 @@ workflow {
 		}
 	metaT_single_unmapped_ch = hybrid_assembly_input_ch
 		.map { sample, fastqs, contigs ->
-			new_sample = [:]
+			def new_sample = [:]
 			new_sample.id = sample.id + ".metaT.singles"
 			new_sample.library_type = "metaT"
 			def wanted_fastqs = []
@@ -166,7 +166,7 @@ workflow {
 		}
 	metaG_paired_unmapped_ch = hybrid_assembly_input_ch
 		.map { sample, fastqs, contigs ->
-			new_sample = [:]
+			def new_sample = [:]
 			new_sample.id = sample.id + ".metaG"
 			new_sample.library_type = "metaG"
 			def wanted_fastqs = []
@@ -176,7 +176,7 @@ workflow {
 		}
 	metaG_single_unmapped_ch = hybrid_assembly_input_ch
 		.map { sample, fastqs, contigs ->
-			new_sample = [:]
+			def new_sample = [:]
 			new_sample.id = sample.id + ".metaG.singles"
 			new_sample.library_type = "metaG"
 			def wanted_fastqs = []
