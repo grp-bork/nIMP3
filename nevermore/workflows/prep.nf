@@ -37,7 +37,7 @@ workflow nevermore_simple_preprocessing {
 		fastq_ch
 
 	main:
-
+		rawcounts_ch = Channel.empty()
 		if (params.run_qa) {
 			fastqc(fastq_ch, "raw")
 
@@ -46,11 +46,11 @@ workflow nevermore_simple_preprocessing {
 				"${asset_dir}/multiqc.config",
 				"raw"
 			)
+			rawcounts_ch = fastqc.out.counts
 		}
 
 		processed_reads_ch = Channel.empty()
 		orphans_ch = Channel.empty()
-		rawcounts_ch = fastqc.out.counts
 
 		if (params.amplicon_seq) {
 
