@@ -284,7 +284,7 @@ workflow megahit_hybrid_unmapped {
 		fastq_ch
 		contigs_ch
 	main:
-		hybrid_megahit(fastq_ch.combine(contigs_ch))
+		hybrid_megahit(fastq_ch.combine(contigs_ch), "final")
 	emit:
 		contigs = hybrid_megahit.out.contigs
 }
