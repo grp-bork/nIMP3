@@ -245,30 +245,27 @@ workflow {
 	// post_assembly_check_ch.dump(pretty: true, tag: "post_assembly_check_ch")
 	extract_unmapped(extract_unmapped_ch, "initial")
 	extract_unmapped.out.fastqs.dump(pretty: true, tag: "extract_unmapped_ch")
-	// extract_unmapped(post_assembly_check_ch, "initial")
-	// extract_unmapped(extract_unmapped_ch, "initial")
-	// extract_unmapped.out.fastqs.view()
+	
+	unmapped_ch = extract_unmapped.out.fastqs
+		.map { sample, fastqs ->
+			sample.id = sample.index_id
+			return tuple(sample.id, sample, fastqs)
+		}
+		.groupTuple(by: 0, size: 2, remainder: true)
+		.map { sample_id, sample, fastqs -> 
+			def meta = [:]
+			meta.id = sample_id
+			meta.library_type = sample.library_type
+			return tuple(meta, fastqs.flatten())
+		}
+		.groupTuple(by: 0, size: 2, remainder: true, sort: true)
+		.map { sample, fastqs ->
+			sample.library_type = sample.library_type[0]
+			return tuple(sample, fastqs.flatten())
+		}
 
-		// unmapped_ch = extract_unmapped.out.fastqs
-		// 	.map { sample, fastqs ->
-		// 		sample.id = sample.index_id
-		// 		return tuple(sample.id, sample, fastqs)
-		// 	}
-		// 	.groupTuple(by: 0, size: 2, remainder: true)
-		// 	.map { sample_id, sample, fastqs -> 
-		// 		meta = [:]
-		// 		meta.id = sample_id
-		// 		meta.library = sample.library
-		// 		meta.library_type = sample.library_type
-		// 		return tuple(meta, fastqs.flatten())
-		// 	}
-		// 	.groupTuple(by: 0, size: 2, remainder: true, sort: true)
-		// 	.map { sample, fastqs ->
-		// 		sample.library = sample.library[0]
-		// 		sample.library_type = sample.library_type[0]
-		// 		return tuple(sample, fastqs.flatten())
-		// 	}
-
+	unmapped_ch.dump(pretty: true, tag: "unmapped_ch")
+	
 	empty_file = file("${launchDir}/NO_INPUT")
 	empty_file.text = "NOTHING TO SEE HERE."
 	print empty_file
