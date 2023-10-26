@@ -125,6 +125,61 @@ workflow {
 	bwa_index.out.index.dump(pretty: true, tag: "bwa_index.out.index")
 	nevermore_main.out.fastqs.dump(pretty: true, tag: "nevermore_main.out.fastqs")
 
+	/*[DUMP: hybrid_assembly_input_ch] [
+    {
+        "id": "sample1"
+    },
+    [
+        "/scratch/schudoma/imp3_test/work/9f/7654e40f9169728a3f845b272edcbc/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz",
+        "/scratch/schudoma/imp3_test/work/9f/7654e40f9169728a3f845b272edcbc/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz",
+        "/scratch/schudoma/imp3_test/work/ee/b9a3d3515e91e67ad2b0d28a25a827/merged/sample1.metaT.singles_R1.fastq.gz",
+        "/scratch/schudoma/imp3_test/work/7e/72d69ed3806911f6d562adc2f11bab/no_host/sample1.metaG/sample1.metaG_R1.fastq.gz",
+        "/scratch/schudoma/imp3_test/work/7e/72d69ed3806911f6d562adc2f11bab/no_host/sample1.metaG/sample1.metaG_R2.fastq.gz",
+        "/scratch/schudoma/imp3_test/work/3b/764b7ee1663c14ed712dc019176639/merged/sample1.metaG.singles_R1.fastq.gz"
+    ],
+    "/scratch/schudoma/imp3_test/work/3c/7cf332ec2b49e3bfdd2bfed1f2d342/assemblies/metaT_megahit/final/metaT/sample1.metaT/sample1.metaT.final_contigs.fasta"
+]
+	*/
+
+	metaT_paired_unmapped_ch = hybrid_assembly_input_ch
+		.map { sample, fastqs, contigs ->
+			sample.id += ".metaT"
+			def wanted_fastqs = []
+			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaT(.*)") } ))
+			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaT(.*)") } ))
+			return tuple(sample, wanted_fastqs)
+		}
+	metaT_single_unmapped_ch = hybrid_assembly_input_ch
+		.map { sample, fastqs, contigs ->
+			sample.id += ".metaT.singles"
+			def wanted_fastqs = []
+			wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaT(.*)") } ))
+			return tuple(sample, wanted_fastqs)
+		}
+	metaG_paired_unmapped_ch = hybrid_assembly_input_ch
+		.map { sample, fastqs, contigs ->
+			sample.id += ".metaG"
+			def wanted_fastqs = []
+			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaG(.*)") } ))
+			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaG(.*)") } ))
+			return tuple(sample, wanted_fastqs)
+		}
+	metaG_single_unmapped_ch = hybrid_assembly_input_ch
+		.map { sample, fastqs, contigs ->
+			sample.id += ".metaG.singles"
+			def wanted_fastqs = []
+			wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaG(.*)") } ))
+			return tuple(sample, wanted_fastqs)
+		}
+	extract_unmapped_ch = Channel.empty()
+		.concat(metaT_paired_unmapped_ch)
+		.concat(metaT_single_unmapped_ch)
+		.concat(metaG_paired_unmapped_ch)
+		.concat(metaG_single_unmapped_ch)
+	
+	extract_unmapped_ch.dump(pretty: true, tag: "extract_unmapped_ch")
+
+
 	// [sample1.metaT, [id:sample1.metaT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz]]
 	// [[id:sample1.metaT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz]]
 	// [sample1.metaG, [id:sample1.metaG, is_paired:true, library:paired, library_type:metaG, merged:true], [/scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R1.fastq.gz, /scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R2.fastq.gz]]
@@ -167,7 +222,8 @@ workflow {
 	post_assembly_check_ch.dump(pretty: true, tag: "post_assembly_check_ch")
 		
 
-	extract_unmapped(post_assembly_check_ch, "initial")
+	// extract_unmapped(post_assembly_check_ch, "initial")
+	extract_unmapped(extract_unmapped_ch, "initial")
 	// extract_unmapped.out.fastqs.view()
 
 		// unmapped_ch = extract_unmapped.out.fastqs
