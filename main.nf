@@ -175,7 +175,7 @@ workflow {
 			def wanted_fastqs = []
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaG(.*)") } ))
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaG(.*)") } ))
-			return tuple(new_sample, index)
+			return tuple(new_sample, wanted_fastqs, index)
 		}
 	metaG_single_unmapped_ch = combined_assembly_input_index_ch
 		.map { sample, fastqs, index ->
