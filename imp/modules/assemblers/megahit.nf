@@ -74,7 +74,7 @@ process hybrid_megahit {
 	r2_files.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaT(.*)") } ))
 	orphan_files.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaT(.*)") } ))
 
-	contigs.orphan_files.addAll(contigs.findAll( { it.name != "NO_INPUT" }))
+	orphan_files.addAll(contigs.findAll( { it.name != "NO_INPUT" }))
 
 	if (r1_files.size() != 0) {
 		input_files += "-1 ${r1_files.join(',')}"
