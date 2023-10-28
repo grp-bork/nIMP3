@@ -15,6 +15,7 @@ include { metaT_assembly } from "./imp/workflows/meta_t"
 include { assembly_prep } from "./imp/workflows/input"
 include { hybrid_megahit } from "./imp/modules/assemblers/megahit"
 include { get_unmapped_reads } from "./imp/workflows/extract"
+include { concatenate_contigs } from "./imp/modules/assemblers/functions"
 
 
 // if (params.input_dir && params.remote_input_dir) {
@@ -261,6 +262,7 @@ workflow {
 		.groupTuple(by: 0, size: 2, remainder: true) //, sort: true)
 		.map { sample, fastqs ->
 			// sample.library_type = sample.library_type[0]
+			sample.library_type = "hybrid"
 			return tuple(sample, fastqs.flatten())
 		}
 
@@ -271,7 +273,20 @@ workflow {
 	print empty_file
 
 
-	megahit_hybrid_unmapped(unmapped_ch, Channel.of(empty_file))
+	unmapped_contigs_ch = Channel.empty()
+	if (params.assembler == "megahit") {
+		megahit_hybrid_unmapped(unmapped_ch, Channel.of(empty_file))
+		unmapped_contigs_ch = megahit_hybrid_unmapped.out.contigs
+	}
+	unmapped_contigs_ch.dump(pretty: true, tag: "unmapped_contigs_ch")
+
+	all_contigs_ch = contigs_ch
+		.concat(unmapped_contigs_ch)
+		.groupTuple(by: 0, size: 2, remainder: true, sort: true)
+
+	all_contigs_ch.dump(pretty: true, tag: "all_contigs_ch")
+	
+	concatenate_contigs(all_contigs_ch, "final", params.assembler)
 	// hybrid_megahit(unmapped_ch.combine(Channel.of(empty_file)))
 	// final_assembly_ch = get_unmapped_reads.out.reads
 	// 	.map { sample, fastqs -> return tuple(sample, fastqs, [empty_file])}
