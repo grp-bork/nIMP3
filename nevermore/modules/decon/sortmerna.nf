@@ -20,7 +20,7 @@ process sortmerna {
 
 		"""
 		mkdir -p work/index/ no_rrna/${sample.id}/ rrna/${sample.id}/
-		sortmerna --fastx --aligned --threads ${task.cpus} -m ${mem_mb} --workdir work/ --idx-dir \$(dirname $(readlink ${db}))/index/ ${reads} ${pe_params} --ref ${db}
+		sortmerna --fastx --aligned --threads ${task.cpus} -m ${mem_mb} --workdir work/ --idx-dir \$(dirname \$(readlink ${db}))/index/ ${reads} ${pe_params} --ref ${db}
 
 		${mv_output}
 		"""
