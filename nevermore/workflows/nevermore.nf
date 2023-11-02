@@ -33,8 +33,16 @@ workflow nevermore_main {
 
 			if (params.run_sortmerna) {
 
-				sortmerna(preprocessed_ch, params.sortmerna_db)
-				preprocessed_ch = sortmerna.out.fastqs
+				preprocessed_ch
+					.branch {
+						metaT: it[0].library_type == "metaT"
+						metaG: true
+					}
+					.set { for_sortmerna_ch }
+
+				sortmerna(for_sortmerna_ch.metaT, params.sortmerna_db)
+				preprocessed_ch = for_sortmerna_ch.metaG
+					.concat(sortmerna.out.fastqs)					
 
 			}
 	
