@@ -9,12 +9,14 @@ process sortmerna {
 		def mem_mb = task.memory.toMega()
 
 		def reads = "--reads ${sample.id}_R1.fastq.gz"
-		def mv_output = "gzip -vc work/other_fwd.fq > no_rrna/${sample.id}/${sample.id}_R1.fastq.gz\n"
+		// def mv_output = "gzip -vc work/other_fwd.fq > no_rrna/${sample.id}/${sample.id}_R1.fastq.gz\n"
+		def mv_output = "mv -v work/out/other_fwd.fq.gz no_rrna/${sample.id}/${sample.id}_R1.fastq.gz\n"
 		def pe_params = ""
 		
 		if (sample.is_paired) {
 			reads += " --reads ${sample.id}_R2.fastq.gz"
-			mv_output += "gzip -vc work/other_rev.fq > no_rrna/${sample.id}/${sample.id}_R2.fastq.gz\n"
+			// mv_output += "gzip -vc work/other_rev.fq > no_rrna/${sample.id}/${sample.id}_R2.fastq.gz\n"
+			mv_output += "mv -v work/out/other_rev.fq.gz no_rrna/${sample.id}/${sample.id}_R2.fastq.gz\n"
 			pe_params += "--out2 --other --paired_in"
 		}
 
