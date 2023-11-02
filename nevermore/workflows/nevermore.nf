@@ -4,6 +4,7 @@ nextflow.enable.dsl=2
 
 include { nevermore_simple_preprocessing } from "./prep"
 include { remove_host_kraken2_individual; remove_host_kraken2 } from "../modules/decon/kraken2"
+include { sortmerna } from "../modules/decon/sortmerna"
 include { prepare_fastqs } from "../modules/converters/prepare_fastqs"
 include { fastqc } from "../modules/qc/fastqc"
 include { multiqc } from "../modules/qc/multiqc"
@@ -28,6 +29,13 @@ workflow nevermore_main {
 			preprocessed_ch = nevermore_simple_preprocessing.out.main_reads_out
 			if (!params.drop_orphans) {
 				preprocessed_ch = preprocessed_ch.concat(nevermore_simple_preprocessing.out.orphan_reads_out)
+			}
+
+			if (params.run_sortmerna) {
+
+				sortmerna(preprocessed_ch, params.sortmerna_db)
+				preprocessed_ch = sortmerna.out.fastqs
+
 			}
 	
 			if (params.remove_host) {
