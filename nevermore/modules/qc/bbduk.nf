@@ -38,7 +38,6 @@ process qc_bbduk {
 
     def read1 = "in1=${sample.id}_R1.fastq.${compression} out1=qc_reads/${sample.id}/${sample.id}_R1.fastq.gz"
     
-    def trim_params = params.qc_params_shotgun + " ref=${adapters} minlen=${params.qc_minlen}"
     def stats_out = "stats=stats/qc/bbduk/${sample.id}.bbduk_stats.txt"
 
     """
