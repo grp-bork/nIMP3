@@ -52,7 +52,7 @@ workflow metaT_initial_assembly {
 
 		post_assembly_check_ch
 			.filter { it[0].is_paired }
-			.dump(pretty: true, tag: "post_assembly_check_ch_is_paired")
+			.dump(tag: "post_assembly_check_ch_is_paired")
 		
 
 		extract_unmapped(post_assembly_check_ch, "initial")
