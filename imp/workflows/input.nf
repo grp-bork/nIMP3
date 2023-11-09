@@ -42,6 +42,7 @@ workflow assembly_prep {
 				meta.id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
 				meta.library = sample.library
 				meta.library_type = sample.library_type
+				meta.is_paired = sample.is_paired
 				
 				return tuple(meta, [fastqs].flatten())
 			}

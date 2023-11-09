@@ -189,7 +189,7 @@ workflow {
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaG.singles"
 			new_sample.library_type = "metaG"
-			new_sample.is_paired = false
+			new_sample. = false
 			new_sample.index_id = sample_id
 			def wanted_fastqs = []
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaG(.*)") } ))
