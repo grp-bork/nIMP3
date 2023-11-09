@@ -48,7 +48,7 @@ workflow metaT_initial_assembly {
 				return tuple(sample, fastqs, index) 
 			}
 
-		post_assembly_check_ch.dump(pretty: true, tag: "post_assembly_check_ch")
+		post_assembly_check_ch.dump(tag: "post_assembly_check_ch")
 
 		post_assembly_check_ch
 			.filter { it[0].is_paired }
