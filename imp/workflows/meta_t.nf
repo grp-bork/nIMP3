@@ -47,6 +47,8 @@ workflow metaT_initial_assembly {
 				sample.index_id = sample_id
 				return tuple(sample, fastqs, index) 
 			}
+
+		post_assembly_check_ch.dump(pretty: true, tag: "post_assembly_check_ch")
 		
 
 		extract_unmapped(post_assembly_check_ch, "initial")
