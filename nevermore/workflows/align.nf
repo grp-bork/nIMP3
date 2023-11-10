@@ -173,7 +173,7 @@ workflow nevermore_prep_align {
 				"qc"
 			)
 
-			read_counts_ch = fastqc.out.counts
+			readcounts_ch = fastqc.out.counts
 		}
 
 		fastq_prep_ch = paired_ch
@@ -182,7 +182,7 @@ workflow nevermore_prep_align {
 
 	emit:
 		fastqs = fastq_prep_ch
-		read_counts = read_counts_ch
+		read_counts = readcounts_ch
 
 }
 
