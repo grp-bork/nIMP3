@@ -68,7 +68,16 @@ workflow {
 	)
 
 	metaG_assembly_ch = assembly_prep.out.reads
-	// metaG_assembly_ch.view()
+
+	metaG_assembly_ch.dump(pretty: true, tag: "metaG_hybrid_input")
+
+	metaT_contigs_ch = metaT_assembly.out.final_contigs
+		.map { sample, contigs ->
+			def meta = [:]
+			meta.id = sample.id.replaceAll(/\.singles$/, "").replaceAll(/\.metaT/, "")
+			return tuple(meta, contigs)
+		}
+	metaT_contigs_ch.dump(pretty: true, tag: "metaT_contigs_ch")
 
 	hybrid_assembly_input_ch = metaT_assembly.out.reads
 		.map { sample, fastqs ->
@@ -80,6 +89,8 @@ workflow {
 			return tuple(meta, fastqs)
 			
 		}
+	hybrid_assembly_input_ch.dump(pretty: true, tag: "metaT_hybrid_input")
+	hybrid_assembly_input_ch = hybrid_assembly_input_ch
 		.concat(
 			metaG_assembly_ch
 				.map { sample, fastqs ->
@@ -93,13 +104,10 @@ workflow {
 		)
 		.groupTuple()
 		.map { sample, fastqs -> return tuple(sample, fastqs.flatten()) }
+	hybrid_assembly_input_ch.dump(pretty: true, tag: "all_reads_hybrid_input")
+	hybrid_assembly_input_ch = hybrid_assembly_input_ch
 		.concat(
-			metaT_assembly.out.final_contigs
-				.map { sample, contigs ->
-					def meta = [:]
-					meta.id = sample.id.replaceAll(/\.singles$/, "").replaceAll(/\.metaT/, "")
-					return tuple(meta, contigs)
-				},			
+			metaT_contigs_ch
 		)
 		.groupTuple()
 		.map { sample, data -> return tuple(sample, data[0], data[1]) }
