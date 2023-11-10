@@ -121,7 +121,7 @@ def process_sample(
 		if add_suffix:
 			sample_sub += f".{add_suffix}"
 		sample = sample_sub + ".singles"
-		
+
 		sample_dir = os.path.join(output_dir, sample)
 		pathlib.Path(sample_dir).mkdir(parents=True, exist_ok=True)
 

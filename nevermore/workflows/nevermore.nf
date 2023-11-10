@@ -42,7 +42,7 @@ workflow nevermore_main {
 
 				sortmerna(for_sortmerna_ch.metaT, params.sortmerna_db)
 				preprocessed_ch = for_sortmerna_ch.metaG
-					.concat(sortmerna.out.fastqs)					
+					.concat(sortmerna.out.fastqs)
 
 			}
 	

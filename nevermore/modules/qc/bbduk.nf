@@ -12,13 +12,14 @@ process qc_bbduk {
     tuple val(sample), path("qc_reads/${sample.id}/BBDUK_FINISHED"), emit: sentinel
 
     script:
-    def maxmem = task.memory.toGiga()
+    // def maxmem = task.memory.toGiga().intdiv(2) 
+    def maxmem = task.memory.toGiga() 
     def compression = (reads[0].name.endsWith("gz")) ? "gz" : "bz2"
 
     def read2 = ""
     def orphan_check = ""
 
-    def bb_params = params.qc_params_shotgun
+    def bb_params = params.qc_params_shotgun //.replaceAll(/maq=([0-9]+)/, "")
     
     def trim_params = "${bb_params} ref=${adapters} minlen=${params.qc_minlen}"
 
