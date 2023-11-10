@@ -170,6 +170,7 @@ workflow {
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaT(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
 		}
+		.filter { it[1].size() > 0}
 	metaT_single_unmapped_ch = combined_assembly_input_index_ch
 		.map { sample_id, sample, fastqs, index ->
 			def new_sample = [:]
@@ -181,6 +182,7 @@ workflow {
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaT(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
 		}
+		.filter { it[1].size() > 0}
 	metaG_paired_unmapped_ch = combined_assembly_input_index_ch
 		.map { sample_id, sample, fastqs, index ->
 			def new_sample = [:]
@@ -193,6 +195,7 @@ workflow {
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaG(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
 		}
+		.filter { it[1].size() > 0}
 	metaG_single_unmapped_ch = combined_assembly_input_index_ch
 		.map { sample_id, sample, fastqs, index ->
 			def new_sample = [:]
@@ -204,6 +207,8 @@ workflow {
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaG(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
 		}
+		.filter { it[1].size() > 0}
+
 	extract_unmapped_ch = Channel.empty()
 		.concat(metaT_paired_unmapped_ch)
 		.concat(metaT_single_unmapped_ch)
