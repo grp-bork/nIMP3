@@ -38,11 +38,8 @@ workflow assembly_prep {
 	main:
 		initial_assembly_ch = fastq_ch
 			.map { sample, fastqs -> 
-				meta = [:]
+				def meta = sample.clone()
 				meta.id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
-				meta.library = sample.library
-				meta.library_type = sample.library_type
-				meta.is_paired = sample.is_paired
 				
 				return tuple(meta, [fastqs].flatten())
 			}

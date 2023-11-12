@@ -28,10 +28,8 @@ workflow get_unmapped_reads {
 			}
 			.groupTuple(by: 0, size: 2, remainder: true)
 			.map { sample_id, sample, fastqs -> 
-				meta = [:]
+				def meta = sample.clone()
 				meta.id = sample_id
-				meta.library = sample.library
-				meta.library_type = sample.library_type
 				return tuple(meta, fastqs.flatten())
 			}
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
