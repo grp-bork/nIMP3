@@ -9,6 +9,9 @@ process extract_unmapped {
 	tuple val(sample), path("unmapped/${stage}/${sample.library_type}/${sample.id}/*.fastq.gz"), emit: fastqs, optional: true
 
 	script:
+
+	println "SAMPLE"
+	println sample
 	def reads1 = "${sample.id}_R1.fastq.gz"
 	def reads2 = ""
 	def filter_cmd_base = "samtools view --threads {task.cpus} -u"

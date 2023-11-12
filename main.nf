@@ -259,7 +259,7 @@ workflow {
 
 	// post_assembly_check_ch.dump(pretty: true, tag: "post_assembly_check_ch")
 	extract_unmapped(extract_unmapped_ch, "initial")
-	extract_unmapped.out.fastqs.dump(pretty: true, tag: "extract_unmapped_ch")
+	extract_unmapped.out.fastqs.dump(pretty: true, tag: "extract_unmapped_fastqs_ch")
 	
 	unmapped_ch = extract_unmapped.out.fastqs
 		.map { sample, fastqs ->
