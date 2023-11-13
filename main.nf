@@ -126,8 +126,9 @@ workflow {
 
 	contigs_ch = contigs_ch.map {
 		sample, fastqs -> 
-		sample.library_type = "hybrid"
-		return tuple(sample, fastqs)
+		def new_sample = sample.clone()
+		new_sample.library_type = "hybrid"
+		return tuple(new_sample, fastqs)
 	}
 
 	bwa_index(contigs_ch, "initial")
@@ -263,8 +264,9 @@ workflow {
 	
 	unmapped_ch = extract_unmapped.out.fastqs
 		.map { sample, fastqs ->
-			sample.id = sample.index_id
-			return tuple(sample.id, sample, fastqs)
+			def new_sample = sample.clone()
+			new_sample.id = sample.index_id
+			return tuple(new_sample.id, new_sample, fastqs)
 		}
 		.groupTuple(by: 0, size: 2, remainder: true)
 		.map { sample_id, sample, fastqs -> 
@@ -275,9 +277,10 @@ workflow {
 		}
 		.groupTuple(by: 0, size: 2, remainder: true) //, sort: true)
 		.map { sample, fastqs ->
+			def new_sample = sample.clone()
 			// sample.library_type = sample.library_type[0]
-			sample.library_type = "hybrid"
-			return tuple(sample, fastqs.flatten())
+			new_sample.library_type = "hybrid"
+			return tuple(new_sample, fastqs.flatten())
 		}
 
 	unmapped_ch.dump(pretty: true, tag: "unmapped_ch")
