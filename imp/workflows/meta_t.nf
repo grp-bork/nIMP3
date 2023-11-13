@@ -70,6 +70,9 @@ workflow metaT_initial_assembly {
 				return tuple(meta, fastqs.flatten())
 			}
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
+
+		unmapped_ch.dump(pretty: true, tag: "unmapped_after_metaT_assembly")
+		unmapped_ch = unmapped_ch
 			.map { sample, fastqs ->
 				sample.library = sample.library[0]
 				sample.library_type = sample.library_type[0]
