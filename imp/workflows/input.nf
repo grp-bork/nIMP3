@@ -10,8 +10,9 @@ workflow metaT_input {
 		reads = fastq_input.out.fastqs
 			.map {
 				sample, files ->					
-					sample.library_type = "metaT"					
-				return tuple(sample, files)
+					def new_sample = sample.clone()
+					new_sample.library_type = "metaT"					
+				return tuple(new_sample, files)
 			}
 }
 
@@ -25,8 +26,9 @@ workflow metaG_input {
 		reads = fastq_input.out.fastqs
 			.map {
 				sample, files ->
-					sample.library_type = "metaG"
-				return tuple(sample, files)
+					def new_sample = sample.clone()
+					new_sample.library_type = "metaG"
+				return tuple(new_sample, files)
 			}
 			
 }
@@ -38,10 +40,10 @@ workflow assembly_prep {
 	main:
 		initial_assembly_ch = fastq_ch
 			.map { sample, fastqs -> 
-				def meta = sample.clone()
-				meta.id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
+				def new_sample = sample.clone()
+				new_sample.id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
 				
-				return tuple(meta, [fastqs].flatten())
+				return tuple(new_sample, [fastqs].flatten())
 			}
 			.groupTuple(by: 0, size: 2, remainder: true)
 			.map { sample, fastqs -> return tuple(sample, fastqs.flatten())}

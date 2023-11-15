@@ -44,8 +44,9 @@ workflow metaT_initial_assembly {
 			}
 			.combine(bwa_index.out.index, by: [0, 1])
 			.map { sample_id, libtype, sample, fastqs, index ->
-				sample.index_id = sample_id
-				return tuple(sample, fastqs, index) 
+				def new_sample = sample.clone()
+				new_sample.index_id = sample_id
+				return tuple(new_sample, fastqs, index) 
 			}
 
 		post_assembly_check_ch.dump(tag: "post_assembly_check_ch")
@@ -60,8 +61,9 @@ workflow metaT_initial_assembly {
 
 		unmapped_ch = extract_unmapped.out.fastqs
 			.map { sample, fastqs ->
-				sample.id = sample.index_id
-				return tuple(sample.id, sample, fastqs)
+				def new_sample = sample.clone()
+				new_sample.id = sample.index_id
+				return tuple(new_sample.id, new_sample, fastqs)
 			}
 			.groupTuple(by: 0, size: 2, remainder: true)
 			.map { sample_id, sample, fastqs -> 
@@ -74,9 +76,10 @@ workflow metaT_initial_assembly {
 		unmapped_ch.dump(pretty: true, tag: "unmapped_after_metaT_assembly")
 		unmapped_ch = unmapped_ch
 			.map { sample, fastqs ->
-				sample.library = sample.library[0]
-				sample.library_type = sample.library_type[0]
-				return tuple(sample, fastqs.flatten())
+				def new_sample = sample.clone()
+				new_sample.library = sample.library[0]
+				new_sample.library_type = sample.library_type[0]
+				return tuple(new_sample, fastqs.flatten())
 			}
 
 		emit:
