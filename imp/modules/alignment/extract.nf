@@ -18,7 +18,7 @@ process extract_unmapped {
 	def filter_cmd =  "${filter_cmd_base} -f 4 alignment.bam > unmapped.bam 2>> error.log"
 
 	def outpath = "unmapped/${stage}/${sample.library_type}/${sample.id}"
-	def extract_cmd = "samtools fastq -0 ${outpath}/${sample.id}_R1.fastq.gz unmapped.bam"
+	def extract_cmd = "samtools fastq -0 ${outpath}/${fastqs[0]} unmapped.bam"
 
 	// def check_cmd = "if [[ -z \"\$(gzip -dc ${outpath}/${sample.id}_R1.fastq.gz | head -n 1)\" ]]; then rm -f ${outpath}/${sample.id}_R1.fastq.gz; fi"
 

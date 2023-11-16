@@ -15,3 +15,22 @@ process concatenate_contigs {
 		"""
 
 }
+
+
+def filter_fastq(fastq, is_paired, library_source) {
+
+	def metaT_p = ~/.*metaT.*/
+	def metaG_p = ~/.*metaG.*/
+	def se_p = ~/.*(singles|orphans|chimeras).*/
+
+	return (
+		library_source == "metaG"
+			? metaG_p.matcher(fastq.name).matches()
+			: metaT_p.matcher(fastq.name).matches()
+		) && (
+			is_paired
+				? !se_p.matcher(fastq.name).matches()
+				: se_p.matcher(fastq.name).matches()
+		)
+
+}

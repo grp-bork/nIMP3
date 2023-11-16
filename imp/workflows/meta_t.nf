@@ -14,17 +14,6 @@ workflow metaT_initial_assembly {
 	main:
 		assembly_prep(fastq_ch)
 		initial_assembly_ch = assembly_prep.out.reads
-		// initial_assembly_ch = fastq_ch
-		// 	.map { sample, fastqs -> 
-		// 		meta = [:]
-		// 		meta.id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
-		// 		meta.library = sample.library
-		// 		meta.library_type = sample.library_type
-				
-		// 		return tuple(meta, [fastqs].flatten())
-		// 	}
-		// 	.groupTuple(by: 0, size: 2, remainder: true)
-		// 	.map { sample, fastqs -> return tuple(sample, fastqs.flatten())}
 
 		if (params.assembler == "spades") {
 			rnaspades(initial_assembly_ch, "initial")
@@ -34,8 +23,6 @@ workflow metaT_initial_assembly {
 			contigs_ch = metaT_megahit.out.contigs
 		}
 		bwa_index(contigs_ch, "initial")
-
-		// get_unmapped_reads(fastq_ch, bwa_index.out.index)
 
 		post_assembly_check_ch = fastq_ch
 			.map { sample, fastqs -> 
@@ -63,21 +50,11 @@ workflow metaT_initial_assembly {
 			.map { sample, fastqs ->
 				def new_sample = sample.clone()
 				new_sample.id = sample.index_id
-				// return tuple(new_sample.id, new_sample, fastqs)
 				return tuple(new_sample, [fastqs].flatten())
 			}
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
 		unmapped_ch.dump(pretty: true, tag: "unmapped_after_metaT_assembly_1")
 
-		// unmapped_ch = unmapped_ch
-		// 	.map { sample_id, sample, fastqs -> 
-		// 		def new_sample = sample.clone()
-		// 		new_sample.id = sample_id
-		// 		return tuple(new_sample, fastqs.flatten())
-		// 	}
-		// 	.groupTuple(by: 0, size: 2, remainder: true, sort: true)
-
-		// unmapped_ch.dump(pretty: true, tag: "unmapped_after_metaT_assembly_2")
 		unmapped_ch = unmapped_ch
 			.map { sample, fastqs ->
 				def new_sample = sample.clone()
@@ -87,7 +64,6 @@ workflow metaT_initial_assembly {
 			}
 
 		emit:
-			// unmapped_reads = get_unmapped_reads.out.reads
 			unmapped_reads = unmapped_ch
 			contigs = contigs_ch
 			reads = initial_assembly_ch
@@ -99,7 +75,6 @@ workflow metaT_assembly {
 		fastq_ch
 	main:
 		metaT_initial_assembly(fastq_ch)
-		// metaT_initial_assembly.out.unmapped_reads.view()
 
 		def assembler = ""
 		if (params.assembler == "spades") {
@@ -112,9 +87,14 @@ workflow metaT_assembly {
 			assembler = "metaT_megahit"
 		}
 
+		metaT_initial_assembly.out.contigs.dump(pretty: true, tag: "metaT_initial_assembly.out.contigs")
+
 		all_contigs_ch = metaT_initial_assembly.out.contigs
 			.concat(contigs_ch)
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
+
+		all_contigs_ch.dump(pretty: true, tag: "all_contigs_ch")
+
 		concatenate_contigs(all_contigs_ch, "final", assembler)
 
 	emit:
