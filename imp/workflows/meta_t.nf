@@ -63,20 +63,21 @@ workflow metaT_initial_assembly {
 			.map { sample, fastqs ->
 				def new_sample = sample.clone()
 				new_sample.id = sample.index_id
-				return tuple(new_sample.id, new_sample, fastqs)
-			}
-			.groupTuple(by: 0, size: 2, remainder: true)
-		unmapped_ch.dump(pretty: true, tag: "unmapped_after_metaT_assembly_1")
-
-		unmapped_ch = unmapped_ch
-			.map { sample_id, sample, fastqs -> 
-				def new_sample = sample.clone()
-				new_sample.id = sample_id
+				// return tuple(new_sample.id, new_sample, fastqs)
 				return tuple(new_sample, fastqs.flatten())
 			}
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
+		unmapped_ch.dump(pretty: true, tag: "unmapped_after_metaT_assembly_1")
 
-		unmapped_ch.dump(pretty: true, tag: "unmapped_after_metaT_assembly_2")
+		// unmapped_ch = unmapped_ch
+		// 	.map { sample_id, sample, fastqs -> 
+		// 		def new_sample = sample.clone()
+		// 		new_sample.id = sample_id
+		// 		return tuple(new_sample, fastqs.flatten())
+		// 	}
+		// 	.groupTuple(by: 0, size: 2, remainder: true, sort: true)
+
+		// unmapped_ch.dump(pretty: true, tag: "unmapped_after_metaT_assembly_2")
 		unmapped_ch = unmapped_ch
 			.map { sample, fastqs ->
 				def new_sample = sample.clone()
