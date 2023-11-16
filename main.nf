@@ -163,7 +163,7 @@ workflow {
 			new_sample.is_paired = true
 			new_sample.index_id = sample_id
 			def wanted_fastqs = []
-			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaT(.*)") } ))
+			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)(singles|orphans|chimeras)(.*)") && it.name.matches("(.*)metaT(.*)") } ))
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaT(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
 		}
@@ -176,7 +176,7 @@ workflow {
 			new_sample.is_paired = false
 			new_sample.index_id = sample_id
 			def wanted_fastqs = []
-			wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaT(.*)") } ))
+			wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)(singles|orphans|chimeras)(.*)") && it.name.matches("(.*)metaT(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
 		}
 		.filter { it[1].size() > 0}
@@ -188,7 +188,7 @@ workflow {
 			new_sample.is_paired = true
 			new_sample.index_id = sample_id
 			def wanted_fastqs = []
-			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaG(.*)") } ))
+			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)(singles|orphans|chimeras)(.*)") && it.name.matches("(.*)metaG(.*)") } ))
 			wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaG(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
 		}
@@ -201,7 +201,7 @@ workflow {
 			new_sample.is_paired = false
 			new_sample.index_id = sample_id
 			def wanted_fastqs = []
-			wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaG(.*)") } ))
+			wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)(singles|orphans|chimeras)(.*)") && it.name.matches("(.*)metaG(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
 		}
 		.filter { it[1].size() > 0}
