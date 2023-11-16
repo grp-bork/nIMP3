@@ -120,7 +120,7 @@ workflow {
 		hybrid_megahit(hybrid_assembly_input_ch, "initial")
 		contigs_ch = hybrid_megahit.out.contigs
 	}
-	
+
 	contigs_ch = contigs_ch.map {
 		sample, fastqs -> 
 		def new_sample = sample.clone()
@@ -191,7 +191,7 @@ workflow {
 			new_sample.is_paired = false
 			new_sample.index_id = sample_id
 			def wanted_fastqs = fastqs
-				.findAll({ filter_fastq(it, false, "metaT") })
+				.findAll({ filter_fastq(it, false, "metaG") })
 			// wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)(singles|orphans|chimeras)(.*)") && it.name.matches("(.*)metaG(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
 		}
