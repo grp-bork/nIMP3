@@ -83,7 +83,7 @@ workflow metaT_initial_assembly {
 				def new_sample = sample.clone()
 				new_sample.library = sample.library[0]
 				new_sample.library_type = sample.library_type[0]
-				return tuple(new_sample, fastqs.flatten())
+				return tuple(new_sample, [fastqs].flatten())
 			}
 
 		emit:
