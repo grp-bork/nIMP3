@@ -67,9 +67,9 @@ workflow metaT_initial_assembly {
 			}
 			.groupTuple(by: 0, size: 2, remainder: true)
 			.map { sample_id, sample, fastqs -> 
-				def meta = [:]
-				meta.id = sample_id
-				return tuple(meta, fastqs.flatten())
+				def new_sample = sample.clone()
+				new_sample.id = sample_id
+				return tuple(new_sample, fastqs.flatten())
 			}
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
 
