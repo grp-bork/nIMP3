@@ -20,9 +20,7 @@ process metaT_megahit {
 
 	def input_files = ""
 	// we cannot auto-detect SE vs. PE-orphan!
-	// def r1_files = fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)(singles|orphans|chimeras)(.*)") } )
-	def r1_files = fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") } )
-	r1_files = r1_files.findAll( { !it.name.matches("(.*)(singles|orphans|chimeras)(.*)") } )
+	def r1_files = fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)(singles|orphans|chimeras)(.*)") } )
 	def r2_files = fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") } )
 	def orphans = fastqs.findAll( { it.name.matches("(.*)(singles|orphans|chimeras)(.*)") } )
 
@@ -67,14 +65,14 @@ process hybrid_megahit {
 	def r2_files = []
 	def orphan_files = []
 
-	// we cannot auto-detect SE vs. PE-orphan!
-	r1_files.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaG(.*)") } ))
+	// we cannot auto-detect SE vs. PE-orphan!	
+	r1_files.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)(singles|orphans|chimeras)(.*)") && it.name.matches("(.*)metaG(.*)") } ))
 	r2_files.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaG(.*)") } ))
-	orphan_files.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaG(.*)") } ))
+	orphan_files.addAll(fastqs.findAll( { it.name.matches("(.*)(singles|orphans|chimeras)(.*)") && it.name.matches("(.*)metaG(.*)") } ))
 
-	r1_files.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaT(.*)") } ))
+	r1_files.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)(singles|orphans|chimeras)(.*)") && it.name.matches("(.*)metaT(.*)") } ))
 	r2_files.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaT(.*)") } ))
-	orphan_files.addAll(fastqs.findAll( { it.name.matches("(.*)singles(.*)") && it.name.matches("(.*)metaT(.*)") } ))
+	orphan_files.addAll(fastqs.findAll( { it.name.matches("(.*)(singles|orphans|chimeras)(.*)") && it.name.matches("(.*)metaT(.*)") } ))
 
 	orphan_files.addAll(contigs.findAll( { it.name != "NO_INPUT" }))
 
