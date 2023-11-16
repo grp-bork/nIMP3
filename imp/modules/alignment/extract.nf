@@ -12,17 +12,18 @@ process extract_unmapped {
 
 	println "SAMPLE"
 	println sample
-	def reads1 = "${sample.id}_R1.fastq.gz"
+	def reads1 = "${fastqs[0]}"
 	def reads2 = ""
 	def filter_cmd_base = "samtools view --threads {task.cpus} -u"
 	def filter_cmd =  "${filter_cmd_base} -f 4 alignment.bam > unmapped.bam 2>> error.log"
 
 	def outpath = "unmapped/${stage}/${sample.library_type}/${sample.id}"
-	def extract_cmd = "samtools fastq -0 ${outpath}/${fastqs[0]} unmapped.bam"
+	def extract_cmd = "samtools fastq -0 ${outpath}/${sample.id}_R1.fastq.gz unmapped.bam"
 
 	// def check_cmd = "if [[ -z \"\$(gzip -dc ${outpath}/${sample.id}_R1.fastq.gz | head -n 1)\" ]]; then rm -f ${outpath}/${sample.id}_R1.fastq.gz; fi"
 
 	if (sample.is_paired == true) {
+		reads1 = "${sample.id}_R1.fastq.gz"
 		reads2 = "${sample.id}_R2.fastq.gz"
 		filter_cmd = "${filter_cmd_base} -f4 -F 264 alignment.bam > self_unmapped.bam 2>> error.log\n"
 		filter_cmd += "${filter_cmd_base} -f8 -F 260 alignment.bam > mate_unmapped.bam 2>> error.log\n"
