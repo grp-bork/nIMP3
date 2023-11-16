@@ -20,9 +20,9 @@ process metaT_megahit {
 
 	def input_files = ""
 	// we cannot auto-detect SE vs. PE-orphan!
-	r1_files = fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)singles(.*)") } )
+	r1_files = fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)(singles|orphans|chimeras)(.*)") } )
 	r2_files = fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") } )
-	orphans = fastqs.findAll( { it.name.matches("(.*)singles(.*)") } )
+	orphans = fastqs.findAll( { it.name.matches("(.*)(singles|orphans|chimeras)(.*)") } )
 
 	if (r1_files.size() != 0) {
 		input_files += "-1 ${r1_files.join(' ')}"
