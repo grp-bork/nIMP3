@@ -145,9 +145,10 @@ workflow nevermore_prep_align {
 				meta.merged = false
 				return tuple(meta, fastq)
 			}
-			.concat(merge_single_fastqs.out.fastq)
+			.concat(pe_singles_ch.no_merge)
 			.concat(single_reads_ch.single_end)
 			.concat(paired_ch)
+			.concat(merge_single_fastqs.out.fastq)
 
 		/*	perform post-qc fastqc analysis and generate multiqc report on merged single-read and paired-end sets */
 
@@ -171,6 +172,7 @@ workflow nevermore_prep_align {
 
 		fastq_prep_ch = paired_ch
 			.concat(single_reads_ch.single_end)
+			.concat(pe_singles_ch.no_merge)
 			.concat(merge_single_fastqs.out.fastq)
 
 	emit:

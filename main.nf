@@ -57,11 +57,7 @@ workflow {
 			.filter { it[0].library_type == "metaT" }			
 	)
 
-	// metaT_assembly.out.reads.view()
-	// [[id:sample1.metaT, library:paired, library_type:metaT], [/scratch/schudoma/imp3_test/work/0a/c32c5be6621089f9c71d87fc2fd308/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/0a/c32c5be6621089f9c71d87fc2fd308/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz, /scratch/schudoma/imp3_test/work/f3/2d793cfd78eda426ffc94ce4f5712a/merged/sample1.metaT.singles_R1.fastq.gz]]
-	// metaT_assembly.out.final_contigs.view()
-	// [[id:sample1.metaT, library:paired, library_type:metaT], /scratch/schudoma/imp3_test/work/29/885cb85b918cada4ee1e07111a2434/assemblies/rnaspades/final/metaT/sample1.metaT/sample1.metaT.final_contigs.fasta]
-
+	// collect fastqs per sample
 	assembly_prep(
 		nevermore_main.out.fastqs
 			.filter { it[0].library_type == "metaG" }

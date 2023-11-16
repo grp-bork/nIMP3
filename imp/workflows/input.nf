@@ -33,7 +33,9 @@ workflow metaG_input {
 			
 }
 
-
+// collect all fastq files for a sample
+// identify related fastqs via sample id : <prefix>.<library_type>[.singles]
+// each sample has at most 2 groups of files: [2 x PE, 1 x orphan], [1 x singles]
 workflow assembly_prep {
 	take:
 		fastq_ch
