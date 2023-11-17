@@ -58,8 +58,8 @@ workflow metaT_initial_assembly {
 		unmapped_ch = unmapped_ch
 			.map { sample, fastqs ->
 				def new_sample = sample.clone()
-				new_sample.library = sample.library[0]
-				new_sample.library_source = sample.library_source[0]
+				new_sample.library = [sample.library].flatten()[0]
+				new_sample.library_source = [sample.library_source].flatten()[0]
 				return tuple(new_sample, [fastqs].flatten())
 			}
 
