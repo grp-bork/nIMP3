@@ -21,8 +21,10 @@ process extract_unmapped {
 	def extract_cmd = ""
 
 	// def check_cmd = "if [[ -z \"\$(gzip -dc ${outpath}/${sample.id}_R1.fastq.gz | head -n 1)\" ]]; then rm -f ${outpath}/${sample.id}_R1.fastq.gz; fi"
+	def message = (sample.is_paired) ? "MSG_IS_PAIRED" : "MSG_IS_SINGLE"
+	print message
 
-	if (sample.is_paired == true) {
+	if (sample.is_paired == true) { // why can i not use "sample.is_paired" ????
 		print "IN IS_PAIRED_BLOCK"
 		reads1 += "${sample.id}_R1.fastq.gz"
 		reads2 += "${sample.id}_R2.fastq.gz"
