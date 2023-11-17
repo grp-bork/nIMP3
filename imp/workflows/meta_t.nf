@@ -50,6 +50,7 @@ workflow metaT_initial_assembly {
 			.map { sample, fastqs ->
 				def new_sample = sample.clone()
 				new_sample.id = sample.index_id
+				new_sample.remove("index_id")
 				return tuple(new_sample, [fastqs].flatten())
 			}
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
