@@ -6,7 +6,7 @@ process extract_unmapped {
 	val(stage)
 
 	output:
-	tuple val(sample), path("unmapped/${stage}/${sample.source}/${sample.id}/*.fastq.gz"), emit: fastqs, optional: true
+	tuple val(sample), path("unmapped/${stage}/${sample.library_source}/${sample.id}/*.fastq.gz"), emit: fastqs, optional: true
 
 	script:
 
