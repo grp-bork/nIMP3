@@ -6,12 +6,12 @@ workflow get_unmapped_reads {
 		fastq_ch
         index_ch
 	main:
-        // [[id:sample1.metaG, is_paired:true, library:paired, library_type:metaG, merged:true], [/scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R1.fastq.gz, /scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R2.fastq.gz]]
-        // [[id:sample1.metaT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz]]
+        // [[id:sample1.metaG, is_paired:true, library:paired, library_source:metaG, merged:true], [/scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R1.fastq.gz, /scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R2.fastq.gz]]
+        // [[id:sample1.metaT, is_paired:true, library:paired, library_source:metaT, merged:true], [/scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz]]
 		post_assembly_check_ch = fastq_ch
 			.map { sample, fastqs -> 
 				sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
-				return tuple(sample_base_id, sample.library_type, sample, [fastqs].flatten())
+				return tuple(sample_base_id, sample.library_source, sample, [fastqs].flatten())
 			}
 			.combine(index_ch, by: [0, 1])
 			.map { sample_id, libtype, sample, fastqs, index ->
@@ -38,7 +38,7 @@ workflow get_unmapped_reads {
 			.map { sample, fastqs ->
                 def new_sample = sample.clone()
 				new_sample.library = new_sample.library[0]
-				new_sample.library_type = new_sample.library_type[0]
+				new_sample.library_source = new_sample.library_source[0]
 				return tuple(new_sample, fastqs.flatten())
 			}
 

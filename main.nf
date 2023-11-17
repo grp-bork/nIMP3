@@ -54,13 +54,13 @@ workflow {
 
 	metaT_assembly(
 		nevermore_main.out.fastqs
-			.filter { it[0].library_type == "metaT" }			
+			.filter { it[0].library_source == "metaT" }			
 	)
 
 	// collect metaG fastqs per sample
 	assembly_prep(
 		nevermore_main.out.fastqs
-			.filter { it[0].library_type == "metaG" }
+			.filter { it[0].library_source == "metaG" }
 	)
 
 	metaG_assembly_ch = assembly_prep.out.reads
@@ -124,7 +124,7 @@ workflow {
 	contigs_ch = contigs_ch.map {
 		sample, fastqs -> 
 		def new_sample = sample.clone()
-		new_sample.library_type = "hybrid"
+		new_sample.library_source = "hybrid"
 		return tuple(new_sample, fastqs)
 	}
 
@@ -146,7 +146,7 @@ workflow {
 		.map { sample_id, sample, fastqs, index ->
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaT"
-			new_sample.library_type = "metaT"
+			new_sample.library_source = "metaT"
 			new_sample.is_paired = true
 			new_sample.index_id = sample_id
 			def wanted_fastqs = fastqs
@@ -160,7 +160,7 @@ workflow {
 		.map { sample_id, sample, fastqs, index ->
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaT.singles"
-			new_sample.library_type = "metaT"
+			new_sample.library_source = "metaT"
 			new_sample.is_paired = false
 			new_sample.index_id = sample_id
 			def wanted_fastqs = fastqs
@@ -173,7 +173,7 @@ workflow {
 		.map { sample_id, sample, fastqs, index ->
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaG"
-			new_sample.library_type = "metaG"
+			new_sample.library_source = "metaG"
 			new_sample.is_paired = true
 			new_sample.index_id = sample_id
 			def wanted_fastqs = fastqs
@@ -187,7 +187,7 @@ workflow {
 		.map { sample_id, sample, fastqs, index ->
 			def new_sample = [:]
 			new_sample.id = sample.id + ".metaG.singles"
-			new_sample.library_type = "metaG"
+			new_sample.library_source = "metaG"
 			new_sample.is_paired = false
 			new_sample.index_id = sample_id
 			def wanted_fastqs = fastqs
@@ -204,15 +204,6 @@ workflow {
 		.concat(metaG_single_unmapped_ch)
 	
 	extract_unmapped_ch.dump(pretty: true, tag: "extract_unmapped_ch")
-
-
-	// [sample1.metaT, [id:sample1.metaT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz]]
-	// [[id:sample1.metaT, is_paired:true, library:paired, library_type:metaT, merged:true], [/scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R1.fastq.gz, /scratch/schudoma/imp3_test/work/32/89e706473152c55350201e65cd16a3/no_host/sample1.metaT/sample1.metaT_R2.fastq.gz]]
-	// [sample1.metaG, [id:sample1.metaG, is_paired:true, library:paired, library_type:metaG, merged:true], [/scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R1.fastq.gz, /scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R2.fastq.gz]]
-	// [[id:sample1.metaG, is_paired:true, library:paired, library_type:metaG, merged:true], [/scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R1.fastq.gz, /scratch/schudoma/imp3_test/work/da/eea24ab29b720733d771235b1d7a15/no_host/sample1.metaG/sample1.metaG_R2.fastq.gz]]
-	// [sample1, null, [/scratch/schudoma/imp3_test/work/52/0bf03b27daa9dbeb9a72a2936ef999/index/initial/null/sample1/sample1.amb, /scratch/schudoma/imp3_test/work/52/0bf03b27daa9dbeb9a72a2936ef999/index/initial/null/sample1/sample1.ann, /scratch/schudoma/imp3_test/work/52/0bf03b27daa9dbeb9a72a2936ef999/index/initial/null/sample1/sample1.bwt, /scratch/schudoma/imp3_test/work/52/0bf03b27daa9dbeb9a72a2936ef999/index/initial/null/sample1/sample1.pac, /scratch/schudoma/imp3_test/work/52/0bf03b27daa9dbeb9a72a2936ef999/index/initial/null/sample1/sample1.sa]]
-
-	// get_unmapped_reads(nevermore_main.out.fastqs, bwa_index.out.index)
 
 	base_id_ch = nevermore_main.out.fastqs
 		.map { sample, fastqs -> 
@@ -259,14 +250,12 @@ workflow {
 		.map { sample_id, sample, fastqs -> 
 			def meta = [:]
 			meta.id = sample_id
-			// meta.library_type = sample.library_type
 			return tuple(meta, fastqs.flatten())
 		}
 		.groupTuple(by: 0, size: 2, remainder: true) //, sort: true)
 		.map { sample, fastqs ->
 			def new_sample = sample.clone()
-			// sample.library_type = sample.library_type[0]
-			new_sample.library_type = "hybrid"
+			new_sample.library_source = "hybrid"
 			return tuple(new_sample, fastqs.flatten())
 		}
 

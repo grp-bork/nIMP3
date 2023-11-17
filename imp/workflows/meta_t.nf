@@ -27,7 +27,7 @@ workflow metaT_initial_assembly {
 		post_assembly_check_ch = fastq_ch
 			.map { sample, fastqs -> 
 				sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
-				return tuple(sample_base_id, sample.library_type, sample, [fastqs].flatten())
+				return tuple(sample_base_id, sample.library_source, sample, [fastqs].flatten())
 			}
 			.combine(bwa_index.out.index, by: [0, 1])
 			.map { sample_id, libtype, sample, fastqs, index ->
@@ -59,7 +59,7 @@ workflow metaT_initial_assembly {
 			.map { sample, fastqs ->
 				def new_sample = sample.clone()
 				new_sample.library = sample.library[0]
-				new_sample.library_type = sample.library_type[0]
+				new_sample.library_source = sample.library_source[0]
 				return tuple(new_sample, [fastqs].flatten())
 			}
 

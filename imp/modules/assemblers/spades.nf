@@ -11,7 +11,7 @@ process rnaspades {
 	val(stage)
 
 	output:
-	tuple val(sample), path("assemblies/rnaspades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.*.fasta"), emit: contigs
+	tuple val(sample), path("assemblies/rnaspades/${stage}/${sample.library_source}/${sample.id}/${sample.id}.${stage}.*.fasta"), emit: contigs
 
 	script:
 
@@ -38,10 +38,10 @@ process rnaspades {
 	// --meta and --rna seem mutually exclusive?
 
 	"""
-	rnaspades.py -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.library_type}/${sample.id} ${stranded} ${kmers} ${input_files}
-	mv -v assemblies/rnaspades/${stage}/${sample.library_type}/${sample.id}/transcripts.fasta assemblies/rnaspades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
+	rnaspades.py -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.library_source}/${sample.id} ${stranded} ${kmers} ${input_files}
+	mv -v assemblies/rnaspades/${stage}/${sample.library_source}/${sample.id}/transcripts.fasta assemblies/rnaspades/${stage}/${sample.library_source}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
 	"""
-	// mv -v transcripts.fasta assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
+	// mv -v transcripts.fasta assemblies/spades/${stage}/${sample.library_source}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
 	// rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 }
 
@@ -118,7 +118,7 @@ process metaspades {
 	spades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/metaspades/${stage}/${sample.id} ${kmers} ${input_files} ${contig_str}
 	mv -v assemblies/metaspades/${stage}/${sample.id}/contigs.fasta assemblies/metaspades/${stage}/${sample.id}/${sample.id}.${stage}.contigs.fasta 
 	"""
-	// mv -v transcripts.fasta assemblies/spades/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
+	// mv -v transcripts.fasta assemblies/spades/${stage}/${sample.library_source}/${sample.id}/${sample.id}.${stage}.transcripts.fasta 
 	// rnaspades.py --meta -t ${task.cpus} -m ${mem_gb} -o assemblies/rnaspades/${stage}/${sample.id} ${stranded} ${kmers} ${input_files}
 }
 

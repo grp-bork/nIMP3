@@ -6,7 +6,7 @@ process extract_unmapped {
 	val(stage)
 
 	output:
-	tuple val(sample), path("unmapped/${stage}/${sample.library_type}/${sample.id}/*.fastq.gz"), emit: fastqs, optional: true
+	tuple val(sample), path("unmapped/${stage}/${sample.source}/${sample.id}/*.fastq.gz"), emit: fastqs, optional: true
 
 	script:
 
@@ -17,14 +17,15 @@ process extract_unmapped {
 	def filter_cmd_base = "samtools view --threads {task.cpus} -u"
 	def filter_cmd =  ""
 
-	def outpath = "unmapped/${stage}/${sample.library_type}/${sample.id}"
+	def outpath = "unmapped/${stage}/${sample.library_source}/${sample.id}"
 	def extract_cmd = ""
 
 	// def check_cmd = "if [[ -z \"\$(gzip -dc ${outpath}/${sample.id}_R1.fastq.gz | head -n 1)\" ]]; then rm -f ${outpath}/${sample.id}_R1.fastq.gz; fi"
 	def message = (sample.is_paired) ? "MSG_IS_PAIRED" : "MSG_IS_SINGLE"
 	print message
 
-	if (sample.is_paired == true) { // why can i not use "sample.is_paired" ????
+	// if (sample.is_paired == true) { // why can i not use "sample.is_paired" ????
+	if (fastqs instanceof Collection && fastqs.size() == 2) {
 		print "IN IS_PAIRED_BLOCK"
 		reads1 += "${sample.id}_R1.fastq.gz"
 		reads2 += "${sample.id}_R2.fastq.gz"
@@ -47,7 +48,7 @@ process extract_unmapped {
 
 
 	"""
-	mkdir -p unmapped/${stage}/${sample.library_type}/${sample.id}/
+	mkdir -p unmapped/${stage}/${sample.library_source}/${sample.id}/
 	bwa mem -v 1 -t ${task.cpus} ${sample.index_id} ${reads1} ${reads2} 2>> error.log | \
 	samtools view --threads {task.cpus} -bS - > alignment.bam 2>> error.log
 

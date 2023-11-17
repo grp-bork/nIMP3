@@ -11,7 +11,7 @@ workflow metaT_input {
 			.map {
 				sample, files ->					
 					def new_sample = sample.clone()
-					new_sample.library_type = "metaT"					
+					new_sample.library_source = "metaT"					
 				return tuple(new_sample, files)
 			}
 }
@@ -27,14 +27,14 @@ workflow metaG_input {
 			.map {
 				sample, files ->
 					def new_sample = sample.clone()
-					new_sample.library_type = "metaG"
+					new_sample.library_source = "metaG"
 				return tuple(new_sample, files)
 			}
 			
 }
 
 // collect all fastq files for a sample
-// identify related fastqs via sample id : <prefix>.<library_type>[.singles]
+// identify related fastqs via sample id : <prefix>.<library_source>[.singles]
 // each sample has at most 2 groups of files: [2 x PE, 1 x orphan], [1 x singles]
 workflow assembly_prep {
 	take:

@@ -35,7 +35,7 @@ workflow nevermore_main {
 
 				preprocessed_ch
 					.branch {
-						metaT: it[0].library_type == "metaT"
+						metaT: it[0].library_source == "metaT"
 						metaG: true
 					}
 					.set { for_sortmerna_ch }

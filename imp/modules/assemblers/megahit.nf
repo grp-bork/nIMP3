@@ -12,7 +12,7 @@ process metaT_megahit {
 	val(stage)
 
 	output:
-	tuple val(sample), path("assemblies/metaT_megahit/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.*.fasta"), emit: contigs
+	tuple val(sample), path("assemblies/metaT_megahit/${stage}/${sample.library_source}/${sample.id}/${sample.id}.${stage}.*.fasta"), emit: contigs
 
 	script:
 	def mem_gb = task.memory.toGiga()
@@ -35,7 +35,7 @@ process metaT_megahit {
 	}
 
 	def kmer_params = "--k-list ${params.kmer_steps}" //--k-min ${params.mink} --k-max ${params.maxk} --k-step ${params.stepk}"
-	def outdir = "assemblies/metaT_megahit/${stage}/${sample.library_type}/${sample.id}"
+	def outdir = "assemblies/metaT_megahit/${stage}/${sample.library_source}/${sample.id}"
 	
 	"""
 	mkdir -p ${outdir}/
@@ -54,7 +54,7 @@ process hybrid_megahit {
 	val(stage)
 
 	output:
-	tuple val(sample), path("assemblies/hybrid_megahit/${stage}/${sample.library_type}/${sample.id}/${sample.id}.${stage}.*.fasta"), emit: contigs
+	tuple val(sample), path("assemblies/hybrid_megahit/${stage}/${sample.library_source}/${sample.id}/${sample.id}.${stage}.*.fasta"), emit: contigs
 
 	script:
 	def mem_gb = task.memory.toGiga()
@@ -87,7 +87,7 @@ process hybrid_megahit {
 	}	
 
 	def kmer_params = "--k-list ${params.kmer_steps}"
-	def outdir = "assemblies/hybrid_megahit/${stage}/${sample.library_type}/${sample.id}"
+	def outdir = "assemblies/hybrid_megahit/${stage}/${sample.library_source}/${sample.id}"
 	
 	"""
 	mkdir -p ${outdir}/

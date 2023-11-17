@@ -5,13 +5,13 @@ process concatenate_contigs {
 		val(assembler)
 		
 	output:
-		tuple val(sample), path("assemblies/${assembler}/${stage}/${sample.library_type}/${sample.id}/${sample.id}*"), emit: contigs
+		tuple val(sample), path("assemblies/${assembler}/${stage}/${sample.library_source}/${sample.id}/${sample.id}*"), emit: contigs
 	
 	script:
 		"""
-		mkdir -p assemblies/${assembler}/${stage}/${sample.library_type}/${sample.id}/
+		mkdir -p assemblies/${assembler}/${stage}/${sample.library_source}/${sample.id}/
 
-		cat <(rename_contigs.awk -v ctg_prefix=preprocessing ${contigs[0]}) <(rename_contigs.awk -v ctg_prefix=unmapped ${contigs[1]}) > assemblies/${assembler}/${stage}/${sample.library_type}/${sample.id}/${sample.id}.final_contigs.fasta
+		cat <(rename_contigs.awk -v ctg_prefix=preprocessing ${contigs[0]}) <(rename_contigs.awk -v ctg_prefix=unmapped ${contigs[1]}) > assemblies/${assembler}/${stage}/${sample.library_source}/${sample.id}/${sample.id}.final_contigs.fasta
 		"""
 
 }
