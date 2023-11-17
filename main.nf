@@ -138,7 +138,7 @@ workflow {
 	combined_assembly_input_index_ch = hybrid_assembly_input_ch
 		.map { sample, fastqs, contigs -> return tuple(sample.id, sample, fastqs) }
 		.join(bwa_index.out.index, by: 0)
-		.map { sample_id, sample, fastqs, libtype, index -> return tuple(sample_id, sample, fastqs, index) }
+		.map { sample_id, sample, fastqs, libsrc, index -> return tuple(sample_id, sample, fastqs, index) }
 	combined_assembly_input_index_ch.dump(pretty: true, tag: "combined_assembly_input_index_ch")
 
 

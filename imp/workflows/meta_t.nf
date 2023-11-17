@@ -30,7 +30,7 @@ workflow metaT_initial_assembly {
 				return tuple(sample_base_id, sample.library_source, sample, [fastqs].flatten())
 			}
 			.combine(bwa_index.out.index, by: [0, 1])
-			.map { sample_id, libtype, sample, fastqs, index ->
+			.map { sample_id, libsrc, sample, fastqs, index ->
 				def new_sample = sample.clone()
 				new_sample.index_id = sample_id
 				return tuple(new_sample, fastqs, index) 
