@@ -48,6 +48,7 @@ process metaT_megahit {
 
 process hybrid_megahit {
 	label "megahit"
+	tag "${sample.id}"
 
 	input:
 	tuple val(sample), path(fastqs), path(contigs)
