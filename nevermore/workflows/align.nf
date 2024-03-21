@@ -10,6 +10,9 @@ include { merge_single_fastqs } from "../modules/converters/merge_fastqs"
 
 def asset_dir = "${projectDir}/nevermore/assets"
 
+params.drop_chimeras = true
+params.drop_orphans = false
+params.run_qa = false
 
 workflow nevermore_prep_align {
 
