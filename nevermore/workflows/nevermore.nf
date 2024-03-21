@@ -35,7 +35,7 @@ workflow nevermore_main {
 
 				preprocessed_ch
 					.branch {
-						metaT: it[0].library_source == "metaT"
+						metaT: it[0].containsKey("library_source") && it[0].library_source == "metaT"
 						metaG: true
 					}
 					.set { for_sortmerna_ch }
@@ -64,6 +64,7 @@ workflow nevermore_main {
 	
 			}
 	
+
 		} else {
 	
 			preprocessed_ch = fastq_ch
