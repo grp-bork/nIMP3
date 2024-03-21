@@ -1,0 +1,98 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/cschu/nevermore_imp/main/nextflow_schema.json",
+    "title": "Nextflow pipeline parameters",
+    "description": "This pipeline uses Nextflow and processes some kind of data. The JSON Schema was built using the nf-core pipeline schema builder.",
+    "type": "object",
+    "definitions": {
+        "preprocessing": {
+            "title": "preprocessing",
+            "type": "object",
+            "description": "Preprocessing parameters",
+            "default": "",
+            "properties": {
+                "qc_minlen": {
+                    "type": "integer",
+                    "description": "Minimum read length to pass quality control",
+                    "default": 45
+                },
+                "qc_params_shotgun": {
+                    "type": "string",
+                    "description": "bbduk quality control parameters",
+                    "default": "qtrim=rl trimq=3 maq=25 ktrim=r k=23 mink=11 hdist=1 ftm=5 entropy=0.5 entropywindow=50 entropyk=5 tpe tbo"
+                },
+                "remove_host_kraken2_db": {
+                    "type": "string",
+                    "description": "Path to a kraken2 database",
+                    "hidden": true
+                },
+                "sortmerna_db": {
+                    "type": "string",
+                    "description": "Path to a sortmerna database",
+                    "hidden": true
+                }
+            },
+            "required": [
+                "qc_minlen",
+                "qc_params_shotgun",
+                "remove_host_kraken2_db",
+                "sortmerna_db"
+            ]
+        },
+        "assembly": {
+            "title": "assembly",
+            "type": "object",
+            "description": "Assembler configuration",
+            "default": "",
+            "properties": {
+                "assembler": {
+                    "type": "string",
+                    "description": "Which assembler to use",
+                    "enum": [
+                        "megahit"
+                    ]
+                },
+                "kmer_steps": {
+                    "type": "string",
+                    "description": "A comma-separated list of k-mer sizes for the assembler",
+                    "default": "25,29,33,37,41,45,49,53,57,61,65,69,73,77,81,85,89,93,97"
+                }
+            },
+            "required": [
+                "assembler",
+                "kmer_steps"
+            ]
+        },
+        "new_group_4": {
+            "title": "New Group 4",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "meta_g_input": {
+                    "type": "string",
+                    "description": "Directory path to meta_g files"
+                },
+                "meta_t_input": {
+                    "type": "string",
+                    "description": "Directory path to meta_t files"
+                }
+            },
+            "required": [
+                "meta_g_input",
+                "meta_t_input"
+            ]
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "#/definitions/preprocessing"
+        },
+        {
+            "$ref": "#/definitions/assembly"
+        },
+        {
+            "$ref": "#/definitions/new_group_4"
+        }
+    ]
+}
