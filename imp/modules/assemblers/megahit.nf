@@ -1,6 +1,6 @@
-params.mink = 25
-params.maxk = 100
-params.stepk = 4
+// params.mink = 25
+// params.maxk = 100
+// params.stepk = 4
 params.kmer_steps = "25,29,33,37,41,45,49,53,57,61,65,69,73,77,81,85,89,93,97"
 
 

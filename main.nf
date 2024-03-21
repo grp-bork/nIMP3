@@ -3,8 +3,6 @@
 nextflow.enable.dsl=2
 
 include { nevermore_main } from "./nevermore/workflows/nevermore"
-include { gffquant_flow } from "./nevermore/workflows/gffquant"
-// include { fastq_input } from "./nevermore/workflows/input"
 include { metaT_input; metaG_input } from "./imp/workflows/input"
 
 include { rnaspades; metaspades } from "./imp/modules/assemblers/spades"
@@ -17,28 +15,12 @@ include { hybrid_megahit } from "./imp/modules/assemblers/megahit"
 include { get_unmapped_reads } from "./imp/workflows/extract"
 include { concatenate_contigs; filter_fastq } from "./imp/modules/assemblers/functions"
 
-
-// if (params.input_dir && params.remote_input_dir) {
-// 	log.info """
-// 		Cannot process both --input_dir and --remote_input_dir. Please check input parameters.
-// 	""".stripIndent()
-// 	exit 1
-// } else if (!params.input_dir && !params.remote_input_dir) {
-// 	log.info """
-// 		Neither --input_dir nor --remote_input_dir set.
-// 	""".stripIndent()
-// 	exit 1
-// }
-
-def input_dir = (params.input_dir) ? params.input_dir : params.remote_input_dir
-
 params.remote_input_dir = false
 
 params.assembler = "megahit"
 
 
 workflow {
-	// last working revision: 06e468bf12
 
 	metaT_input(
 		Channel.fromPath(params.metaT_input_dir + "/*", type: "dir")
@@ -151,8 +133,6 @@ workflow {
 			new_sample.index_id = sample_id
 			def wanted_fastqs = fastqs
 				.findAll({ filter_fastq(it, true, "metaT") })
-			// wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)(singles|orphans|chimeras)(.*)") && it.name.matches("(.*)metaT(.*)") } ))
-			// wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaT(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
 		}
 		.filter { it[1].size() > 0 }
@@ -165,7 +145,6 @@ workflow {
 			new_sample.index_id = sample_id
 			def wanted_fastqs = fastqs
 				.findAll({ filter_fastq(it, false, "metaT") })
-			// wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)(singles|orphans|chimeras)(.*)") && it.name.matches("(.*)metaT(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
 		}
 		.filter { it[1].size() > 0 }
@@ -178,8 +157,6 @@ workflow {
 			new_sample.index_id = sample_id
 			def wanted_fastqs = fastqs
 				.findAll({ filter_fastq(it, true, "metaG") })
-			// wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)(singles|orphans|chimeras)(.*)") && it.name.matches("(.*)metaG(.*)") } ))
-			// wanted_fastqs.addAll(fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") && it.name.matches("(.*)metaG(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
 		}
 		.filter { it[1].size() > 0 }
@@ -192,7 +169,6 @@ workflow {
 			new_sample.index_id = sample_id
 			def wanted_fastqs = fastqs
 				.findAll({ filter_fastq(it, false, "metaG") })
-			// wanted_fastqs.addAll(fastqs.findAll( { it.name.matches("(.*)(singles|orphans|chimeras)(.*)") && it.name.matches("(.*)metaG(.*)") } ))
 			return tuple(new_sample, wanted_fastqs, index)
 		}
 		.filter { it[1].size() > 0 }

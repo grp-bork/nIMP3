@@ -9,9 +9,11 @@ include { fastqc } from "../modules/qc/fastqc"
 include { multiqc } from "../modules/qc/multiqc"
 include { calculate_library_size_cutoff; subsample_reads } from "../modules/qc/subsample"
 
-
-def merge_pairs = (params.merge_pairs || false)
-def keep_orphans = (params.keep_orphans || false)
+params.keep_orphans = true
+params.run_qa = false
+params.subsample = [:]
+def merge_pairs = false
+def keep_orphans = true
 
 def asset_dir = "${projectDir}/nevermore/assets"
 
@@ -61,9 +63,6 @@ workflow nevermore_simple_preprocessing {
 						no_subsample: true
 					}
 					.set { check_subsample_ch }
-				// subsample_ch = fastq_ch
-				// 	.filter { params.subsample.subset == "all" || it[0].library_source == params.subsample.subset }
-				// subsample_ch.dump(pretty: true, tag: "subsample_ch")
 
 				calculate_library_size_cutoff(
 					fastqc.out.counts
