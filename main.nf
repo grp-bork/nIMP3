@@ -35,13 +35,13 @@ workflow {
 	nevermore_main(metaT_ch.concat(metaG_ch))
 
 	metaT_assembly(
-		nevermore_main.out.reads
+		nevermore_main.out.fastqs
 			.filter { it[0].library_source == "metaT" }			
 	)
 
 	// collect metaG fastqs per sample
 	assembly_prep(
-		nevermore_main.out.reads
+		nevermore_main.out.fastqs
 			.filter { it[0].library_source == "metaG" }
 	)
 
