@@ -13,6 +13,10 @@ include { calculate_library_size_cutoff; subsample_reads } from "../modules/qc/s
 def keep_orphans = (params.keep_orphans || false)
 def asset_dir = "${projectDir}/nevermore/assets"
 
+params.subsample = [:]
+params.subsample.random_seed = 313
+
+
 process concat_singles {
     input:
     tuple val(sample), path(reads)
