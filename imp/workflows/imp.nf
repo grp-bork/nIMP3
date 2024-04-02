@@ -17,13 +17,13 @@ workflow imp_main {
 
 	main:	
 		metaT_assembly(
-			fastq_ch.out.fastqs
+			fastq_ch
 				.filter { it[0].library_source == "metaT" }			
 		)
 
 		// collect metaG fastqs per sample
 		assembly_prep(
-			fastq_ch.out.fastqs
+			fastq_ch.fastqs
 				.filter { it[0].library_source == "metaG" }
 		)
 
