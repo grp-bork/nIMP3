@@ -23,7 +23,7 @@ workflow imp_main {
 
 		// collect metaG fastqs per sample
 		assembly_prep(
-			fastq_ch.fastqs
+			fastq_ch
 				.filter { it[0].library_source == "metaG" }
 		)
 
