@@ -1,4 +1,5 @@
 process extract_unmapped {
+	container "docker://registry.git.embl.de/schudoma/align-docker:latest"
 	label "align"
 
 	input:

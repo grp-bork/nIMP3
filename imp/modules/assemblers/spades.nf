@@ -4,6 +4,7 @@ params.kmer_steps = "25 29 33 37 41 45 49 53 57 61 65 69 73 77 81 85 89 93 97"
 
 
 process rnaspades {
+	container "docker://quay.io/biocontainers/spades:3.12.0--h9ee0642_3"
 	label "spades"
 
 	input:
@@ -62,6 +63,7 @@ process rnaspades {
 
 
 process metaspades {
+	container "docker://quay.io/biocontainers/spades:3.12.0--h9ee0642_3"
 	label "spades"
 
 	input:

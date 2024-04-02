@@ -41,4 +41,3 @@ workflow nevermore_align {
 		aln_counts = merge_and_sort.out.flagstats
 
 }
-
