@@ -38,7 +38,7 @@ qc_minlen: 45
 # ftm=5 : get rid of (n*5)+1st base (last sequencing cycle illumina garbage) -- NOTE: unset for preprocessed data
 # entropy=0.5 entropywindow=50 entropyk=5 : discard low complexity sequences
 qc_params_shotgun: "qtrim=rl trimq=3 maq=25 ktrim=r k=23 mink=11 hdist=1 ftm=5 entropy=0.5 entropywindow=50 entropyk=5 tpe tbo"
-
+# trimq=20 maxns=1
 
 # decontamination parameters
 
