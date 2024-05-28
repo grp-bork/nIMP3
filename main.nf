@@ -24,10 +24,10 @@ params.remote_input_dir = false
 workflow {
 
 	metaT_input(
-		Channel.fromPath(params.metaT_input_dir + "/*", type: "dir", checkIfExists: true)
+		Channel.fromPath(params.meta_t_input + "/*", type: "dir", checkIfExists: true)
 	)
 	metaG_input(
-		Channel.fromPath(params.metaG_input_dir + "/*", type: "dir", checkIfExists: true)
+		Channel.fromPath(params.meta_g_input + "/*", type: "dir", checkIfExists: true)
 	)
 
 	metaT_ch = metaT_input.out.reads		
