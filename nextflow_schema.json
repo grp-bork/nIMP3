@@ -23,13 +23,11 @@
         },
         "remove_host_kraken2_db": {
           "type": "boolean",
-          "description": "Path to a kraken2 database",
-          "hidden": true
+          "description": "Path to a kraken2 database"
         },
         "sortmerna_db": {
           "type": "boolean",
-          "description": "Path to a sortmerna database",
-          "hidden": true
+          "description": "Path to a sortmerna database"
         }
       },
       "required": [
@@ -59,22 +57,28 @@
       },
       "required": ["assembler", "kmer_steps"]
     },
-    "new_group_4": {
-      "title": "New Group 4",
+    "required": {
+      "title": "Required",
       "type": "object",
       "description": "",
       "default": "",
       "properties": {
         "meta_g_input": {
           "type": "string",
-          "description": "Directory path to meta_g files"
+          "description": "Directory path to meta_g files",
+          "format": "directory-path"
         },
         "meta_t_input": {
           "type": "string",
-          "description": "Directory path to meta_t files"
+          "description": "Directory path to meta_t files",
+          "format": "directory-path"
+        },
+        "output_dir": {
+          "type": "string",
+          "format": "directory-path"
         }
       },
-      "required": ["meta_g_input", "meta_t_input"]
+      "required": ["meta_g_input", "meta_t_input", "output_dir"]
     }
   },
   "allOf": [
@@ -85,7 +89,7 @@
       "$ref": "#/definitions/assembly"
     },
     {
-      "$ref": "#/definitions/new_group_4"
+      "$ref": "#/definitions/required"
     }
   ],
   "properties": {
@@ -107,8 +111,7 @@
       "type": "boolean"
     },
     "remote_input_dir": {
-      "type": "string",
-      "hidden": true
+      "type": "string"
     }
   }
 }
