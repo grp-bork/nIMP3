@@ -48,6 +48,10 @@ workflow assembly_prep {
 				return tuple(new_sample.id, new_sample.library_source, [fastqs].flatten())
 			}
 			.groupTuple(by: [0, 1], size: 2, remainder: true)
+
+		initial_assembly_ch.dump(pretty: true, tag: "in_assemply_prep")
+
+		initial_assembly_ch = initial_assembly_ch
 			.map { sample_key, fastqs -> 
 				def meta = [:]
 				meta.id = sample_key[0]
