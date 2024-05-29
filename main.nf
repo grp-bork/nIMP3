@@ -35,6 +35,8 @@ workflow {
 
 	nevermore_main(metaT_ch.concat(metaG_ch))
 
+	nevermore.out.fastqs.dump(pretty: true, tag: "nvm_main_fastqs")
+
 	imp_main(nevermore_main.out.fastqs)
 
 	// metaT_assembly(
