@@ -45,10 +45,15 @@ workflow assembly_prep {
 				def new_sample = sample.clone()
 				new_sample.id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
 				
-				return tuple(new_sample, fastqs)
+				return tuple(new_sample.id, new_sample.library_source, fastqs)
 			}
-			.groupTuple(by: 0, size: 2, remainder: true)
-			.map { sample, fastqs -> return tuple(sample, fastqs.flatten())}
+			.groupTuple(by: [0, 1], size: 2, remainder: true)
+			.map { sample_key, fastqs -> 
+				def meta = [:]
+				meta.id = sample_key[0]
+				meta.library_source = sample_key[1]
+				return tuple(meta, [fastqs].flatten())
+			}
 	emit:
 		reads = initial_assembly_ch
 }
