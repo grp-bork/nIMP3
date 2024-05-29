@@ -12,6 +12,9 @@ workflow metaT_initial_assembly {
 	take:
 		fastq_ch
 	main:
+
+		fastq_ch.dump(pretty: true, tag: "metat_input")
+
 		assembly_prep(fastq_ch)
 		initial_assembly_ch = assembly_prep.out.reads
 
