@@ -15,6 +15,8 @@ workflow metaT_initial_assembly {
 		assembly_prep(fastq_ch)
 		initial_assembly_ch = assembly_prep.out.reads
 
+		initial_assembly_ch.dump(pretty: true, tag: "inital_metat_assembly_ch")
+
 		if (params.assembler == "spades") {
 			rnaspades(initial_assembly_ch, "initial")
 			contigs_ch = rnaspades.out.contigs
