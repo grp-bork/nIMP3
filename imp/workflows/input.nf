@@ -51,13 +51,13 @@ workflow assembly_prep {
 
 		initial_assembly_ch.dump(pretty: true, tag: "in_assemply_prep")
 
-		// initial_assembly_ch = initial_assembly_ch
-		// 	.map { sample_key, fastqs -> 
-		// 		def meta = [:]
-		// 		meta.id = sample_key[0]
-		// 		meta.library_source = sample_key[1]
-		// 		return tuple(meta, [fastqs].flatten())
-		// 	}
+		initial_assembly_ch = initial_assembly_ch
+			.map { sample_id, sample_source, fastqs -> 
+				def meta = [:]
+				meta.id = sample_id
+				meta.library_source = sample_source
+				return tuple(meta, [fastqs].flatten())
+			}
 	emit:
 		reads = initial_assembly_ch
 }
