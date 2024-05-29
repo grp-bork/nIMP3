@@ -20,7 +20,7 @@ workflow imp_main {
 			fastq_ch
 				.filter { it[0].library_source == "metaT" }			
 		)
-
+		/*
 		// collect metaG fastqs per sample
 		assembly_prep(
 			fastq_ch
@@ -242,6 +242,7 @@ workflow imp_main {
 		// final_assembly_ch = get_unmapped_reads.out.reads
 		// 	.map { sample, fastqs -> return tuple(sample, fastqs, [empty_file])}
 		// final_assembly_ch.view()
+		*/
 	
 }
 
