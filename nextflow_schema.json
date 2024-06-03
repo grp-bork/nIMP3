@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
-  "$id": "https://raw.githubusercontent.com/cschu/nevermore_imp/main/nextflow_schema.json",
-  "title": "Nextflow pipeline parameters",
-  "description": "This pipeline uses Nextflow and processes some kind of data. The JSON Schema was built using the nf-core pipeline schema builder.",
+  "$id": "https://raw.githubusercontent.com/grp-bork/nIMP3/main/nextflow_schema.json",
+  "title": "nIMP3 pipeline parameters",
+  "description": "nIMP3 JSON schema",
   "type": "object",
   "definitions": {
     "preprocessing": {
