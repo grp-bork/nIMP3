@@ -12,13 +12,10 @@ Narayanasamy, S., Jarosz, Y., Muller, E.E.L. et al. IMP: a pipeline for reproduc
 ### Collaborators
 
 #### Bork Group EMBL Heidelberg
-Christian Schudoma
-Shahriyar Mahdi Robbani
-Daniel Podlesny
+Christian Schudoma, Shahriyar Mahdi Robbani, Daniel Podlesny
 
 #### University of Luxembourg
-Oskar Hickl
-Patrick May
+Oskar Hickl, Patrick May
 
 #### University of Amsterdam
 Anna Heintz-Buschart
