@@ -15,7 +15,7 @@ nextflow run /path/to/nevermore_imp --meta_t_input </path/to/meta_t_data> --meta
 * Supported file endings are `.fastq,.fq,.fastq.gz,.fq.gz,.fastq.bz2,.fq.bz2`
 * Files in sample-specific folders will automatically be assigned to a sample labeled with the folder name.
 * Filenames for paired-end data need to share a common prefix terminated by `_R?[12]` in order to be automatically matched. 
-* Suffixes following the the `_R?[12]` pattern, such as `_001` from newer Illumina machines need to be removed.
+* Suffixes following the `_R?[12]` pattern, such as `_001` from newer Illumina machines need to be removed.
 * In case of paired-end data with additional unpaired reads (e.g. as obtained from preprocessed ENA datasets), the unpaired files can be automatically picked up from the same folder but should be labeled as `<sample_prefix>.single(s).<fastq-suffix>`. 
 
 In the following example, the paths to the input datasets need to be set as `--meta_t_input /path/to/imp/input/meta_t --meta_g_input /path/to/imp/input/meta_g`. nevermoreIMP will then automatically detect the sample-specific folders within those directories.
