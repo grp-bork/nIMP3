@@ -22,12 +22,18 @@
           "default": "qtrim=rl trimq=3 maq=25 ktrim=r k=23 mink=11 hdist=1 ftm=5 entropy=0.5 entropywindow=50 entropyk=5 tpe tbo"
         },
         "remove_host_kraken2_db": {
-          "type": "boolean",
-          "description": "Path to a kraken2 database"
+          "type": "string",
+          "format": "directory-path",
+          "hidden": true,
+          "description": "Path to a kraken2 database",
+          "default": "/vol/data/databases/clowm/CLDB-018fde8b0aa373a5ba7d3236bb921cc9/018fde8b0aac74889c57f7b1af5f87cb/hg38_silva_genome"
         },
         "sortmerna_db": {
-          "type": "boolean",
-          "description": "Path to a sortmerna database"
+          "type": "string",
+          "format": "directory-path",
+          "hidden": true,
+          "description": "Path to a sortmerna database",
+          "default": "/vol/data/databases/clowm/CLDB-018fc4a79d6d731980ff0a6cbdcc53d2/018fc4a79d73756fbe9c0cf6b63886a5/"
         }
       },
       "required": [
@@ -98,20 +104,22 @@
       "default": true
     },
     "remove_host": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": true
     },
     "drop_orphans": {
-      "type": "boolean"
+      "type": "boolean",
+      "hidden": true,
+      "default": false
     },
     "kraken2_min_hit_groups": {
       "type": "integer",
+      "hidden": true,
       "default": 10
     },
     "run_sortmerna": {
-      "type": "boolean"
-    },
-    "remote_input_dir": {
-      "type": "string"
-    }
+      "type": "boolean",
+      "default": true
+    }    
   }
 }
