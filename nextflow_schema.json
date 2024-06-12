@@ -11,6 +11,28 @@
       "description": "Preprocessing parameters",
       "default": "",
       "properties": {
+        "run_preprocessing": {
+          "type": "boolean",
+          "default": true
+        },
+        "remove_host": {
+          "type": "boolean",
+          "default": true
+        },
+        "drop_orphans": {
+          "type": "boolean",
+          "hidden": true,
+          "default": false
+        },
+        "kraken2_min_hit_groups": {
+          "type": "integer",
+          "hidden": true,
+          "default": 10
+        },
+        "run_sortmerna": {
+          "type": "boolean",
+          "default": true
+        },
         "qc_minlen": {
           "type": "integer",
           "description": "Minimum read length to pass quality control",
@@ -97,29 +119,5 @@
     {
       "$ref": "#/definitions/required"
     }
-  ],
-  "properties": {
-    "run_preprocessing": {
-      "type": "boolean",
-      "default": true
-    },
-    "remove_host": {
-      "type": "boolean",
-      "default": true
-    },
-    "drop_orphans": {
-      "type": "boolean",
-      "hidden": true,
-      "default": false
-    },
-    "kraken2_min_hit_groups": {
-      "type": "integer",
-      "hidden": true,
-      "default": 10
-    },
-    "run_sortmerna": {
-      "type": "boolean",
-      "default": true
-    }    
-  }
+  ]  
 }
