@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/grp-bork/nIMP3,15,2
+/grp-bork/nIMP3/blob/main/nextflow.config,10,1
+/grp-bork/nIMP3/tree/main/docs,8,2
+/grp-bork/nevermore_imp,6,2
+/grp-bork/nIMP3/blob/main/docs/usage.md,6,2
+/grp-bork/nevermore_imp/blob/main/imp/modules/alignment/indexing/bwa_index.nf,6,1
+/grp-bork/nevermore_imp/blob/main/nextflow_schema.json,4,1
+/grp-bork/nIMP3/blob/main/nextflow_schema.json,4,1
+/grp-bork/nIMP3/blob/main/README.md,4,1
+/grp-bork/nevermore_imp/blob/main/docs/output.md,2,1
