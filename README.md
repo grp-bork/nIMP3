@@ -10,7 +10,7 @@ Narayanasamy, S., Jarosz, Y., Muller, E.E.L. et al. IMP: a pipeline for reproduc
 ```
 
 ![nevermore_workflow](docs/nevermore.svg)
-![imp3_workflow](docs/imp3_workflow.svg)
+![nimp3_workflow](docs/nimp3_workflow.svg)
 
 
 
