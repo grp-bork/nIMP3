@@ -7,6 +7,18 @@ workflow nevermore_pack_reads {
 		fastq_ch
 	
 	main:
+
+		/* re-add pair information, which might have been lost upstream */
+
+		fastq_ch = fastq_ch
+			.map { sample, fastqs ->
+			def meta = sample.clone()
+			meta.is_paired = [fastqs].flatten().size() == 2
+			return tuple(meta, fastqs)
+		}
+
+		fastq_ch.dump(pretty: true, tag: "pack_fastq_ch")
+
 		/*	route all single-read files into a common channel */
 
 		single_ch = fastq_ch
@@ -42,7 +54,7 @@ workflow nevermore_pack_reads {
 			}
 		.set { single_reads_ch }
 
-		def se_group_size = 3 - (params.drop_chimeras ? 1 : 0) - (params.drop_orphans ? 1 : 0)
+		def se_group_size = 2 - (params.drop_orphans ? 1 : 0)
 
 		single_reads_ch.paired_end
 			.groupTuple(sort: true, size: se_group_size, remainder: true)
@@ -73,15 +85,15 @@ workflow nevermore_pack_reads {
 				meta.merged = false
 				return tuple(meta, fastq)
 			}
-			.concat(pe_singles_ch.no_merge)
-			.concat(single_reads_ch.single_end)
-			.concat(paired_ch)
-			.concat(merge_single_fastqs.out.fastq)
+			.mix(pe_singles_ch.no_merge)
+			.mix(single_reads_ch.single_end)
+			.mix(paired_ch)
+			.mix(merge_single_fastqs.out.fastq)
 
 		fastq_prep_ch = paired_ch
-			.concat(single_reads_ch.single_end)
-			.concat(pe_singles_ch.no_merge)
-			.concat(merge_single_fastqs.out.fastq)
+			.mix(single_reads_ch.single_end)
+			.mix(pe_singles_ch.no_merge)
+			.mix(merge_single_fastqs.out.fastq)
 
 	emit:
 		fastqs = fastq_prep_ch
