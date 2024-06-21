@@ -5,8 +5,9 @@ params.kmer_steps = "25,29,33,37,41,45,49,53,57,61,65,69,73,77,81,85,89,93,97"
 
 
 process metaT_megahit {
-	container "docker://quay.io/biocontainers/megahit:1.2.9--h43eeafb_4"
+	container "quay.io/biocontainers/megahit:1.2.9--h43eeafb_4"
 	label "megahit"
+	label "highmem_large"
 
 	input:
 	tuple val(sample), path(fastqs)
@@ -48,9 +49,11 @@ process metaT_megahit {
 
 
 process hybrid_megahit {
-	container "docker://quay.io/biocontainers/megahit:1.2.9--h43eeafb_4"
+	container "quay.io/biocontainers/megahit:1.2.9--h43eeafb_4"
 	label "megahit"
+	label "highmem_large"
 	tag "${sample.id}"
+
 
 	input:
 	tuple val(sample), path(fastqs), path(contigs)

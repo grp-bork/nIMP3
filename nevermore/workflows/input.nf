@@ -7,8 +7,6 @@ params.bam_input_pattern = "**.bam"
 
 def bam_suffix_pattern = params.bam_input_pattern.replaceAll(/\*/, "")
 
-def input_dir = (params.input_dir) ? params.input_dir : params.remote_input_dir
-
 
 process transfer_fastqs {
 	input:
@@ -142,11 +140,14 @@ workflow bam_input {
 			.groupTuple(sort: true)
 			.map { classify_sample(it[0], it[1]) }
 
+		fastq_ch = Channel.empty()
 		if (params.do_bam2fq_conversion) {
 			bam2fq(bam_ch)
-			bam_ch = bam2fq.out.reads
+			fastq_ch = bam2fq.out.reads
 				.map { classify_sample(it[0].id, it[1]) }
 		}
 	emit:
 		bamfiles = bam_ch
+		fastqs = fastq_ch
 }
+

@@ -1,5 +1,9 @@
 process run_metaphlan4 {
-	container "docker://quay.io/biocontainers/metaphlan:4.1.0--pyhca03a8a_0"
+	publishDir params.output_dir, mode: "copy"
+	container "quay.io/biocontainers/metaphlan:4.1.0--pyhca03a8a_0"
+	tag "${sample.id}"
+	label "process_high"
+	label "metaphlan4"
 	
 	input:
 	tuple val(sample), path(fastqs)
@@ -20,14 +24,36 @@ process run_metaphlan4 {
 		samestr_params = "--samout ${sample.id}.mp4.sam.bz2"
 	}
 
+	// def r1_files = fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)(singles|orphans|chimeras)(.*)") } )
+	// def r2_files = fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") } )
+	// def orphans = fastqs.findAll( { it.name.matches("(.*)(singles|orphans|chimeras)(.*)") } )
+
+	def input_files = []  //r1_files + r2_files + orphans
+	input_files += fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)(singles|orphans|chimeras)(.*)") } )
+	input_files += fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") } )
+	input_files += fastqs.findAll( { it.name.matches("(.*)(singles|orphans|chimeras)(.*)") } )
+	mp4_input = input_files.join(',')
+
+
+
+	// if (r1_files.size() != 0) {
+	// 				input_files += "--fastq-r1 ${r1_files.join(' ')}"
+	// }
+	// 			if (r2_files.size() != 0) {
+	// 				input_files += " --fastq-r2 ${r2_files.join(' ')}"
+	// 			}
+	// 			if (orphans.size() != 0) {
+	// 				input_files += " --fastq-orphans ${orphans.join(' ')}"
+	// 			}
+
 	
-	if (fastqs instanceof Collection && fastqs.size() == 2) {
-		mp4_input = "${sample.id}_R1.fastq.gz,${sample.id}_R2.fastq.gz"
-	} else if (fastqs instanceof Collection && fastqs.size() == 3) {
-		mp4_input = "${sample.id}_R1.fastq.gz,${sample.id}_R2.fastq.gz,${sample.id}.singles_R1.fastq.gz"
-	} else {
-		mp4_input = "${fastqs}"
-	}
+	// if (fastqs instanceof Collection && fastqs.size() == 2) {
+	// 	mp4_input = "${sample.id}_R1.fastq.gz,${sample.id}_R2.fastq.gz"
+	// } else if (fastqs instanceof Collection && fastqs.size() == 3) {
+	// 	mp4_input = "${sample.id}_R1.fastq.gz,${sample.id}_R2.fastq.gz,${sample.id}.singles_R1.fastq.gz"
+	// } else {
+	// 	mp4_input = "${fastqs}"
+	// }
 
 	"""
 	mkdir -p tmp/
@@ -56,7 +82,8 @@ process run_metaphlan4 {
 
 
 process combine_metaphlan4 {
-	container "docker://quay.io/biocontainers/metaphlan:4.1.0--pyhca03a8a_0"
+	container "quay.io/biocontainers/metaphlan:4.1.0--pyhca03a8a_0"
+	label "metaphlan4"
 
 	input:
 	tuple val(sample), path(bt2)
@@ -77,7 +104,10 @@ process combine_metaphlan4 {
 
 
 process collate_metaphlan4_tables {
-	container "docker://quay.io/biocontainers/metaphlan:4.1.0--pyhca03a8a_0"
+	publishDir params.output_dir, mode: "copy"
+	container "quay.io/biocontainers/metaphlan:4.1.0--pyhca03a8a_0"
+	label "metaphlan4"
+	label "mini"
 
 	input:
 	path(tables)
