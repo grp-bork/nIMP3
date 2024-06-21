@@ -1,6 +1,7 @@
 process extract_unmapped {
-	container "docker://registry.git.embl.de/schudoma/align-docker:latest"
+	container "registry.git.embl.de/schudoma/align-docker:latest"
 	label "align"
+	label "small"
 
 	input:
 	tuple val(sample), path(fastqs), path(index)

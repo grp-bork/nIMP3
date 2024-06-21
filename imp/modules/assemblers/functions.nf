@@ -1,4 +1,6 @@
 process concatenate_contigs {
+	label "default"
+
 	input:
 		tuple val(sample), path(contigs)
 		val(stage)

@@ -1,5 +1,6 @@
 process bwa_index {
-	container "docker://registry.git.embl.de/schudoma/align-docker:latest"
+	container "registry.git.embl.de/schudoma/align-docker:latest"
+	label "small"
 
 	input:
 	tuple val(sample), path(fasta)
