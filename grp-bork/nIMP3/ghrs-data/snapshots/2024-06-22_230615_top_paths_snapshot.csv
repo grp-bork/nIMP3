@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/grp-bork/nIMP3,14,2
+/grp-bork/nIMP3/blob/main/nextflow.config,12,1
+/grp-bork/nIMP3/tree/main/docs,8,2
+/grp-bork/nIMP3/blob/main/docs/usage.md,6,2
+/grp-bork/nIMP3/blob/main/nextflow_schema.json,6,2
+/grp-bork/nIMP3/commits/main,4,2
+/grp-bork/nimp3,3,1
+/grp-bork/nIMP3/actions/workflows/github-repo-stats.yml,2,1
+/grp-bork/nIMP3/blob/github-repo-stats/grp-bork/nIMP3/ghrs-data/snapshots/2024-06-12_140052_top_paths_snapshot.csv,2,1
+/grp-bork/nIMP3/blob/main/imp/modules/alignment/indexing/bwa_index.nf,2,1
