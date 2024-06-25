@@ -55,7 +55,7 @@
           "format": "directory-path",
           "hidden": true,
           "description": "Path to a sortmerna database",
-          "default": "/vol/data/databases/clowm/CLDB-018fc4a79d6d731980ff0a6cbdcc53d2/018fc4a79d73756fbe9c0cf6b63886a5/smr_v4.3_sensitive_db.fasta"
+          "default": "/vol/data/databases/clowm/CLDB-018fc4a79d6d731980ff0a6cbdcc53d2/01904e78e29d7569b2d710a46fc0a372/smr_v4.3_sensitive_db.fasta"
         }
       },
       "required": [
