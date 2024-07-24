@@ -1,0 +1,20 @@
+{
+  "inputParameters": [
+    "meta_t_input",
+    "meta_g_input"
+  ],
+  "outputParameters": [
+    "output_dir"
+  ],
+  "exampleParameters": {
+    "meta_t_input": "s3://example-data-nimp3/meta_t/",
+    "meta_g_input": "s3://example-data-nimp3/meta_g/"
+  },
+  "dois": [
+    "10.1186/s13059-016-1116-8"
+  ],
+  "resourceParameters": [
+    "remove_host_kraken2_db",
+    "sortmerna_db"
+  ]
+}
