@@ -9,8 +9,8 @@ nIMP3
 Narayanasamy, S., Jarosz, Y., Muller, E.E.L. et al. IMP: a pipeline for reproducible reference-independent integrated metagenomic and metatranscriptomic analyses. Genome Biol 17, 260 (2016). https://doi.org/10.1186/s13059-016-1116-8
 ```
 
-![nevermore_workflow](docs/nevermore.svg)
-![nimp3_workflow](docs/nimp3_workflow.svg)
+![nevermore_workflow](https://raw.githubusercontent.com/grp-bork/nIMP3/main/docs/nevermore.svg)
+![nimp3_workflow](https://raw.githubusercontent.com/grp-bork/nIMP3/main/docs/nimp3_workflow.svg)
 
 
 
