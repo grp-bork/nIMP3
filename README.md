@@ -50,7 +50,7 @@
 `IMP` (Integrated Meta-omic Pipeline) is a workflow for metagenomic/metatranscriptomic co-assembly originally developed at the [University of Luxembourg](https://git-r3lab.uni.lu/IMP/IMP)*. `nIMP3` is a nextflow-port of [IMP3](https://git-r3lab.uni.lu/IMP/imp3) developed at EMBL Heidelberg in collaboration with the University of Luxembourg and University of Amsterdam for the [NFDI4Microbiota](https://nfdi4microbiota.de/) framework. `nIMP3` is powered by the independent [nevermore](https://github.com/cschu/nevermore) workflow component library.
 
 #### Citation
-This workflow: badge tbd.
+This workflow: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13143025.svg)](https://doi.org/10.5281/zenodo.13143025)
 
 Also cite:
 ```
