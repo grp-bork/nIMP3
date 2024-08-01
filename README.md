@@ -87,6 +87,19 @@ NOTE: `bwa` and `samtools` need to be run from a shared container/environment.
 This workflow will be available on the CloWM platform (coming soon).
 
 ## Command-Line Interface (CLI)
+The workflow run is controlled by environment-specific parameters (see [run.config](https://github.com/grp-bork/nIMP3/blob/main/config/run.config)) and study-specific parameters (see [params.yml](https://github.com/grp-bork/nIMP3/blob/main/config/params.yml)). The parameters in the `params.yml` can be specified on the command line as well.
+
+You can either clone this repository from GitHub and run it as follows
+```
+git clone https://github.com/grp-bork/nIMP3.git
+nextflow run /path/to/nIMP3 [-resume] -c /path/to/run.config -params-file /path/to/params.yml
+```
+
+Or, you can have nextflow pull it from github and run it from the `$HOME/.nextflow` directory.
+```
+nextflow run grp-bork/nIMP3 [-resume] -c /path/to/run.config -params-file /path/to/params.yml
+```
+
 ## Input files
 Fastq files are supported and can be either uncompressed (but shouldn't be!) or compressed with `gzip` or `bzip2`. Sample data must be arranged in one directory per sample.
 
