@@ -7,8 +7,8 @@
     "output_dir"
   ],
   "exampleParameters": {
-    "meta_t_input": "s3://example-data-nimp3/meta_t/",
-    "meta_g_input": "s3://example-data-nimp3/meta_g/"
+    "meta_t_input": "s3://workflow-exampledata/nimp3/meta_t/",
+    "meta_g_input": "s3://workflow-exampledata/nimp3/meta_g/"
   },
   "dois": [
     "10.5281/zenodo.13143024",
