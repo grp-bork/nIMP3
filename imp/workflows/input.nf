@@ -6,6 +6,7 @@ workflow metaT_input {
 		fastq_ch
 	main:
 		fastq_input(fastq_ch, Channel.of("metaT"))
+		// fastq_input(fastq_ch, Channel.of(null))
 	emit:
 		reads = fastq_input.out.fastqs
 			.map {
@@ -22,6 +23,7 @@ workflow metaG_input {
 		fastq_ch
 	main:
 		fastq_input(fastq_ch, Channel.of("metaG"))
+		// fastq_input(fastq_ch, Channel.of(null))
 	emit:
 		reads = fastq_input.out.fastqs
 			.map {
