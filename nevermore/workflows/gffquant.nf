@@ -12,7 +12,7 @@ workflow gffquant_flow {
 	main:
 
 		if (params.gq_stream) {
-			stream_gffquant(input_ch, params.gffquant_db, params.reference)
+			stream_gffquant(input_ch, params.gffquant_db)
 			feature_count_ch = (params.gq_panda) ? stream_gffquant.out.profiles : stream_gffquant.out.results
 			counts = stream_gffquant.out.results
 		} else {
@@ -27,6 +27,7 @@ workflow gffquant_flow {
 			.filter { !it.name.endsWith("Counter.txt.gz") }
 			.filter { params.collate_gene_counts || !it.name.endsWith("gene_counts.txt.gz") }
 			.filter { params.collate_gene_counts || !it.name.endsWith("gene_counts.pd.txt")}
+			.filter { !it.name.endsWith("gene_ids.txt.gz") }
 			.map { file -> 
 				def category = file.name
 					// .replaceAll(/\.txt(\.gz)?$/, "")
