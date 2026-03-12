@@ -42,8 +42,8 @@ process prepare_fastqs {
 	input:
 		tuple val(sample), path(files), val(remote_input), val(library_suffix)
 	output:
-		tuple val((library_suffix == null) ? sample : "${sample}.${library_suffix}"), path("fastq/${sample}/${sample}*.fastq.{gz,bz2}"), emit: pairs, optional: true
-		tuple val((library_suffix == null) ? sample : "${sample}.${library_suffix}"), path("fastq/${sample}.singles/${sample}*.fastq.{gz,bz2}"), emit: singles, optional: true
+		tuple val(sample), path("fastq/${sample}/${sample}*.fastq.{gz,bz2}"), emit: pairs, optional: true
+		tuple val(sample), path("fastq/${sample}.singles/${sample}*.fastq.{gz,bz2}"), emit: singles, optional: true
 		path("sample_library_info.txt"), emit: library_info
 
   script:
@@ -112,7 +112,10 @@ workflow fastq_input {
 		fastq_ch = fastq_ch
 			.groupTuple(by: 0)
 			.combine(libsfx)
-			.map { sample_id, files, suffix -> return tuple(sample_id, files, (params.remote_input_dir != null || params.remote_input_dir), suffix) }
+			.map { sample_id, files, suffix -> 
+				return [ ((suffix == null) ? sample_id : "${sample_id}.${suffix}", files, (params.remote_input_dir != null || params.remote_input_dir), suffix) ]
+				// tuple(sample_id, files, (params.remote_input_dir != null || params.remote_input_dir), suffix) 
+			}
 
 		if (params.ignore_samples) {
 			ignore_samples = params.ignore_samples.split(",")
