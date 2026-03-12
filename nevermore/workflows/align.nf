@@ -6,16 +6,25 @@ include { bwa_mem_align } from "../modules/align/bwa"
 include { minimap2_align } from "../modules/align/minimap2"
 include { merge_and_sort; merge_sam } from "../modules/align/helpers"
 
-def asset_dir = "${projectDir}/nevermore/assets"
 def do_alignment = params.run_gffquant || !params.skip_alignment
 def do_stream = params.gq_stream
-def do_preprocessing = (!params.skip_preprocessing || params.run_preprocessing)
 
 params.do_name_sort = true
-params.align = [:]
-params.align.run_minimap2 = false
-params.align.run_bwa = false
 
+if (params.align == null) {
+
+	params.align = [:]
+}
+
+if (params.align.run_minimap2 == null) {
+	params.align.run_minimap2 = false
+}
+
+if (params.align.run_bwa == null) {
+	params.align.run_bwa = false
+}
+
+print "PARAMS-ALIGN: ${params}"
 
 workflow nevermore_align {
 
@@ -39,7 +48,7 @@ workflow nevermore_align {
 			minimap_aligned_ch = minimap2_align.out.sam
 			.map { sample, sam ->
 				sample_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
-				return tuple(sample_id, sam)
+				return [ sample_id, sam ]
 			}
 			.groupTuple(sort: true)
 
@@ -48,7 +57,7 @@ workflow nevermore_align {
 				.map { sample_id, samfiles ->
 					def meta = [:]
 					meta.id = sample_id
-					return tuple(meta, samfiles)
+					return [ meta, samfiles ]
 			})
 
 			alignment_ch = alignment_ch
@@ -70,11 +79,16 @@ workflow nevermore_align {
 			aligned_ch = bwa_mem_align.out.bam
 				.map { sample, bam ->
 					sample_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
-					return tuple(sample_id, bam)
+					return [ sample_id, bam ]
 				}
 				.groupTuple(sort: true)
 
-			merge_and_sort(aligned_ch, true)
+			merge_and_sort(aligned_ch
+				.map { sample_id, bamfiles ->
+					def meta = [:]
+					meta.id = sample_id
+					return [ meta, bamfiles ]
+				}, true)
 
 			alignment_ch = alignment_ch
 				.mix(merge_and_sort.out.bam)

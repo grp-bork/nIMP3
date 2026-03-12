@@ -11,13 +11,13 @@ workflow get_unmapped_reads {
 		post_assembly_check_ch = fastq_ch
 			.map { sample, fastqs -> 
 				sample_base_id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
-				return tuple(sample_base_id, sample.library_source, sample, [fastqs].flatten())
+				return [ sample_base_id, sample.library_source, sample, [fastqs].flatten() ]
 			}
 			.combine(index_ch, by: [0, 1])
 			.map { sample_id, libsrc, sample, fastqs, index ->
                 def new_sample = sample.clone()
 				new_sample.index_id = sample_id
-				return tuple(new_sample, fastqs, index) 
+				return [ new_sample, fastqs, index ]
 			}
 
 		extract_unmapped(post_assembly_check_ch, "initial")
@@ -26,20 +26,20 @@ workflow get_unmapped_reads {
 			.map { sample, fastqs ->
                 def new_sample = sample.clone()
 				new_sample.id = new_sample.index_id
-				return tuple(new_sample.id, new_sample, fastqs)
+				return [ new_sample.id, new_sample, fastqs ]
 			}
 			.groupTuple(by: 0, size: 2, remainder: true)
 			.map { sample_id, sample, fastqs -> 
 				def new_sample = sample.clone()
 				new_sample.id = sample_id
-				return tuple(new_sample, fastqs.flatten())
+				return [ new_sample, fastqs.flatten() ]
 			}
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
 			.map { sample, fastqs ->
                 def new_sample = sample.clone()
 				new_sample.library = new_sample.library[0]
 				new_sample.library_source = new_sample.library_source[0]
-				return tuple(new_sample, fastqs.flatten())
+				return [ new_sample, fastqs.flatten() ]
 			}
 
 	emit:

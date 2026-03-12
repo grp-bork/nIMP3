@@ -48,14 +48,14 @@
           "format": "directory-path",
           "hidden": true,
           "description": "Path to a kraken2 database",
-          "default": "/vol/data/databases/clowm/CLDB-018fde8b0aa373a5ba7d3236bb921cc9/018fde8b0aac74889c57f7b1af5f87cb/hg38_silva_genome"
+          "default": ""
         },
         "sortmerna_db": {
           "type": "string",
           "format": "directory-path",
           "hidden": true,
           "description": "Path to a sortmerna database",
-          "default": "/vol/data/databases/clowm/CLDB-018fc4a79d6d731980ff0a6cbdcc53d2/01904e78e29d7569b2d710a46fc0a372/smr_v4.3_sensitive_db.fasta"
+          "default": ""
         }
       },
       "required": [

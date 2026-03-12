@@ -1,3 +1,4 @@
 {
-	"version": "0.13.0"
+	"base_version": "0.15.12",
+	"local_version": "0.15.12"
 }

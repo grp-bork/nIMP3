@@ -12,7 +12,7 @@ workflow metaT_input {
 				sample, files ->					
 					def new_sample = sample.clone()
 					new_sample.library_source = "metaT"					
-				return tuple(new_sample, files)
+				return [ new_sample, files ]
 			}
 }
 
@@ -28,7 +28,7 @@ workflow metaG_input {
 				sample, files ->
 					def new_sample = sample.clone()
 					new_sample.library_source = "metaG"
-				return tuple(new_sample, files)
+				return [ new_sample, files ]
 			}
 			
 }
@@ -45,7 +45,7 @@ workflow assembly_prep {
 				def new_sample = sample.clone()
 				new_sample.id = sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "")
 				
-				return tuple(new_sample.id, new_sample.library_source, [fastqs].flatten())
+				return [ new_sample.id, new_sample.library_source, [fastqs].flatten() ]
 			}
 			.groupTuple(by: [0, 1], size: 2, remainder: true)
 
@@ -56,7 +56,7 @@ workflow assembly_prep {
 				def meta = [:]
 				meta.id = sample_id
 				meta.library_source = sample_source
-				return tuple(meta, [fastqs].flatten())
+				return [ meta, [fastqs].flatten() ]
 			}
 	emit:
 		reads = initial_assembly_ch
