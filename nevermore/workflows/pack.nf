@@ -76,7 +76,7 @@ workflow nevermore_pack_reads {
 				meta.id = sample_id
 				meta.is_paired = false
 				meta.library = "paired"
-				// meta.library_source = (sample_id.endsWith(".metaT") ? "metaT" : ((sample_id.endsWith(".metaG")) ? "metaG": null)) //library_source
+				meta.library_source = (sample_id.endsWith(".metaT") ? "metaT" : ((sample_id.endsWith(".metaG")) ? "metaG": null)) //library_source
 				meta.merged = true
 				meta.multilib = true
 
