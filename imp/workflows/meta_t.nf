@@ -96,7 +96,7 @@ workflow metaT_assembly {
 		metaT_initial_assembly.out.contigs.dump(pretty: true, tag: "metaT_initial_assembly.out.contigs")
 
 		all_contigs_ch = metaT_initial_assembly.out.contigs
-			.concat(contigs_ch)
+			.mix(contigs_ch)
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
 
 		all_contigs_ch.dump(pretty: true, tag: "all_contigs_ch")

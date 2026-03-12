@@ -52,7 +52,7 @@ workflow imp_main {
 
 		// combine the metaT and metaG reads
 		hybrid_assembly_input_ch = hybrid_assembly_input_ch
-			.concat(
+			.mix(
 				metaG_assembly_ch
 					.map { sample, fastqs ->
 						def meta = [:]
@@ -68,7 +68,7 @@ workflow imp_main {
 
 		// add the metaT contigs to the metaG/T input reads
 		hybrid_assembly_input_ch = hybrid_assembly_input_ch
-			.concat(
+			.mix(
 				metaT_contigs_ch
 			)
 			.groupTuple()
@@ -156,10 +156,10 @@ workflow imp_main {
 			.filter { it[1].size() > 0 }
 
 		extract_unmapped_ch = Channel.empty()
-			.concat(metaT_paired_unmapped_ch)
-			.concat(metaT_single_unmapped_ch)
-			.concat(metaG_paired_unmapped_ch)
-			.concat(metaG_single_unmapped_ch)
+			.mix(metaT_paired_unmapped_ch)
+			.mix(metaT_single_unmapped_ch)
+			.mix(metaG_paired_unmapped_ch)
+			.mix(metaG_single_unmapped_ch)
 		
 		extract_unmapped_ch.dump(pretty: true, tag: "extract_unmapped_ch")
 
@@ -232,7 +232,7 @@ workflow imp_main {
 		unmapped_contigs_ch.dump(pretty: true, tag: "unmapped_contigs_ch")
 
 		all_contigs_ch = contigs_ch
-			.concat(unmapped_contigs_ch)
+			.mix(unmapped_contigs_ch)
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
 
 		all_contigs_ch.dump(pretty: true, tag: "all_contigs_ch")
