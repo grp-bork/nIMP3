@@ -114,7 +114,7 @@ workflow fastq_input {
 			.combine(libsfx)
 			.map { sample_id, files, suffix -> 
 				return [ 
-					((suffix == null) ? sample_id : "${sample_id}.${suffix}"), files, (params.remote_input_dir != null || params.remote_input_dir), suffix ]
+					((suffix == null) ? sample_id : "${sample_id}.${suffix}"), files, (params.remote_input_dir != null || params.remote_input_dir), null ]
 				// tuple(sample_id, files, (params.remote_input_dir != null || params.remote_input_dir), suffix) 
 			}
 
