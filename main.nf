@@ -12,12 +12,10 @@ params.remote_input_dir = false
 workflow {
 
 	metaT_input(
-		// Channel.fromPath(params.meta_t_input + "/*", type: "dir", checkIfExists: true)
-		Channel.fromPath("${params.meta_t_input}/**.{fastq,fastq.gz,fq,fq.gz}", checkIfExists: true)
+		Channel.fromPath("${params.meta_t_input}/**.{fastq,fastq.gz,fastq.bz2,fq,fq.gz,fq.bz2}", checkIfExists: true)
 	)
 	metaG_input(
-		// Channel.fromPath(params.meta_g_input + "/*", type: "dir", checkIfExists: true)
-		Channel.fromPath("${params.meta_g_input}/**.{fastq,fastq.gz,fq,fq.gz}", checkIfExists: true)
+		Channel.fromPath("${params.meta_g_input}/**.{fastq,fastq.gz,fastq.bz2,fq,fq.gz,fq.bz2}", checkIfExists: true)
 	)
 
 	metaT_ch = metaT_input.out.reads		
@@ -28,13 +26,5 @@ workflow {
 	nevermore_main.out.fastqs.dump(pretty: true, tag: "nvm_main_fastqs")
 
 	imp_main(nevermore_main.out.fastqs)
-	// 		.map { sample, files -> 
-	// 			def new_sample = sample.clone()
-	// 			new_sample.library_source = (new_sample.id.endsWith(".metaT") ? "metaT" : ((new_sample.id.endsWith(".metaG")) ? "metaG": null)) //library_source
-	// 			return [ new_sample, files ]
-	// 		}
-	// )
-
-
 	
 }
