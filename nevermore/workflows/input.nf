@@ -106,7 +106,7 @@ workflow fastq_input {
 
 		} else {
 			fastq_ch = fastq_ch
-				.map { file -> return tuple(file.getParent().getName(), file) }
+				.map { file -> [ file.getParent().getName(), file ] }
 		}
 
 		fastq_ch = fastq_ch
@@ -167,7 +167,7 @@ workflow bam_input {
 		bam_ch = bam_ch
 			.map { file ->
 				def sample = file.name.replaceAll(bam_suffix_pattern, "").replaceAll(/\.$/, "")
-				return tuple(sample, file)
+				return [ sample, file ]
 			}
 			.groupTuple(sort: true)
 			.map { classify_sample(it[0], it[1]) }
