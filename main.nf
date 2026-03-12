@@ -27,6 +27,15 @@ workflow {
 
 	nevermore_main.out.fastqs.dump(pretty: true, tag: "nvm_main_fastqs")
 
-	imp_main(nevermore_main.out.fastqs)
+	imp_main(
+		nevermore_main.out.fastqs
+			.map { sample, files -> 
+				def new_sample = sample.clone()
+				new_sample.library_source = (new_sample.id.endsWith(".metaT") ? "metaT" : ((new_sample.id.endsWith(".metaG")) ? "metaG": null)) //library_source
+				return [ new_sample, files ]
+			}
+	)
+
+
 	
 }

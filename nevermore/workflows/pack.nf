@@ -66,14 +66,17 @@ workflow nevermore_pack_reads {
 			.set { pe_singles_ch }
 
 		merged_single_ch = pe_singles_ch.do_merge
-			.map { meta, fastq -> [ meta.id, meta.library_source, fastq ] }
-			.groupTuple(by: [0, 1], sort: true, size: se_group_size, remainder: true)
-			.map { sample_id, library_source, fastqs ->
+			// .map { meta, fastq -> [ meta.id, meta.library_source, fastq ] }
+			.map { meta, fastq -> [ meta.id, fastq ] }
+			// .groupTuple(by: [0, 1], sort: true, size: se_group_size, remainder: true)
+			.groupTuple(by: 0, sort: true, size: se_group_size, remainder: true)
+			// .map { sample_id, library_source, fastqs ->
+			.map { sample_id, fastqs ->
 				def meta = [:]
 				meta.id = sample_id
 				meta.is_paired = false
 				meta.library = "paired"
-				meta.library_source = library_source
+				// meta.library_source = (sample_id.endsWith(".metaT") ? "metaT" : ((sample_id.endsWith(".metaG")) ? "metaG": null)) //library_source
 				meta.merged = true
 				meta.multilib = true
 
