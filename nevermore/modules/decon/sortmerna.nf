@@ -1,6 +1,7 @@
 process sortmerna {
 	container "quay.io/biocontainers/sortmerna:4.3.6--h9ee0642_0"
 	label "medium"
+	tag "${sample.id}"
 
 	input:
 		tuple val(sample), path(fastqs)
