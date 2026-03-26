@@ -59,16 +59,17 @@ workflow metaT_initial_assembly {
 				return [ new_sample.id, new_sample, [fastqs].flatten() ]
 			}
 			.groupTuple(by: 0, size: 2, remainder: true) //, sort: true)
-			.map { sample_id, sample, fastqs -> [ sample, fastqs ] }
+			.map { sample_id, sample, fastqs -> [ sample[0], fastqs ] }
 		unmapped_ch.dump(pretty: true, tag: "unmapped_after_metaT_assembly_1")
 
 		unmapped_ch = unmapped_ch
 			.map { sample, fastqs ->
 				def new_sample = sample.clone()
-				new_sample.library = [sample.library].flatten()[0]
-				new_sample.library_source = [sample.library_source].flatten()[0]
+				// new_sample.library = [sample.library].flatten()[0]
+				// new_sample.library_source = [sample.library_source].flatten()[0]
 				return [ new_sample, [fastqs].flatten() ]
 			}
+		unmapped_ch.dump(pretty: true, tag: "unmapped_after_metaT_assembly_2")
 
 		emit:
 			unmapped_reads = unmapped_ch
