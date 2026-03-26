@@ -58,7 +58,7 @@ workflow metaT_initial_assembly {
 				new_sample.remove("index_id")
 				return [ new_sample.id, new_sample, [fastqs].flatten() ]
 			}
-			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
+			.groupTuple(by: 0, size: 2, remainder: true) //, sort: true)
 			.map { sample_id, sample, fastqs -> [ sample, fastqs ] }
 		unmapped_ch.dump(pretty: true, tag: "unmapped_after_metaT_assembly_1")
 
