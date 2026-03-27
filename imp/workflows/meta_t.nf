@@ -97,9 +97,10 @@ workflow metaT_assembly {
 
 		metaT_initial_assembly.out.contigs.dump(pretty: true, tag: "metaT_initial_assembly.out.contigs")
 
-		all_contigs_ch = metaT_initial_assembly.out.contigs
-			.mix(contigs_ch)
+		all_contigs_ch = metaT_initial_assembly.out.contigs.map { sample, contigs -> [ sample.id, sample, contigs ] }
+			.mix(contigs_ch.map { sample, contigs -> [ sample.id, sample, contigs ] })
 			.groupTuple(by: 0, size: 2, remainder: true, sort: true)
+			.map { sample_id, samples, contigs -> [ samples[0], contigs ] }
 
 		all_contigs_ch.dump(pretty: true, tag: "all_contigs_ch")
 
