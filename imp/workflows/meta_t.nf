@@ -95,6 +95,8 @@ workflow metaT_assembly {
 			assembler = "metaT_megahit"
 		}
 
+		contigs_ch.dump(pretty: true, tag: "metaT_final_contigs_ch")
+
 		metaT_initial_assembly.out.contigs.dump(pretty: true, tag: "metaT_initial_assembly.out.contigs")
 
 		all_contigs_ch = metaT_initial_assembly.out.contigs.map { sample, contigs -> [ sample.id, sample, contigs ] }
