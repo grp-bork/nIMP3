@@ -1,4 +1,5 @@
 include { rnaspades; metaspades } from "../modules/assemblers/spades"
+include { quast } from "../modules/assemblers/quast"
 include { bwa_index } from "../modules/alignment/indexing/bwa_index"
 include { extract_unmapped } from "../modules/alignment/extract"
 
@@ -242,6 +243,8 @@ workflow imp_main {
 		// final_assembly_ch = get_unmapped_reads.out.reads
 		// 	.map { sample, fastqs -> return tuple(sample, fastqs, [empty_file])}
 		// final_assembly_ch.view()
+
+		quast(concatenate_contigs.out.contigs)
 		
 	
 }
