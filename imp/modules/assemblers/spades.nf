@@ -7,6 +7,7 @@ process rnaspades {
 	container "quay.io/biocontainers/spades:3.12.0--h9ee0642_3"
 	label "spades"
 	label "highmem_large"
+	tag "${sample.id}"
 
 	input:
 	tuple val(sample), path(fastqs)
@@ -67,6 +68,7 @@ process metaspades {
 	container "quay.io/biocontainers/spades:3.12.0--h9ee0642_3"
 	label "spades"
 	label "highmem_large"
+	tag "${sample.id}"
 
 	input:
 	tuple val(sample), path(fastqs), path(contigs)

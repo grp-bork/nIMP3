@@ -2,6 +2,7 @@ process extract_unmapped {
 	container "registry.git.embl.org/schudoma/align-docker:latest"
 	label "align"
 	label "small"
+	tag "${sample.id}.${stage}"
 
 	input:
 	tuple val(sample), path(fastqs), path(index)

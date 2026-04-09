@@ -1,5 +1,6 @@
 process concatenate_contigs {
 	label "default"
+	tag "${sample.id}.${stage}.${assembler}"
 
 	input:
 		tuple val(sample), path(contigs)

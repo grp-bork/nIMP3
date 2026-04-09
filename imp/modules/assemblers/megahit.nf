@@ -8,6 +8,7 @@ process metaT_megahit {
 	container "quay.io/biocontainers/megahit:1.2.9--h43eeafb_4"
 	label "megahit"
 	label "highmem_large"
+	tag "${sample.id}.${stage}"
 
 	input:
 	tuple val(sample), path(fastqs)
@@ -52,7 +53,7 @@ process hybrid_megahit {
 	container "quay.io/biocontainers/megahit:1.2.9--h43eeafb_4"
 	label "megahit"
 	label "highmem_large"
-	tag "${sample.id}"
+	tag "${sample.id}.${stage}"
 
 
 	input:
