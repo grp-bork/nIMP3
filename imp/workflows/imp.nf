@@ -102,7 +102,8 @@ workflow imp_main {
 		// add the bwa indices to the input reads
 		combined_assembly_input_index_ch = hybrid_assembly_input_ch
 			.map { sample, fastqs, contigs -> [ sample.id, sample, fastqs ] }
-			.join(bwa_index.out.index.map { sample, index -> [ sample.id, index ] }, by: 0)
+			// .join(bwa_index.out.index.map { sample, index -> [ sample.id, index ] }, by: 0)
+			.join(bwa_index.out.index, by: 0)
 			.map { sample_id, sample, fastqs, libsrc, index -> [ sample_id, sample, fastqs, index ] }
 		combined_assembly_input_index_ch.dump(pretty: true, tag: "combined_assembly_input_index_ch")
 
