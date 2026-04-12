@@ -1,6 +1,7 @@
 process quast {
 	container "quay.io/biocontainers/quast:4.1--py27_0"
 	publishDir "${params.output_dir}"
+	tag "${sample.id}"
 
 	input:
 	tuple val(sample), path(assembly)
