@@ -9,7 +9,10 @@ process extract_unmapped {
 	val(stage)
 
 	output:
+	// tuple val(sample), path("unmapped/${stage}/${sample.library_source}/${sample.id}/*.fastq.gz"), emit: fastqs, optional: true
 	tuple val(sample), path("unmapped/${stage}/${sample.library_source}/${sample.id}/*.fastq.gz"), emit: fastqs, optional: true
+    // tuple val(sample), path("unmapped/${stage}/${sample.library_source}/${sample.id}/${sample.id}.orphans_R1.fastq.gz"), emit: orphans, optional: true
+    
 
 	script:
 
@@ -17,36 +20,78 @@ process extract_unmapped {
 	println sample
 	def reads1 = ""
 	def reads2 = ""
+	def outpath = "unmapped/${stage}/${sample.library_source}/${sample.id}"
 	def filter_cmd_base = "samtools view --threads {task.cpus} -u"
 	def filter_cmd =  ""
-
-	def outpath = "unmapped/${stage}/${sample.library_source}/${sample.id}"
 	def extract_cmd = ""
+	def clean_cmd = ""
 
 	// def check_cmd = "if [[ -z \"\$(gzip -dc ${outpath}/${sample.id}_R1.fastq.gz | head -n 1)\" ]]; then rm -f ${outpath}/${sample.id}_R1.fastq.gz; fi"
-	def message = (sample.is_paired) ? "MSG_IS_PAIRED" : "MSG_IS_SINGLE"
-	print message
+	// def message = (sample.is_paired) ? "MSG_IS_PAIRED" : "MSG_IS_SINGLE"
+	// print message
 
-	// if (sample.is_paired == true) { // why can i not use "sample.is_paired" ????
-	if (fastqs instanceof Collection && fastqs.size() == 2) {
-		print "IN IS_PAIRED_BLOCK"
-		reads1 += "${sample.id}_R1.fastq.gz"
-		reads2 += "${sample.id}_R2.fastq.gz"
-		filter_cmd += "${filter_cmd_base} -f4 -F 264 alignment.bam > self_unmapped.bam 2>> error.log\n"
-		filter_cmd += "${filter_cmd_base} -f8 -F 260 alignment.bam > mate_unmapped.bam 2>> error.log\n"
-		filter_cmd += "${filter_cmd_base} -f12 -F 256 alignment.bam > both_unmapped.bam 2>> error.log\n"
+	def r1_files = fastqs.findAll( { it.name.endsWith("_R1.fastq.gz") && !it.name.matches("(.*)(singles|orphans|chimeras)(.*)") } )
+	def r2_files = fastqs.findAll( { it.name.endsWith("_R2.fastq.gz") } )
+	def orphans = fastqs.findAll( { it.name.matches("(.*)(singles|orphans|chimeras)(.*)") } )
+
+
+	if (r1_files.size() == 1) {
+		reads1 += "${r1_files[0]}"
+
+		clean_cmd += """
+			if [ -f ${outpath}/${sample.id}_R1.fastq.gz -a -z "\$(gzip -dc ${outpath}/${sample.id}_R1.fastq.gz | head -n 1)" ]; then rm -vf ${outpath}/${sample}_R[12].fastq.gz; fi
+		"""
+
+		if (r2_files.size() == 1) {
+			reads2 += "${r2_files[0]}"
+			filter_cmd += "${filter_cmd_base} -f4 -F 264 alignment.bam > self_unmapped.bam 2>> error.log\n"
+			filter_cmd += "${filter_cmd_base} -f12 -F 256 alignment.bam > both_unmapped.bam 2>> error.log\n"
+
+			clean_cmd += """
+				if [ -f ${outpath}/${sample.id}_R2.fastq.gz -a -z "\$(gzip -dc ${outpath}/${sample.id}_R2.fastq.gz | head -n 1)" ]; then rm -vf ${outpath}/${sample}_R[12].fastq.gz; fi
+				if [ -f ${outpath}/${sample.id}.orphans_R1.fastq.gz -a -z "\$(gzip -dc ${outpath}/${sample.id}.orphans_R1.fastq.gz | head -n 1)" ]; then rm -vf ${outpath}/${sample.id}.orphans_R1.fastq.gz; fi
+			"""
+		} else {
+			filter_cmd += "${filter_cmd_base} -f 4 alignment.bam > unmapped.bam 2>> error.log"
+		}
 
 		filter_cmd += "samtools merge --threads ${task.cpus} -u - *_unmapped.bam 2>> error.log"
 		filter_cmd += " | samtools collate -@ ${task.cpus} -o unmapped.bam - 2>> error.log"
 
-		extract_cmd += "samtools fastq -1 ${outpath}/${sample.id}_R1.fastq.gz -2 ${outpath}/${sample.id}_R2.fastq.gz unmapped.bam"
-		// check_cmd = "if [[ -z \"\$(gzip -dc ${outpath}/${sample.id}_R1.fastq.gz | head -n 1)\" ]]; then rm -f ${outpath}/*.fastq.gz; fi"
-	} else {
-		print "IN IS_SINGLE_BLOCK"
-		reads1 += "${fastqs[0]}"
+		extract_cmd += "samtools fastq -1 ${outpath}/${sample.id}_R1.fastq.gz -2 ${outpath}/${sample.id}_R2.fastq.gz -s ${outpath}/${sample.id}.orphans_R1.fastq.gz unmapped.bam"
+
+	} else if (orphans.size() == 1) {
+		reads1 += "${orphans[1]}"
 		filter_cmd += "${filter_cmd_base} -f 4 alignment.bam > unmapped.bam 2>> error.log"
 		extract_cmd += "samtools fastq -0 ${outpath}/${sample.id}_R1.fastq.gz unmapped.bam"
+
+		clean_cmd += """
+			if [ -f ${outpath}/${sample.id}.orphans_R1.fastq.gz -a -z "\$(gzip -dc ${outpath}/${sample.id}.orphans_R1.fastq.gz | head -n 1)" ]; then rm -vf ${outpath}/${sample.id}.orphans_R1.fastq.gz; fi
+		"""
 	}
+
+
+
+	// // if (sample.is_paired == true) { // why can i not use "sample.is_paired" ????
+	// if (fastqs instanceof Collection && fastqs.size() == 2) {
+	// 	print "IN IS_PAIRED_BLOCK"
+	// 	reads1 += "${sample.id}_R1.fastq.gz"
+	// 	reads2 += "${sample.id}_R2.fastq.gz"
+	// 	filter_cmd += "${filter_cmd_base} -f4 -F 264 alignment.bam > self_unmapped.bam 2>> error.log\n"
+	// 	// filter_cmd += "${filter_cmd_base} -f8 -F 260 alignment.bam > mate_unmapped.bam 2>> error.log\n"
+	// 	filter_cmd += "${filter_cmd_base} -f12 -F 256 alignment.bam > both_unmapped.bam 2>> error.log\n"
+
+	// 	filter_cmd += "samtools merge --threads ${task.cpus} -u - *_unmapped.bam 2>> error.log"
+	// 	filter_cmd += " | samtools collate -@ ${task.cpus} -o unmapped.bam - 2>> error.log"
+
+	// 	extract_cmd += "samtools fastq -1 ${outpath}/${sample.id}_R1.fastq.gz -2 ${outpath}/${sample.id}_R2.fastq.gz unmapped.bam"
+	// 	// check_cmd = "if [[ -z \"\$(gzip -dc ${outpath}/${sample.id}_R1.fastq.gz | head -n 1)\" ]]; then rm -f ${outpath}/*.fastq.gz; fi"
+	// } else {
+	// 	print "IN IS_SINGLE_BLOCK"
+	// 	reads1 += "${fastqs[0]}"
+	// 	filter_cmd += "${filter_cmd_base} -f 4 alignment.bam > unmapped.bam 2>> error.log"
+	// 	extract_cmd += "samtools fastq -0 ${outpath}/${sample.id}_R1.fastq.gz unmapped.bam"
+	// }
 
 
 
@@ -57,9 +102,10 @@ process extract_unmapped {
 
 	${filter_cmd}
 	${extract_cmd}
-	if [[ -z "\$(gzip -dc ${outpath}/${sample.id}_R1.fastq.gz | head -n 1)" ]]; then rm -vf ${outpath}/*.fastq.gz; fi
 
+	${clean_cmd}
 	"""
+	// if [[ -z "\$(gzip -dc ${outpath}/${sample.id}_R1.fastq.gz | head -n 1)" ]]; then rm -vf ${outpath}/*.fastq.gz; fi
 
 
 	
