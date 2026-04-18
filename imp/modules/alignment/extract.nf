@@ -61,7 +61,7 @@ process extract_unmapped {
 		extract_cmd += "samtools fastq -1 ${outpath}/${sample.id}_R1.fastq.gz -2 ${outpath}/${sample.id}_R2.fastq.gz -s ${outpath}/${sample.id}.orphans_R1.fastq.gz unmapped.bam"
 
 	} else if (orphans.size() == 1) {
-		reads1 += "${orphans[1]}"
+		reads1 += "${orphans[0]}"
 		filter_cmd += "${filter_cmd_base} -f 4 alignment.bam > unmapped.bam 2>> error.log"
 		extract_cmd += "samtools fastq -0 ${outpath}/${sample.id}_R1.fastq.gz unmapped.bam"
 
