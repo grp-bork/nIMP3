@@ -28,13 +28,13 @@ process metaT_megahit {
 	def orphans = fastqs.findAll( { it.name.matches("(.*)(singles|orphans|chimeras)(.*)") } )
 
 	if (r1_files.size() != 0) {
-		input_files += "-1 ${r1_files.join(' ')}"
+		input_files += "-1 ${r1_files.join(',')}"
 	}
 	if (r2_files.size() != 0) {
-		input_files += " -2 ${r2_files.join(' ')}"
+		input_files += " -2 ${r2_files.join(',')}"
 	}
 	if (orphans.size() != 0) {
-		input_files += " -r ${orphans.join(' ')}"
+		input_files += " -r ${orphans.join(',')}"
 	}
 
 	def kmer_params = "--k-list ${params.kmer_steps}" //--k-min ${params.mink} --k-max ${params.maxk} --k-step ${params.stepk}"
