@@ -37,7 +37,7 @@ workflow imp_main {
 			.map { sample, contigs ->
 				def meta = [:]
 				meta.id = sample.id.replaceAll(/\.singles$/, "").replaceAll(/\.metaT/, "")
-				return [ meta, contigs ]
+				return [ meta.id, meta, contigs ]
 			}
 		metaT_contigs_ch.dump(pretty: true, tag: "metaT_contigs_ch")
 
@@ -46,8 +46,7 @@ workflow imp_main {
 			.map { sample, fastqs ->
 				def meta = [:]
 				meta.id = sample.id.replaceAll(/\.singles$/, "").replaceAll(/\.metaT/, "")
-				return [ meta, fastqs ]
-				
+				return [ meta, fastqs ]				
 			}
 		hybrid_assembly_input_ch.dump(pretty: true, tag: "metaT_hybrid_input")
 
@@ -59,11 +58,11 @@ workflow imp_main {
 						def meta = [:]
 						meta.id = sample.id.replaceAll(/\.singles$/, "").replaceAll(/\.metaG/, "")
 						return [ meta, fastqs ]
-
 					}			
 			)
-			.groupTuple()
-			.map { sample, fastqs -> [ sample, fastqs.flatten() ] }
+			.map { sample, fastqs -> [ sample.id, sample, fastqs] }
+			.groupTuple(by: 0, size: 4, remainder: true)
+			.map { sample_id, sample, fastqs -> [ sample_id, sample[0], fastqs.flatten() ] }
 
 		hybrid_assembly_input_ch.dump(pretty: true, tag: "all_reads_hybrid_input")
 
@@ -72,8 +71,8 @@ workflow imp_main {
 			.mix(
 				metaT_contigs_ch
 			)
-			.groupTuple()
-			.map { sample, data -> [ sample, data[0], data[1] ] }
+			.groupTuple(by: 0, size: 2)
+			.map { sample_id, sample, data -> [ sample, data[0], data[1] ] }
 
 		hybrid_assembly_input_ch.dump(pretty: true, tag: "hybrid_assembly_input_ch")
 
@@ -101,7 +100,10 @@ workflow imp_main {
 
 		// add the bwa indices to the input reads
 		combined_assembly_input_index_ch = hybrid_assembly_input_ch
-			.map { sample, fastqs, contigs -> [ sample.id, sample, fastqs ] }
+			.map { sample_id, sample, fastqs, contigs -> [ sample.id, sample, fastqs ] }
+			// .map { sample, fastqs, contigs -> [ sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "").replaceAll(/.meta[GT]$/, ""), sample, fastqs ] }
+
+			
 			// .join(bwa_index.out.index.map { sample, index -> [ sample.id, index ] }, by: 0)
 			.join(bwa_index.out.index, by: 0)
 			.map { sample_id, sample, fastqs, libsrc, index -> [ sample_id, sample, fastqs, index ] }
@@ -210,10 +212,10 @@ workflow imp_main {
 			.map { sample_id, sample, fastqs -> 
 				def meta = [:]
 				meta.id = sample_id
-				return [ meta, fastqs.flatten() ]
+				return [ meta.id, meta, fastqs.flatten() ]
 			}
 			.groupTuple(by: 0, size: 2, remainder: true) //, sort: true)
-			.map { sample, fastqs ->
+			.map { sample_id, sample, fastqs ->
 				def new_sample = sample.clone()
 				new_sample.library_source = "hybrid"
 				return [ new_sample, fastqs.flatten() ]
@@ -221,7 +223,7 @@ workflow imp_main {
 
 		unmapped_ch.dump(pretty: true, tag: "unmapped_ch")
 		
-		empty_file = file("${launchDir}/NO_INPUT")
+		empty_file = file("${params.output_dir}/NO_INPUT")
 		empty_file.text = "NOTHING TO SEE HERE."
 		print empty_file
 
