@@ -72,7 +72,7 @@ workflow imp_main {
 				metaT_contigs_ch
 			)
 			.groupTuple(by: 0, size: 2)
-			.map { sample_id, sample, data -> [ sample, data[0], data[1] ] }
+			.map { sample_id, sample, data -> [ sample[0], data[0], data[1] ] }
 
 		hybrid_assembly_input_ch.dump(pretty: true, tag: "hybrid_assembly_input_ch")
 
