@@ -78,7 +78,7 @@ workflow imp_main {
 
 		hybrid_assembly_input_ch = hybrid_assembly_input_ch
 			.join(metaT_contigs_ch.map { sample_id, sample, contigs -> [ sample_id, contigs ] }, by: 0)
-			.map { sample_id, sample, reads, contigs -> [ sample, reads, contigs ] }
+			.map { sample_id, sample, fastqs, contigs -> [ sample, fastqs, contigs ] }
 
 		hybrid_assembly_input_ch.dump(pretty: true, tag: "hybrid_assembly_input_ch")
 
@@ -109,7 +109,7 @@ workflow imp_main {
 
 		// add the bwa indices to the input reads
 		combined_assembly_input_index_ch = hybrid_assembly_input_ch
-			.map { sample_id, sample, fastqs, contigs -> [ sample.id, sample, fastqs ] }
+			.map { sample, fastqs, contigs -> [ sample.id, sample, fastqs ] }
 			// .map { sample, fastqs, contigs -> [ sample.id.replaceAll(/.(orphans|singles|chimeras)$/, "").replaceAll(/.meta[GT]$/, ""), sample, fastqs ] }
 
 			
