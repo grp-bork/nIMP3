@@ -67,14 +67,23 @@ workflow imp_main {
 		hybrid_assembly_input_ch.dump(pretty: true, tag: "all_reads_hybrid_input")
 
 		// add the metaT contigs to the metaG/T input reads
+		/*
 		hybrid_assembly_input_ch = hybrid_assembly_input_ch
 			.mix(
 				metaT_contigs_ch
 			)
 			.groupTuple(by: 0, size: 2)
 			.map { sample_id, sample, data -> [ sample[0], data[0], data[1] ] }
+		*/
+
+		hybrid_assembly_input_ch = hybrid_assembly_input_ch
+			.join(metaT_contigs_ch.map { sample_id, sample, contigs -> [ sample_id, contigs ] }, by: 0)
+			.map { sample_id, sample, reads, contigs -> [ sample, reads, contigs ] }
 
 		hybrid_assembly_input_ch.dump(pretty: true, tag: "hybrid_assembly_input_ch")
+
+
+
 
 		// perform initial hybrid assembly, label the resulting contigs as hybrid and build bwa index
 		if (params.assembler == "spades") {
