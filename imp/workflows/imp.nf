@@ -9,7 +9,7 @@ include { hybrid_megahit } from "../modules/assemblers/megahit"
 include { get_unmapped_reads } from "./extract"
 include { concatenate_contigs; filter_fastq } from "../modules/assemblers/functions"
 
-include { kallisto_index; kallisto_quant } from "../modules/alignment/indexing/kallisto"
+include { kallisto_index } from "../modules/alignment/indexing/kallisto"
 
 
 params.assembler = "megahit"

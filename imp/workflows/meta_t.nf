@@ -7,6 +7,8 @@ include { concatenate_contigs } from "../modules/assemblers/functions"
 include { assembly_prep } from "./input"
 include { get_unmapped_reads } from "./extract"
 
+include { kallisto_index } from "../modules/alignment/indexing/kallisto"
+
 
 workflow metaT_initial_assembly {
 	take:
@@ -28,6 +30,7 @@ workflow metaT_initial_assembly {
 			contigs_ch = metaT_megahit.out.contigs
 		}
 		bwa_index(contigs_ch, "initial")
+		kallisto_index(contigs_ch, "initial")
 
 		post_assembly_check_ch = fastq_ch
 			.map { sample, fastqs -> 
