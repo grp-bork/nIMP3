@@ -13,7 +13,7 @@ process kallisto_index {
 	script:
 	"""
 	mkdir -p kallisto/index/${stage}/${sample.library_source}/${sample.id}/
-	kallisto index -i index/${stage}/${sample.library_source}/${sample.id}/${sample.id}.idx ${fasta}
+	kallisto index -i kallisto/index/${stage}/${sample.library_source}/${sample.id}/${sample.id}.idx ${fasta}
 	"""
 	
 }
