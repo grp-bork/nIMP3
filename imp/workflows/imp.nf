@@ -9,6 +9,9 @@ include { hybrid_megahit } from "../modules/assemblers/megahit"
 include { get_unmapped_reads } from "./extract"
 include { concatenate_contigs; filter_fastq } from "../modules/assemblers/functions"
 
+include { kallisto_index; kallisto_quant } from "../modules/alignment/indexing/kallisto"
+
+
 params.assembler = "megahit"
 
 
@@ -104,6 +107,9 @@ workflow imp_main {
 		bwa_index(contigs_ch, "initial")
 
 		bwa_index.out.index.dump(pretty: true, tag: "bwa_index.out.index")
+
+		kallisto_index(contigs_ch, "initial")
+
 
 		fastq_ch.dump(pretty: true, tag: "fastq_ch")
 
@@ -225,7 +231,7 @@ workflow imp_main {
 			}
 			.groupTuple(by: 0, size: 2, remainder: true) //, sort: true)
 			.map { sample_id, sample, fastqs ->
-				def new_sample = sample.clone()
+				def new_sample = sample[0].clone()
 				new_sample.library_source = "hybrid"
 				return [ new_sample, fastqs.flatten() ]
 			}
