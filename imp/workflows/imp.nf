@@ -9,7 +9,7 @@ include { hybrid_megahit } from "../modules/assemblers/megahit"
 include { get_unmapped_reads } from "./extract"
 include { concatenate_contigs; filter_fastq } from "../modules/assemblers/functions"
 
-include { kallisto_index } from "../modules/alignment/indexing/kallisto"
+// include { kallisto_index } from "../modules/alignment/indexing/kallisto"
 
 
 params.assembler = "megahit"
@@ -108,7 +108,7 @@ workflow imp_main {
 
 		bwa_index.out.index.dump(pretty: true, tag: "bwa_index.out.index")
 
-		kallisto_index(contigs_ch, "initial")
+		// kallisto_index(contigs_ch, "initial")
 
 
 		fastq_ch.dump(pretty: true, tag: "fastq_ch")

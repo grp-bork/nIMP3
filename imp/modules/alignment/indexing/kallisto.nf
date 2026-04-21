@@ -1,5 +1,5 @@
 process kallisto_index {
-	container "quay.io/biocontainers/kallisto:0.50.1--hc877fd6_1"
+	container "quay.io/biocontainers/kallisto:0.52.0--h13ff97a_0"
 	label "medium"
 	tag "${sample.id}.${stage}"
 
