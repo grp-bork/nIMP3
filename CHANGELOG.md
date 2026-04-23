@@ -1,3 +1,11 @@
+version -> 0.3.4
+
+- nevermore version -> 0.15.17
+ - fixed input issue caused in 8ae6e0e (0.15.14) and cc76484 (0.15.13)
+ - add multi-suffix support to prepare_fastqs.py
+ - add sentinel to sortmerna process
+ - add sample_id-tags to various processes
+
 version -> 0.3.3
 
 - nevermore version -> 0.15.14
