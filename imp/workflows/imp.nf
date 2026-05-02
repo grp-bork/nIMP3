@@ -238,7 +238,7 @@ workflow imp_main {
 
 		unmapped_ch.dump(pretty: true, tag: "unmapped_ch")
 		
-		empty_file = file("${params.output_dir}/NO_INPUT")
+		empty_file = file("${workDir}/NO_INPUT")
 		empty_file.text = "NOTHING TO SEE HERE."
 		print empty_file
 
