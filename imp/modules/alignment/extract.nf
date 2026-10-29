@@ -1,5 +1,5 @@
 process extract_unmapped {
-	container "registry.git.embl.org/schudoma/align-docker:latest"
+	container "ghcr.io/cschu/align-docker:v0.6.0"
 	label "align"
 	label "small"
 

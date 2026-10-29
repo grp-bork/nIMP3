@@ -1,3 +1,8 @@
+version -> 0.3.5
+
+- nevermore version -> 0.15.17_0.1
+ - replaced all container git.embl.org container directives to ghcr.io
+
 version -> 0.3.4
 
 - nevermore version -> 0.15.17

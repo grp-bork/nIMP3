@@ -1,5 +1,5 @@
 process bwa_index {
-	container "registry.git.embl.org/schudoma/align-docker:latest"
+	container "ghcr.io/cschu/align-docker:v0.6.0"
 	label "small"
 
 	input:
